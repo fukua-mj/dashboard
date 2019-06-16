@@ -1,0 +1,37 @@
+<p-tabView [activeIndex]="index" (onChange)="onTabChange($event)">
+  <p-tabPanel header="WIP/Move" leftIcon="pi pi-calendar" *ngIf="items[0].display">
+    <app-cg1view #WipMove [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[0]"></app-cg1view>
+  </p-tabPanel>
+  <p-tabPanel header="CUM" leftIcon="pi pi-inbox" *ngIf="items[1].display">
+    <app-cg1view #Cum [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[1]"></app-cg1view>
+  </p-tabPanel>
+  <p-tabPanel header="Yield" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[2].display">
+    <app-cg2view #Yield [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[2]"></app-cg2view>
+  </p-tabPanel>
+  <p-tabPanel header="DPPM/LRR" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[3].display">
+    <app-cg1view #DppmLrr [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[3]"></app-cg1view>
+  </p-tabPanel>
+  <p-tabPanel header="投入产出" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[3].display">
+    <app-cg1view #InputOutput [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[4]"></app-cg1view>
+  </p-tabPanel>
+  <p-tabPanel header="计划实绩" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[3].display">
+    <app-cg2view #ActPlan [currentUserName]="currentUserName" [deviceType]="deviceType" [dataType]="dataType[5]"></app-cg2view>
+  </p-tabPanel>
+</p-tabView>
+<button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button>
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}}</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

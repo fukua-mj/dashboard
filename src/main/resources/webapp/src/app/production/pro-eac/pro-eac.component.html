@@ -1,0 +1,94 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)" (onClose)=onTabClose($event)>
+  <p-tabPanel header="投入产出" leftIcon="pi pi-calendar" *ngIf="display[0]" [selected]="selectTab[0]">
+    <div class="ui-g">
+      <div id="eacproductionInOutChart" echarts [options]="productionInOutChartOption" class="ui-g-12 chartArea-12 xl-chartArea-12 lg-chartArea-12 md-chartArea-12 sm-chartArea-12"></div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="计划实绩" leftIcon="pi pi-inbox" *ngIf="display[1]" [selected]="selectTab[1]">
+    <div class="ui-g">
+      <div id="eacproductionActPlanChart" echarts [options]="productionActPlanChartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+      <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+          <div class="xl-title lg-title"><strong>投入产出</strong></div>
+          <ul class="optionul">
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="inOutType" value="IN" label="工厂投入" [(ngModel)]="inOutType" inputId="preopt1" (click)="drawproductionActPlanChart()"></p-radioButton>
+            </li>
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="inOutType" value="OUT" label="工厂产出" [(ngModel)]="inOutType" inputId="preopt2"
+                (click)="drawproductionActPlanChart()"></p-radioButton>
+            </li>
+          </ul>
+        </div>
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+          <div class="xl-title lg-title"><strong>产品类型</strong></div>
+          <ul class="optionul">
+            <li *ngFor="let item of actPlanProductCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACactPlanProductCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedactPlanProductCategory"
+                inputId="EACactPlanProductCategory+{{item}}" (click)="drawproductionActPlanChart()"></p-radioButton>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="WIP/Movement" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="display[2]" [selected]="selectTab[2]">
+    <div class="ui-g">
+      <div id="eacproductionWIPMoveChart" echarts [options]="productionWIPMoveChartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+      <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+          <div class="xl-title lg-title"><strong>产品阶段</strong></div>
+          <ul class="optionul">
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACWIPMoveProductionType" value="Production" label="正式量产" [(ngModel)]="selectedWIPMoveProductionType"
+                inputId="WIPMoveProductionType1" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+            </li>
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACWIPMoveProductionType" value="Develop" label="客户送样" [(ngModel)]="selectedWIPMoveProductionType"
+                inputId="WIPMoveProductionType2" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+            </li>
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACWIPMoveProductionType" value="Engineer" label="工程验证" [(ngModel)]="selectedWIPMoveProductionType"
+                inputId="WIPMoveProductionType3" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+            </li>
+            <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACWIPMoveProductionType" value="PV" label="PV" [(ngModel)]="selectedWIPMoveProductionType"
+                inputId="WIPMoveProductionType4" (click)="WIPMoveProductionTypeClicked()" (selected)="true"></p-radioButton>
+            </li>
+          </ul>
+        </div>
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+          <div class="xl-title lg-title"><strong>产品类型</strong></div>
+          <ul class="optionul">
+            <li *ngFor="let item of wipMoveProductCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+              <p-radioButton name="EACwipMoveProductCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedWIPMoveProductionCategory"
+                inputId="EACwipMoveProductCategory+{{item}}" (click)="drawproductionWipMoveChart()"></p-radioButton>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Cut Line别" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="display[3]" [selected]="selectTab[3]">
+    <div class="ui-g">
+      <div id="eacproductionCutLineChart" echarts [options]="productionCutLineOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+      <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+          <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+            <div class="xl-title lg-title"><strong>产品类型</strong></div>
+            <ul class="optionul">
+              <li *ngFor="let item of cutLineDifferCategory;index as i" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                <p-radioButton name="eaccutLineDifferCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedCutLineProductionCategory"
+                  inputId="cutLineDifferCategory+{{item}" (click)="drawproductionLineDifferenceChart()"></p-radioButton>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="RT" leftIcon="pi pi-user" rightIcon="pi pi-star">
+      <app-rt #Child_RT [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"></app-rt>
+  </p-tabPanel>
+</p-tabView>

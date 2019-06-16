@@ -1,0 +1,158 @@
+<p-growl [(value)]="msgs"></p-growl>
+
+<p-panel>
+    <p-table #roleinfo [columns]='cols' [value]="roleInfoList" selectionMode="single" [(selection)]="selectedRole"
+        (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [paginator]="true" [rows]="15"
+        [globalFilterFields]="['rolename']">
+        <ng-template pTemplate="caption">
+            权限组信息
+        </ng-template>
+<!--         <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col *ngFor="let col of columns" style="width:150px">
+            </colgroup>
+        </ng-template> -->
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of cols">{{col.header}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-roleInfoList let-columns="columns">
+            <tr [pSelectableRow]="roleInfoList">
+                <td *ngFor="let col of columns">{{roleInfoList[col.field]}}</td>
+<!--                 <td>
+                    <p-button (click)="menuOrderSetting()" icon="fa fa-cog" label=""></p-button>
+                </td> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div style="text-align: left">
+                <input type="text" pInputText placeholder="角色名称" (input)="roleinfo.filterGlobal($event.target.value, 'contains')"
+                    style="background-color: rgb(221, 236, 243)">
+                <p-button (click)="showAddRoleDialog()" icon="fa fa-plus" label="新增"></p-button>
+                <p-button (click)="showUpdateRoleDialog()" icon="fa fa-plus" label="修改"></p-button>
+                <p-button (click)="showDeleteRoleDialog()" icon="fa fa-minus" label="删除"></p-button>
+                <p-button (click)="showUserRoleLinkDialog()" icon="fa fa-connectdevelop" label="角色关联用户"></p-button>
+                <p-button (click)="showRoleMenuLinkDialog()" icon="fa fa-connectdevelop" label="角色关联菜单"></p-button>
+                <p-button (click)="menuOrderSetting()" icon="fa fa-connectdevelop" label="菜单排序设置"></p-button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-panel>
+
+<p-dialog header="注册用户" [(visible)]="display_add" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="rolename">角色名称</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="rolename" [(ngModel)]="addedRole.rolename" placeholder="英文字母">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description">角色描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description" [(ngModel)]="addedRole.description">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Save" (click)="addRole()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Modify角色" [(visible)]="display_modify" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="rolename_modify">用户账号</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="rolename_modify" [(ngModel)]="selectedRole.rolename">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description_modify">用户描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description_modify" [(ngModel)]="selectedRole.description">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Update" (click)="updateRole()" *ngIf="display_update"></p-button>
+            <p-button label="Delete" (click)="deleteRole()" *ngIf="display_delete"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="角色关联用户" [(visible)]="display_UserRoleLink" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <p-pickList [source]="fromusers" [target]="tousers" sourceHeader="Available" targetHeader="Selected"
+                [showSourceControls]=false [showTargetControls]=false [responsive]="true" filterBy="username" dragdrop="true"
+                dragdropScope="users" sourceFilterPlaceholder="UserName" targetFilterPlaceholder="UserName"
+                [sourceStyle]="{'height':'200px'}" [targetStyle]="{'height':'200px'}" (onMoveToTarget)="onMoveToUserTarget($event)"
+                (onMoveToSource)="onMoveToUserSource($event)">
+                <ng-template let-userinfo pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <!-- <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
+                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{userinfo.username}} -
+                            {{userinfo.useraccount}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+        </div>
+
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Commit" (click)="addUserRoleLink()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="角色关联菜单" [(visible)]="display_RoleMenuLink" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <p-pickList [source]="frommenus" [target]="tomenus" sourceHeader="Available" targetHeader="Selected"
+                [showSourceControls]=false [showTargetControls]=false [responsive]="true" filterBy="menuname" dragdrop="true"
+                dragdropScope="users" sourceFilterPlaceholder="MenuName" targetFilterPlaceholder="MenuName"
+                [sourceStyle]="{'height':'200px'}" [targetStyle]="{'height':'200px'}" (onMoveToTarget)="onMoveToMenuTarget($event)"
+                (onMoveToSource)="onMoveToMenuSource($event)" (onTargetSelect)="onTargetMenuSelect($event)">
+                <ng-template let-menuinfo pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <!-- <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
+                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{menuinfo.chinese}} -
+                            {{menuinfo.menuname}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+        </div>
+        <div class="ui-g-12">
+            <input type="text" pInputText placeholder="菜单排序" value={{menuSort}} style="background-color: rgb(221, 236, 243)">
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Commit" (click)="addRoleMenuLink()" [disabled]="disabled_Commit"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="角色关联菜单" [(visible)]="display_MenuSort" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-g ui-fluid">
+        {{selectedRole.rolename}}
+    </div>
+</p-dialog>

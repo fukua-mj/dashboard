@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.CycleTimeMapper">
+   
+    <select id="getCycleTimeProductCategory" resultType="java.util.HashMap">
+	 SELECT DISTINCT A.PRODUCTCATEGORY
+	  FROM MDWMGR.DAS_SHOPCYCLETIME_MWD A
+	 WHERE A.FACTORYNAME = #{shopName} AND A.PRODUCTIONTYPE = #{productionType}
+	 ORDER BY A.PRODUCTCATEGORY
+    </select>    
+    
+    <select id="CycleTimeForLegendData" resultType="java.util.HashMap">
+	 SELECT DISTINCT A.CTDATAGROUP,A.ORDER_BY_COL1
+	  FROM MDWMGR.DAS_SHOPCYCLETIME_MWD A
+	 WHERE     A.FACTORYNAME = #{factoryName}
+	       AND A.PRODUCTIONTYPE = #{productionType}
+	       AND A.PRODUCTCATEGORY = #{productcateGory,jdbcType=VARCHAR}
+	       ORDER BY A.ORDER_BY_COL1
+ 	</select>
+ 
+ 	<select id="CycleTimeForAllData" resultType="java.util.HashMap">
+	 SELECT *
+	  FROM MDWMGR.DAS_SHOPCYCLETIME_MWD A
+	 WHERE     A.FACTORYNAME = #{factoryName}
+	       AND A.PRODUCTIONTYPE = #{productionType}
+	       AND A.PRODUCTCATEGORY = #{productcateGory,jdbcType=VARCHAR}
+	       ORDER BY A.ORDER_BY_COL1
+ 	</select>  
+ 	
+ 	 <select id="getmonthweekdaytimedata" resultType="java.util.HashMap">
+			SELECT TO_CHAR (SYSDATE, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (SYSDATE, 'YYYYWW') AS DATEWEEK,
+		       TO_CHAR (SYSDATE, 'YYYYMM') AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 1, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 1) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 1) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 2, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 2) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 2) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 3, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 3) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 3) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 4, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 4) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 4) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 5, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 5) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 5) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 6, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 6) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 6) AS DATEMONTH
+		  FROM DUAL
+		UNION ALL
+		SELECT TO_CHAR (SYSDATE - 7, 'YYYYMMDD') AS DATETIME,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 7) AS DATEWEEK,
+		       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 7) AS DATEMONTH
+  			FROM DUAL
+ 	</select> 
+
+
+</mapper>

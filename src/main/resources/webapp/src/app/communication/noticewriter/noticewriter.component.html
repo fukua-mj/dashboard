@@ -1,0 +1,48 @@
+<p-growl [(value)]="msgs"></p-growl>
+<div class="ui-g lg-noticewriter xl-noticewriter">
+  <div class="ui-g-10">
+    <span class="ui-float-label title">
+      <input id="float-input" type="text" size="50" pInputText [(ngModel)]="noticeSubject">
+      <label for="float-input">标题</label>
+    </span>
+    <br />
+    <button pButton label="添加收件人" icon="fa-user-plus" (click)="showUserList()"></button>
+    <br />
+    <br />
+    <p>【已选择】 : <span *ngFor="let c of selectedUsers" style="margin-right: 10px;height: 20px;border-radius: 30%;background-color: rgb(225, 239, 243)">
+        <b>{{c.username}} ;</b>
+      </span></p>
+    <p-editor [(ngModel)]="noticeText" [style]="{'height':'365px'}" [placeholder]="placeholder"></p-editor>
+    <br />
+    <button pButton style="margin: 0 0 0 90%" label="Send" icon="fa fa-envelope" (click)="sendNotice()"></button>
+  </div>
+  <div class="ui-g-2">
+    <p-listbox [options]="sendHistory" [(ngModel)]="selectNotice" optionLabel="subject" styleClass="sendHistory"
+      [listStyle]="{'height':'580px','font-size':'13px'}" [style]="{'width':'150px'}" (onDblClick)="showOverLayer($event,sendHistoryList)">
+      <p-header>
+        <div class="hmtitle"><b>发送历史</b></div>
+      </p-header>
+    </p-listbox>
+  </div>
+</div>
+
+<p-overlayPanel #sendHistoryList>
+  <img src="./../../../assets/images/homepage/1.PNG" alt="Galleria 1" />
+</p-overlayPanel>
+
+<p-dialog header="收件人" [(visible)]="display_userList" [responsive]="true" showEffect="fade" [modal]="true" [width]="400">
+  <div class="ui-g ui-fluid">
+    <p-listbox [options]="users" [(ngModel)]="selectedUsers" multiple="multiple" checkbox="checkbox" filter="filter"
+      optionLabel="username" [listStyle]="{'max-height':'350px'}">
+      <p-header>
+        <i class="fa fa-user"></i>
+        User
+      </p-header>
+    </p-listbox>
+  </div>
+  <p-footer>
+    <div>
+      <p-button label="Cancel" (click)="cancel()"></p-button>
+    </div>
+  </p-footer>
+</p-dialog>

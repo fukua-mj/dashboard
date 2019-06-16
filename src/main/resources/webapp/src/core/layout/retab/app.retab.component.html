@@ -1,0 +1,33 @@
+<div *ngIf="items.length !=0 && tabLayout" class="ui-g-12" [ngStyle]="{'padding-top':getPaddingTop() }">
+    <div class="ui-g-12">
+        <p-tabView (onClose)="handleClose($event)" (onChange)="handleChange($event)" #classretab id="classretab">
+
+            <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+                <p-tabPanel [header]="item.label" [selected]="item.selected" *ngIf="item.displayed" [closable]="items.length==1?false:true">
+
+                </p-tabPanel>
+            </ng-template>
+
+<!--             <p-tabPanel [header]="item.label" *ngFor="let item of items; let i = index" [selected]="item.selected"
+                [closable]="items.length==1?false:true" *ngIf='item.displayed'>
+            </p-tabPanel> -->
+
+        </p-tabView>
+    </div>
+    <div class="ui-g-1 ">
+
+        <p-tieredMenu #menu [model]="spItems" [popup]="true"></p-tieredMenu>
+        <!--         <button *ngIf="items.length < 2" #btn type="button" pButton icon="fa fa-caret-down" disabled label="close"
+            (click)="menu.toggle($event)" style="margin-top:6px"></button>
+        <button *ngIf="items.length >= 2" #btn type="button" pButton icon="fa fa-caret-down" label="close" (click)="menu.toggle($event)"
+            style="margin-top:6px"></button> -->
+    </div>
+</div>
+<!-- <div class="xl-tabMove lg-tabMove">
+    <ul>
+        <i class="fa ui-icon-chevron-left" style="float: inherit;margin-top: 14px; margin-right: 3px; cursor: pointer;opacity: 0.6;font-size: large;"
+            (click)="leftClick();"></i>
+        <i class="fa ui-icon-chevron-right" aria-hidden="true" style="margin-top:14px; margin-left: 3px;cursor: pointer;opacity: 0.6;font-size: large;"
+            (click)="rightClick();"></i>
+    </ul>
+</div> -->

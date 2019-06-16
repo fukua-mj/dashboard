@@ -1,0 +1,34 @@
+<p-tabView [activeIndex]="index" (onChange)="onTabChange($event)">
+  <p-tabPanel header="CUM" leftIcon="pi pi-calendar" *ngIf="items[0].display">
+    <app-cum #CUM [shopName]="shopName" [currentUserName]="currentUserName" [deviceType]="deviceType" [processType]="processType"
+      [dataType]="items[0].dataType"></app-cum>
+  </p-tabPanel>
+  <p-tabPanel header="Daily" leftIcon="pi pi-inbox" *ngIf="items[1].display">
+    <app-daily #Daily [shopName]="shopName" [currentUserName]="currentUserName" [deviceType]="deviceType" [processType]="processType"
+      [dataType]="items[1].dataType"></app-daily>
+  </p-tabPanel>
+  <p-tabPanel header="人员别" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[2].display">
+    <app-operator #OpDiffer [shopName]="shopName" [currentUserName]="currentUserName" [deviceType]="deviceType" [processType]="processType2"
+      [dataType]="items[2].dataType"></app-operator>
+  </p-tabPanel>
+  <p-tabPanel header="Line别" leftIcon="pi pi-user" rightIcon="pi pi-star" *ngIf="items[3].display">
+    <app-qaline #Line [shopName]="shopName" [currentUserName]="currentUserName" [deviceType]="deviceType" [processType]="processType2"></app-qaline>
+  </p-tabPanel>
+</p-tabView>
+<!-- <button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button> -->
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}}</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

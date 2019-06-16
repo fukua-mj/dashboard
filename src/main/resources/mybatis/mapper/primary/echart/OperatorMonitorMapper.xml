@@ -1,0 +1,2640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.OperatorMonitorMapper">
+
+	<select id="getOperatorDefectCategory" resultType="java.util.HashMap">
+		  SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM MDWMGR.DAS_OPDEFECT_MWD A
+   WHERE     A.FACTORYNAME = #{shopName}
+         AND A.OPER_DESC = #{operationName}
+         AND A.PRODUCTIONTYPE = #{productionType}
+ORDER BY A.PRODUCTCATEGORY ASC
+	</select>
+	
+	<select id="getOperatorDefectCategoryByLine" resultType="java.util.HashMap">
+		  SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM MDWMGR.DAS_MMDDEFECT_MWD A
+   WHERE     A.FACTORYNAME = #{shopName}
+         AND A.OPER_DESC = #{operationName}
+         AND A.PRODUCTIONTYPE = #{productionType}
+ORDER BY A.PRODUCTCATEGORY ASC
+	</select>
+	
+	<select id="getOperatorDefectCode" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.DAS_OPDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         AND A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}
+	ORDER BY A.DESCRIPTION ASC
+	</select>
+	
+	<select id="getOperatorDefectCodeByLine" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.DAS_MMDDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         AND A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}
+	ORDER BY A.DESCRIPTION ASC
+	</select>
+		
+	<select id="getOperatorDefect" resultType="java.util.HashMap">
+		SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+			 TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.DESCRIPTION,
+	         TT2.DEFECTQTY,
+	         TT2.OUTQTY,TT2.DEFECTRATIO,TT2.OUTQTY_1 FROM 
+	  (SELECT B.OPERATORID,
+	         B.FACTORYNAME,
+	         B.OPER_DESC,
+	         B.PRODUCTCATEGORY,
+	         B.PRODUCTIONTYPE,
+	         B.DESCRIPTION,
+	         B.DEFECTQTY,
+	         B.OUTQTY,
+	         CASE
+	            WHEN D.OUTQTY = 0
+	            THEN
+	               0
+	            WHEN B.DEFECTQTY = 0
+	            THEN
+	               0
+	            WHEN B.OPERATORID != 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+	            WHEN B.OPERATORID = 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / B.OUTQTY) * 100, 2)
+	         END
+	            AS DEFECTRATIO,
+	         D.OUTQTY AS OUTQTY_1
+	    FROM (  SELECT TT.OPERATORID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE,
+	                   TT.DESCRIPTION,
+	                   SUM (TT.DEFECTQTY) AS DEFECTQTY,
+	                   SUM (TT.OUTQTY) AS OUTQTY,
+	                   SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+	              FROM (  SELECT A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.FACTORYDATE,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTSPECNAME,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE,
+	                             A.DEFECTCODE,
+	                             A.DESCRIPTION,
+	                             A.DEFECTQTY,
+	                             A.OUTQTY,
+	                             A.DEFECTRATIO * 100 AS DEFECTRATIO,
+	                             A.DEFECTRATIOPK,
+	                             A.ETLTIME
+	                        FROM MDWMGR.DAS_OPDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if>                          
+	                             AND (   (    A.TIMEHH &lt;= #{endTime}
+	                                      AND A.TIMEHH &gt;= #{startTime})
+	                                  )
+	                    ORDER BY OPERATORID) TT
+	          GROUP BY TT.DESCRIPTION,
+	                   TT.OPERATORID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE
+	          ORDER BY TT.OPERATORID DESC) B,
+	         (  SELECT TT1.OPERATORID, SUM (TT1.OUTQTY) AS OUTQTY
+	              FROM (  SELECT C.OPERATORID,
+	                             C.FACTORYNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE,
+	                             MAX (TO_NUMBER(C.OUTQTY)) AS OUTQTY
+	                        FROM MDWMGR.DAS_OPDEFECT_MWD C
+	   WHERE     C.FACTORYNAME = #{shopName}
+	         AND C.OPER_DESC = #{operationName}
+	         AND C.PRODUCTIONTYPE = #{productionType}
+	         AND C.PRODUCTCATEGORY = #{productCategory}
+	         --AND C.DEFECTRATIOPK &lt;=5
+	                             AND ( (    C.TIMEHH &lt;= #{endTime}
+	                                    AND C.TIMEHH &gt;= #{startTime}))
+	                    GROUP BY C.OPERATORID,
+	                             C.FACTORYNAME,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE
+	                    ORDER BY OPERATORID) TT1
+	          GROUP BY TT1.OPERATORID
+	          ORDER BY TT1.OPERATORID DESC) D
+	   WHERE B.OPERATORID = D.OPERATORID
+	ORDER BY B.OPERATORID DESC) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorList" resultType="java.util.HashMap">
+	  SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT2.OUTQTY
+	    FROM (  SELECT *
+	              FROM (  SELECT TT1.OPERATORID, SUM (TT1.OUTQTY) AS OUTQTY
+	                        FROM (  SELECT C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE,
+	                                       MAX (C.OUTQTY) AS OUTQTY
+	                                  FROM MDWMGR.DAS_OPDEFECT_MWD C
+	                       WHERE     C.FACTORYNAME = #{shopName}
+	                             AND C.OPER_DESC = #{operationName}
+	                             AND C.PRODUCTIONTYPE = #{productionType}
+	                             AND C.PRODUCTCATEGORY = #{productCategory}
+	         					 <if test="defectCode != 'All'">
+	               					 AND C.DESCRIPTION=#{defectCode}
+	         					 </if>
+	         					 <if test="defectCode == 'All'">
+	               					 --AND C.DEFECTRATIOPK &lt;=5
+	         					 </if> 
+	                             AND ( (    C.TIMEHH &lt;= #{endTime}
+	                                    AND C.TIMEHH &gt;= #{startTime}))
+	                              GROUP BY C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE
+	                              ORDER BY OPERATORID) TT1
+	                    GROUP BY TT1.OPERATORID
+	                    ORDER BY TT1.OPERATORID DESC) D
+	          ORDER BY D.OUTQTY DESC) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorDefectCodeList" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.DAS_OPDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	                  <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if> 
+	         AND ( (    A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}))  
+	ORDER BY DESCRIPTION
+	</select>
+	
+	<select id="getOperatorDefectAVG" resultType="java.util.HashMap">
+	SELECT B.FACTORYNAME,
+	       B.OPER_DESC,
+	       B.PRODUCTCATEGORY,
+	       B.PRODUCTIONTYPE,
+	       B.DESCRIPTION,
+	       B.DEFECTQTY,
+	       B.OUTQTY,
+	       CASE
+	          WHEN D.OUTQTY = 0 THEN 0
+	          WHEN B.DEFECTQTY = 0 THEN 0
+	          ELSE TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+	       END
+	          AS DEFECTRATIO,
+	       D.OUTQTY AS OUTQTY_1
+	  FROM (  SELECT TT.FACTORYNAME,
+	                 TT.OPER_DESC,
+	                 TT.PRODUCTCATEGORY,
+	                 TT.PRODUCTIONTYPE,
+	                 TT.DESCRIPTION,
+	                 SUM (TT.DEFECTQTY) AS DEFECTQTY,
+	                 SUM (TT.OUTQTY) AS OUTQTY,
+	                 SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+	            FROM (  SELECT A.OPERATORID,
+	                           A.FACTORYNAME,
+	                           A.FACTORYDATE,
+	                           A.TIMEHH,
+	                           A.OPER_DESC,
+	                           A.PRODUCTSPECNAME,
+	                           A.PRODUCTCATEGORY,
+	                           A.PRODUCTIONTYPE,
+	                           A.DEFECTCODE,
+	                           A.DESCRIPTION,
+	                           A.DEFECTQTY,
+	                           A.OUTQTY,
+	                           A.DEFECTRATIO * 100 AS DEFECTRATIO,
+	                           A.DEFECTRATIOPK,
+	                           A.ETLTIME
+	                      FROM MDWMGR.DAS_OPDEFECT_MWD A
+	                      WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if>                          
+	                             AND (   (    A.TIMEHH &lt;= #{endTime}
+	                                      AND A.TIMEHH &gt;= #{startTime})
+	                                  )               
+	                  ORDER BY OPERATORID) TT
+	        GROUP BY TT.DESCRIPTION,
+	                 TT.FACTORYNAME,
+	                 TT.OPER_DESC,
+	                 TT.PRODUCTCATEGORY,
+	                 TT.PRODUCTIONTYPE
+	        ORDER BY TT.DESCRIPTION DESC) B,
+	       (  SELECT TT1.FACTORYNAME, SUM (TT1.OUTQTY) AS OUTQTY
+	            FROM (  SELECT C.OPERATORID,
+	                           C.FACTORYNAME,
+	                           C.FACTORYDATE,
+	                           C.TIMEHH,
+	                           C.OPER_DESC,
+	                           C.PRODUCTSPECNAME,
+	                           C.PRODUCTCATEGORY,
+	                           C.PRODUCTIONTYPE,
+	                           MAX (TO_NUMBER(C.OUTQTY)) AS OUTQTY
+	                      FROM MDWMGR.DAS_OPDEFECT_MWD C
+	   WHERE     C.FACTORYNAME = #{shopName}
+	         AND C.OPER_DESC = #{operationName}
+	         AND C.PRODUCTIONTYPE = #{productionType}
+	         AND C.PRODUCTCATEGORY = #{productCategory}
+	         --AND C.DEFECTRATIOPK &lt;=5
+	                             AND ( (    C.TIMEHH &lt;= #{endTime}
+	                                    AND C.TIMEHH &gt;= #{startTime}))
+	                  GROUP BY C.OPERATORID,
+	                           C.FACTORYNAME,
+	                           C.OPER_DESC,
+	                           C.PRODUCTSPECNAME,
+	                           C.FACTORYDATE,
+	                           C.TIMEHH,
+	                           C.PRODUCTCATEGORY,
+	                           C.PRODUCTIONTYPE
+	                  ORDER BY OPERATORID) TT1
+	        GROUP BY TT1.FACTORYNAME) D
+	</select>
+	
+	<select id="getOperatorDefectByLine" resultType="java.util.HashMap">
+	  SELECT B.MACHINEID,
+	         B.FACTORYNAME,
+	         B.OPER_DESC,
+	         B.PRODUCTCATEGORY,
+	         B.PRODUCTIONTYPE,
+	         B.DESCRIPTION,
+	         B.DEFECTQTY,
+	         B.OUTQTY,
+	         CASE
+	            WHEN D.OUTQTY = 0
+	            THEN
+	               0
+	            WHEN B.DEFECTQTY = 0
+	            THEN
+	               0
+	            WHEN B.MACHINEID != 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+	            WHEN B.MACHINEID = 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / B.OUTQTY) * 100, 2)
+	         END
+	            AS DEFECTRATIO,
+	         D.OUTQTY AS OUTQTY_1
+	    FROM (  SELECT TT.MACHINEID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE,
+	                   TT.DESCRIPTION,
+	                   SUM (TT.DEFECTQTY) AS DEFECTQTY,
+	                   SUM (TT.OUTQTY) AS OUTQTY,
+	                   SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+	              FROM (  SELECT A.MACHINEID,
+	                             A.FACTORYNAME,
+	                             A.FACTORYDATE,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTSPECNAME,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE,
+	                             A.DEFECTCODE,
+	                             A.DESCRIPTION,
+	                             A.DEFECTQTY,
+	                             A.OUTQTY,
+	                             A.DEFECTRATIO * 100 AS DEFECTRATIO,
+	                             A.DEFECTRATIOPK,
+	                             A.ETLTIME
+	                        FROM MDWMGR.DAS_MMDDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if>                          
+	                             AND (   (    A.TIMEHH &lt;= #{endTime}
+	                                      AND A.TIMEHH &gt;= #{startTime})
+	                                  )
+	                    ORDER BY MACHINEID) TT
+	          GROUP BY TT.DESCRIPTION,
+	                   TT.MACHINEID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE
+	          ORDER BY TT.MACHINEID DESC) B,
+	         (  SELECT TT1.MACHINEID, SUM (TT1.OUTQTY) AS OUTQTY
+	              FROM (  SELECT C.MACHINEID,
+	                             C.FACTORYNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE,
+	                             MAX (TO_NUMBER(C.OUTQTY)) AS OUTQTY
+	                        FROM MDWMGR.DAS_MMDDEFECT_MWD C
+	   WHERE     C.FACTORYNAME = #{shopName}
+	         AND C.OPER_DESC = #{operationName}
+	         AND C.PRODUCTIONTYPE = #{productionType}
+	         AND C.PRODUCTCATEGORY = #{productCategory}
+	         --AND C.DEFECTRATIOPK &lt;=5
+	                             AND ( (    C.TIMEHH &lt;= #{endTime}
+	                                    AND C.TIMEHH &gt;= #{startTime}))
+	                    GROUP BY C.MACHINEID,
+	                             C.FACTORYNAME,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE
+	                    ORDER BY MACHINEID) TT1
+	          GROUP BY TT1.MACHINEID
+	          ORDER BY TT1.MACHINEID DESC) D
+	   WHERE B.MACHINEID = D.MACHINEID
+	ORDER BY B.MACHINEID DESC
+	</select>
+	
+	<select id="getOperatorListByLine" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.MACHINEID
+	    FROM MDWMGR.DAS_MMDDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if> 
+	         AND ( (    A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}))         
+	         AND A.MACHINEID != 'SUM'
+	ORDER BY MACHINEID DESC
+	</select>
+	
+	<select id="getOperatorDefectCodeListByLine" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.DAS_MMDDEFECT_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory}
+	                  <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode}
+	         </if>
+	         <if test="defectCode == 'All'">
+	              -- AND A.DEFECTRATIOPK &lt;=5
+	         </if> 
+	         AND ( (    A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}))  
+	ORDER BY DESCRIPTION
+	</select>
+	
+	<select id="getOperatorDefectAVGByLine" resultType="java.util.HashMap">
+		SELECT B.FACTORYNAME,
+		       B.OPER_DESC,
+		       B.PRODUCTCATEGORY,
+		       B.PRODUCTIONTYPE,
+		       B.DESCRIPTION,
+		       B.DEFECTQTY,
+		       B.OUTQTY,
+		       CASE
+		          WHEN D.OUTQTY = 0 THEN 0
+		          WHEN B.DEFECTQTY = 0 THEN 0
+		          ELSE TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+		       END
+		          AS DEFECTRATIO,
+		       D.OUTQTY AS OUTQTY_1
+		  FROM (  SELECT TT.FACTORYNAME,
+		                 TT.OPER_DESC,
+		                 TT.PRODUCTCATEGORY,
+		                 TT.PRODUCTIONTYPE,
+		                 TT.DESCRIPTION,
+		                 SUM (TT.DEFECTQTY) AS DEFECTQTY,
+		                 SUM (TT.OUTQTY) AS OUTQTY,
+		                 SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+		            FROM (  SELECT A.MACHINEID,
+		                           A.FACTORYNAME,
+		                           A.FACTORYDATE,
+		                           A.TIMEHH,
+		                           A.OPER_DESC,
+		                           A.PRODUCTSPECNAME,
+		                           A.PRODUCTCATEGORY,
+		                           A.PRODUCTIONTYPE,
+		                           A.DEFECTCODE,
+		                           A.DESCRIPTION,
+		                           A.DEFECTQTY,
+		                           A.OUTQTY,
+		                           A.DEFECTRATIO * 100 AS DEFECTRATIO,
+		                           A.DEFECTRATIOPK,
+		                           A.ETLTIME
+		                      FROM MDWMGR.DAS_MMDDEFECT_MWD A
+		                      WHERE     A.FACTORYNAME = #{shopName}
+		         AND A.OPER_DESC = #{operationName}
+		         AND A.PRODUCTIONTYPE = #{productionType}
+		         AND A.PRODUCTCATEGORY = #{productCategory}
+		         <if test="defectCode != 'All'">
+		               AND A.DESCRIPTION=#{defectCode}
+		         </if>
+		         <if test="defectCode == 'All'">
+		               --AND A.DEFECTRATIOPK &lt;=5
+		         </if>                          
+		                             AND (   (    A.TIMEHH &lt;= #{endTime}
+		                                      AND A.TIMEHH &gt;= #{startTime})
+		                                  )               
+		                  ORDER BY MACHINEID) TT
+		        GROUP BY TT.DESCRIPTION,
+		                 TT.FACTORYNAME,
+		                 TT.OPER_DESC,
+		                 TT.PRODUCTCATEGORY,
+		                 TT.PRODUCTIONTYPE
+		        ORDER BY TT.DESCRIPTION DESC) B,
+		       (  SELECT TT1.FACTORYNAME, SUM (TT1.OUTQTY) AS OUTQTY
+		            FROM (  SELECT C.MACHINEID,
+		                           C.FACTORYNAME,
+		                           C.FACTORYDATE,
+		                           C.TIMEHH,
+		                           C.OPER_DESC,
+		                           C.PRODUCTSPECNAME,
+		                           C.PRODUCTCATEGORY,
+		                           C.PRODUCTIONTYPE,
+		                           MAX (TO_NUMBER(C.OUTQTY)) AS OUTQTY
+		                      FROM MDWMGR.DAS_MMDDEFECT_MWD C
+		   WHERE     C.FACTORYNAME = #{shopName}
+		         AND C.OPER_DESC = #{operationName}
+		         AND C.PRODUCTIONTYPE = #{productionType}
+		         AND C.PRODUCTCATEGORY = #{productCategory}
+		                             AND ( (    C.TIMEHH &lt;= #{endTime}
+		                                    AND C.TIMEHH &gt;= #{startTime}))
+		                  GROUP BY C.MACHINEID,
+		                           C.FACTORYNAME,
+		                           C.OPER_DESC,
+		                           C.PRODUCTSPECNAME,
+		                           C.FACTORYDATE,
+		                           C.TIMEHH,
+		                           C.PRODUCTCATEGORY,
+		                           C.PRODUCTIONTYPE
+		                  ORDER BY MACHINEID) TT1
+		        GROUP BY TT1.FACTORYNAME) D
+	</select>
+	
+	<select id="getOperatorYield" resultType="java.util.HashMap">
+		SELECT CASE
+	          WHEN OP.OPERATORNAME IS NULL THEN TT.EVENTUSER
+	          ELSE OP.OPERATORNAME
+	       END
+	          EVENTUSER,
+	       TT.PRODUCTOKQTY,
+	       TT.PRODUCTTOTALQTY,
+	       TT.YIELDRATIO
+	  FROM (  SELECT B.EVENTUSER,
+	                 SUM (B.PRODUCTOKQTY) AS PRODUCTOKQTY,
+	                 SUM (B.PRODUCTTOTALQTY) AS PRODUCTTOTALQTY,
+	                 TRUNC (SUM (B.PRODUCTOKQTY) / SUM (B.PRODUCTTOTALQTY) * 100,
+	                        2)
+	                    AS YIELDRATIO
+	            FROM (SELECT A.FACTORYDATE,
+	                         A.TIMEHH,
+	                         A.FACTORYNAME,
+	                         A.EVENTUSER,
+	                         A.YIELDTYPE,
+	                         A.PROCESSOPERATIONNAME,
+	                         A.OPER_DESC,
+	                         A.PRODUCTSPECNAME,
+	                         A.PRODUCTCATEGORY,
+	                         A.PRODUCTIONTYPE,
+	                         A.PRODUCTOKQTY,
+	                         A.PRODUCTTOTALQTY
+	                    FROM MDWMGR.DAS_OPYIELD_MWD A
+	           WHERE     A.FACTORYNAME = #{shopName}
+	                 AND A.TIMEHH &lt;= #{endTime}
+	                 AND A.TIMEHH &gt;= #{startTime}
+	                 AND A.YIELDTYPE = #{yieldType}
+	                 AND A.OPER_DESC = #{operationName}
+	                 AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                 AND A.PRODUCTIONTYPE = #{productionType}) B
+	        GROUP BY B.EVENTUSER
+	        ORDER BY B.EVENTUSER) TT,
+	       WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	 WHERE TT.EVENTUSER = OP.OPERATORID(+)
+	</select>
+	
+	<select id="getOperatorYieldAVG" resultType="java.util.HashMap">
+		  SELECT B.OPER_DESC,
+	         SUM (B.PRODUCTOKQTY) AS PRODUCTOKQTY,
+	         SUM (B.PRODUCTTOTALQTY) AS PRODUCTTOTALQTY,
+	         TRUNC (SUM (B.PRODUCTOKQTY) / SUM (B.PRODUCTTOTALQTY) * 100, 2)
+	            AS YIELDRATIO
+	    FROM (SELECT A.FACTORYDATE,
+	                 A.TIMEHH,
+	                 A.FACTORYNAME,
+	                 A.EVENTUSER,
+	                 A.YIELDTYPE,
+	                 A.PROCESSOPERATIONNAME,
+	                 A.OPER_DESC,
+	                 A.PRODUCTSPECNAME,
+	                 A.PRODUCTCATEGORY,
+	                 A.PRODUCTIONTYPE,
+	                 A.PRODUCTOKQTY,
+	                 A.PRODUCTTOTALQTY
+	            FROM MDWMGR.DAS_OPYIELD_MWD A
+	           WHERE     A.FACTORYNAME = #{shopName}
+	                 AND A.TIMEHH &lt;= #{endTime}
+	                 AND A.TIMEHH &gt;= #{startTime}
+	                 AND A.YIELDTYPE = #{yieldType}
+	                 AND A.OPER_DESC = #{operationName}
+	                 AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                 AND A.PRODUCTIONTYPE = #{productionType}) B
+	GROUP BY B.OPER_DESC
+	ORDER BY B.OPER_DESC
+	</select>		
+
+	<select id="getOperatorDefectCategorynew" resultType="java.util.HashMap">
+		SELECT DISTINCT A.PRODUCTCATEGORY
+	  FROM MDWMGR.FPS_OPINSDATA_DAY A
+	 WHERE     A.FACTORYDATE >= TO_CHAR (SYSDATE - 56 / 24, 'YYYYMMDD')
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.PRODUCTIONTYPE = #{productionType}
+	       AND A.DESCRIPTION !='-'
+	       AND A.DEFECTQTY !='0'
+	       ORDER BY A.PRODUCTCATEGORY ASC
+	</select>
+	
+	<select id="getOperatorDefectCodenew" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.FPS_OPINSDATA_DAY A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.DATATYPE = #{dataType}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &lt;= #{endTime}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.DESCRIPTION !='-'
+	         AND A.DESCRIPTION !=#{dataType1}
+	         AND A.FACTORYDATE >= TO_CHAR (SYSDATE - 56 / 24, 'YYYYMMDD')
+	ORDER BY A.DESCRIPTION ASC
+	</select>	
+	
+	<select id="getOperatorDefectnew" resultType="java.util.HashMap">
+	  SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.DESCRIPTION,
+	         TT2.DEFECTQTY,
+	         TT2.OUTQTY,
+	         TT2.DEFECTRATIO,
+	         TT2.OUTQTY_1
+	    FROM (  SELECT B.OPERATORID,
+	                   B.FACTORYNAME,
+	                   B.OPER_DESC,
+	                   B.PRODUCTCATEGORY,
+	                   B.PRODUCTIONTYPE,
+	                   B.DESCRIPTION,
+	                   B.DEFECTQTY,
+	                   B.OUTQTY,
+	                   CASE
+	                      WHEN D.OUTQTY = 0
+	                      THEN
+	                         0
+	                      WHEN B.DEFECTQTY = 0
+	                      THEN
+	                         0
+	                      WHEN B.OPERATORID != 'SUM'
+	                      THEN
+	                         TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+	                      WHEN B.OPERATORID = 'SUM'
+	                      THEN
+	                         TRUNC ( (B.DEFECTQTY / B.OUTQTY) * 100, 2)
+	                   END
+	                      AS DEFECTRATIO,
+	                   D.OUTQTY AS OUTQTY_1
+	              FROM (  SELECT TT.OPERATORID,
+	                             TT.FACTORYNAME,
+	                             TT.OPER_DESC,
+	                             TT.PRODUCTCATEGORY,
+	                             TT.PRODUCTIONTYPE,
+	                             TT.DESCRIPTION,
+	                             SUM (TT.DEFECTQTY) AS DEFECTQTY,
+	                             SUM (TT.OUTQTY) AS OUTQTY,
+	                             SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+	                        FROM (  SELECT A.OPERATORID,
+	                                       A.FACTORYNAME,
+	                                       A.FACTORYDATE,
+	                                       A.TIMEHH,
+	                                       A.OPER_DESC,
+	                                       A.PRODUCTSPECNAME,
+	                                       A.PRODUCTCATEGORY,
+	                                       A.PRODUCTIONTYPE,
+	                                       A.DEFECTCODE,
+	                                       A.DESCRIPTION,
+	                                       A.DEFECTQTY,
+	                                       A.OUTQTY,
+	                                       (A.DEFECTQTY / A.OUTQTY) * 100 AS DEFECTRATIO,
+	                                       A.ETLTIME
+	                                  FROM MDWMGR.FPS_OPINSDATA_DAY A
+	   WHERE     A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	         AND A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	         AND A.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+	         AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         --AND A.DESCRIPTION !='-'
+	         AND A.DESCRIPTION !=#{dataType1,jdbcType=VARCHAR}
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if>                          
+	                             AND (   (    A.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+	                                      AND A.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR})
+	                                  )
+	                              ORDER BY OPERATORID) TT
+	                    GROUP BY TT.DESCRIPTION,
+	                             TT.OPERATORID,
+	                             TT.FACTORYNAME,
+	                             TT.OPER_DESC,
+	                             TT.PRODUCTCATEGORY,
+	                             TT.PRODUCTIONTYPE
+	                    ORDER BY TT.OPERATORID DESC) B,
+	                   (  SELECT TT1.OPERATORID, SUM (TT1.OUTQTY) AS OUTQTY
+	                        FROM (  SELECT C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE,
+	                                       MAX (C.OUTQTY) AS OUTQTY
+	                                  FROM MDWMGR.FPS_OPINSDATA_DAY C
+	   WHERE     C.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	   		 AND C.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	         AND C.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+	         --AND C.DESCRIPTION !='-'
+	         AND C.DESCRIPTION !=#{dataType1,jdbcType=VARCHAR}
+	         AND C.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         --AND C.DEFECTRATIOPK &lt;=5
+	                             AND ( (    C.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+	                                    AND C.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR}))
+	                              GROUP BY C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE
+	                              ORDER BY OPERATORID) TT1
+	                    GROUP BY TT1.OPERATORID
+	                    ORDER BY TT1.OPERATORID DESC) D
+	             WHERE B.OPERATORID = D.OPERATORID
+	          ORDER BY B.OPERATORID DESC) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>	
+	
+	<select id="getOperatorListnew" resultType="java.util.HashMap">
+		  SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT2.OUTQTY,
+	         TT2.DEFECTQTY
+	    FROM (  SELECT *
+	              FROM (  SELECT TT1.OPERATORID,
+	                             SUM (TT1.OUTQTY) AS OUTQTY,
+	                             SUM (TT1.DEFECTQTY) AS DEFECTQTY
+	                        FROM (  SELECT C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE,
+	                                       SUM (C.DEFECTQTY) AS DEFECTQTY,
+	                                       MAX (C.OUTQTY) AS OUTQTY
+	                                  FROM MDWMGR.FPS_OPINSDATA_DAY C
+	                       WHERE     C.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	                             AND C.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+								 AND C.DATATYPE = #{dataType,jdbcType=VARCHAR}
+								 --AND C.DESCRIPTION !='-'
+								 --AND C.DEFECTQTY !='0'
+	                             AND C.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	                             AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         					 <if test="defectCode != 'All'">
+	               					 AND C.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+	         					 </if>
+	         					 <if test="defectCode == 'All'">
+	               					 --AND C.DEFECTRATIOPK &lt;=5
+	         					 </if> 
+	                             AND ( (    C.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR,jdbcType=VARCHAR}
+	                                    AND C.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR,jdbcType=VARCHAR}))
+	                              GROUP BY C.OPERATORID,
+	                                       C.FACTORYNAME,
+	                                       C.OPER_DESC,
+	                                       C.PRODUCTSPECNAME,
+	                                       C.FACTORYDATE,
+	                                       C.TIMEHH,
+	                                       C.PRODUCTCATEGORY,
+	                                       C.PRODUCTIONTYPE
+	                              ORDER BY OPERATORID) TT1
+	                    GROUP BY TT1.OPERATORID
+	                    ORDER BY TT1.OPERATORID DESC) D
+	             WHERE D.DEFECTQTY != '0'
+	          ORDER BY D.OUTQTY DESC) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorDefectCodeListnew" resultType="java.util.HashMap">
+	 SELECT DISTINCT A.DESCRIPTION
+	    FROM MDWMGR.FPS_OPINSDATA_DAY A
+	   WHERE     A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+			 AND A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	         AND A.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+	         AND A.DESCRIPTION !='-'
+	         AND A.DESCRIPTION !='漏检率'
+	         AND A.DESCRIPTION !='过检率'
+	         AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                  <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if> 
+	         AND ( (    A.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR,jdbcType=VARCHAR}))  
+	ORDER BY DESCRIPTION
+	</select>
+	
+	<select id="getOperatorDefectAVGnew" resultType="java.util.HashMap">
+		SELECT B.FACTORYNAME,
+		       B.OPER_DESC,
+		       B.PRODUCTCATEGORY,
+		       B.PRODUCTIONTYPE,
+		       B.DESCRIPTION,
+		       B.DEFECTQTY,
+		       B.OUTQTY,
+		       CASE
+		          WHEN D.OUTQTY = 0 THEN 0
+		          WHEN B.DEFECTQTY = 0 THEN 0
+		          ELSE TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+		       END
+		          AS DEFECTRATIO,
+		       D.OUTQTY AS OUTQTY_1
+		  FROM (  SELECT TT.FACTORYNAME,
+		                 TT.OPER_DESC,
+		                 TT.PRODUCTCATEGORY,
+		                 TT.PRODUCTIONTYPE,
+		                 TT.DESCRIPTION,
+		                 SUM (TT.DEFECTQTY) AS DEFECTQTY,
+		                 SUM (TT.OUTQTY) AS OUTQTY,
+		                 SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+		            FROM (  SELECT A.OPERATORID,
+		                           A.FACTORYNAME,
+		                           A.FACTORYDATE,
+		                           A.TIMEHH,
+		                           A.OPER_DESC,
+		                           A.PRODUCTSPECNAME,
+		                           A.PRODUCTCATEGORY,
+		                           A.PRODUCTIONTYPE,
+		                           A.DEFECTCODE,
+		                           A.DESCRIPTION,
+		                           A.DEFECTQTY,
+		                           A.OUTQTY,
+		                           (A.DEFECTQTY/A.OUTQTY) * 100 AS DEFECTRATIO,
+		                           A.ETLTIME
+		                      FROM MDWMGR.FPS_OPINSDATA_DAY A
+		                      WHERE     A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+							  AND A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+		         AND A.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+		         AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+		         --AND A.DESCRIPTION !='-'
+		         AND A.DESCRIPTION !='漏检率'
+		         AND A.DESCRIPTION !='过判率'
+		         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+		         <if test="defectCode != 'All'">
+		               AND A.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+		         </if>
+		         <if test="defectCode == 'All'">
+		               --AND A.DEFECTRATIOPK &lt;=5
+		         </if>                          
+		                             AND (   (    A.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+		                                      AND A.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR})
+		                                  )               
+		                  ORDER BY OPERATORID) TT
+		        GROUP BY TT.DESCRIPTION,
+		                 TT.FACTORYNAME,
+		                 TT.OPER_DESC,
+		                 TT.PRODUCTCATEGORY,
+		                 TT.PRODUCTIONTYPE
+		        ORDER BY TT.DESCRIPTION DESC) B,
+		       (  SELECT TT1.FACTORYNAME, SUM (TT1.OUTQTY) AS OUTQTY
+		            FROM (  SELECT C.OPERATORID,
+		                           C.FACTORYNAME,
+		                           C.FACTORYDATE,
+		                           C.TIMEHH,
+		                           C.OPER_DESC,
+		                           C.PRODUCTSPECNAME,
+		                           C.PRODUCTCATEGORY,
+		                           C.PRODUCTIONTYPE,
+		                           MAX (C.OUTQTY) AS OUTQTY
+		                      FROM MDWMGR.FPS_OPINSDATA_DAY C
+		   WHERE     C.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+		         AND C.DATATYPE = #{dataType,jdbcType=VARCHAR}
+		         AND C.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+		         AND C.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+		         --AND C.DESCRIPTION !='-'
+		         AND C.DESCRIPTION !='漏检率'
+		         AND C.DESCRIPTION !='过检率'
+		         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+		                             AND ( (    C.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+		                                    AND C.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR}))
+		                  GROUP BY C.OPERATORID,
+		                           C.FACTORYNAME,
+		                           C.OPER_DESC,
+		                           C.PRODUCTSPECNAME,
+		                           C.FACTORYDATE,
+		                           C.TIMEHH,
+		                           C.PRODUCTCATEGORY,
+		                           C.PRODUCTIONTYPE
+		                  ORDER BY OPERATORID) TT1
+		        GROUP BY TT1.FACTORYNAME) D
+	</select>
+	
+	<select id="getOperatorYieldnew" resultType="java.util.HashMap">
+		SELECT CASE
+		            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+		            ELSE OP.OPERATORNAME
+		         END
+		            OPERATORID,
+		         TT2.FACTORYNAME,
+		         TT2.OPER_DESC,
+		         TT2.PRODUCTCATEGORY,
+		         TT2.PRODUCTIONTYPE,
+		         TT2.DESCRIPTION,
+		         TT2.DEFECTQTY,
+		         TT2.OUTQTY,
+		         TT2.DEFECTRATIO,
+		         TT2.OUTQTY_1
+		  FROM (  SELECT B.OPERATORID,
+		                 B.FACTORYNAME,
+		                 B.OPER_DESC,
+		                 B.PRODUCTCATEGORY,
+		                 B.PRODUCTIONTYPE,
+		                 B.DESCRIPTION,
+		                 B.DEFECTQTY,
+		                 B.OUTQTY,
+		                 CASE
+		                    WHEN D.OUTQTY = 0
+		                    THEN
+		                       0
+		                    WHEN B.DEFECTQTY = 0
+		                    THEN
+		                       0
+		                    WHEN B.OPERATORID != 'SUM'
+		                    THEN
+		                       TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+		                    WHEN B.OPERATORID = 'SUM'
+		                    THEN
+		                       TRUNC ( (B.DEFECTQTY / B.OUTQTY) * 100, 2)
+		                 END
+		                    AS DEFECTRATIO,
+		                 D.OUTQTY AS OUTQTY_1
+		            FROM (  SELECT TT.OPERATORID,
+		                           TT.FACTORYNAME,
+		                           TT.OPER_DESC,
+		                           TT.PRODUCTCATEGORY,
+		                           TT.PRODUCTIONTYPE,
+		                           TT.DESCRIPTION,
+		                           SUM (TT.DEFECTQTY) AS DEFECTQTY,
+		                           SUM (TT.OUTQTY) AS OUTQTY,
+		                           SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+		                      FROM (  SELECT A.OPERATORID,
+		                                     A.FACTORYNAME,
+		                                     A.FACTORYDATE,
+		                                     A.TIMEHH,
+		                                     A.OPER_DESC,
+		                                     A.PRODUCTSPECNAME,
+		                                     A.PRODUCTCATEGORY,
+		                                     A.PRODUCTIONTYPE,
+		                                     A.DEFECTCODE,
+		                                     A.DESCRIPTION,
+		                                     A.DEFECTQTY,
+		                                     A.OUTQTY,
+		                                     (A.DEFECTQTY / A.OUTQTY) * 100 AS DEFECTRATIO,
+		                                     A.ETLTIME
+		                                FROM MDWMGR.FPS_OPINSDATA_DAY A
+		   WHERE     A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+		         AND A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+		         AND A.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+		         AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+		         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+		         AND A.DESCRIPTION =#{dataType1,jdbcType=VARCHAR}
+		         AND A.DEFECTQTY != '0'
+		         <if test="defectCode != 'All'">
+		               AND A.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+		         </if>
+		         <if test="defectCode == 'All'">
+		               --AND A.DEFECTRATIOPK &lt;=5
+		         </if>                          
+		                             AND (   (    A.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+		                                      AND A.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR})
+		                                  )
+		                            ORDER BY OPERATORID) TT
+		                  GROUP BY TT.DESCRIPTION,
+		                           TT.OPERATORID,
+		                           TT.FACTORYNAME,
+		                           TT.OPER_DESC,
+		                           TT.PRODUCTCATEGORY,
+		                           TT.PRODUCTIONTYPE
+		                  ORDER BY TT.OPERATORID DESC) B,
+		                 (  SELECT TT1.OPERATORID, SUM (TT1.OUTQTY) AS OUTQTY
+		                      FROM (  SELECT C.OPERATORID,
+		                                     C.FACTORYNAME,
+		                                     C.FACTORYDATE,
+		                                     C.TIMEHH,
+		                                     C.OPER_DESC,
+		                                     C.PRODUCTSPECNAME,
+		                                     C.PRODUCTCATEGORY,
+		                                     C.PRODUCTIONTYPE,
+		                                     MAX (C.OUTQTY) AS OUTQTY
+		                                FROM MDWMGR.FPS_OPINSDATA_DAY C
+		   WHERE     C.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+		   		 AND C.DATATYPE = #{dataType,jdbcType=VARCHAR}
+		         AND C.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+		         AND C.DESCRIPTION =#{dataType1,jdbcType=VARCHAR}
+		        -- AND C.DEFECTQTY != '0'
+		         AND C.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+		         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+		         --AND C.DEFECTRATIOPK &lt;=5
+		                             AND ( (    C.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+		                                    AND C.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR}))
+		                            GROUP BY C.OPERATORID,
+		                                     C.FACTORYNAME,
+		                                     C.OPER_DESC,
+		                                     C.PRODUCTSPECNAME,
+		                                     C.FACTORYDATE,
+		                                     C.TIMEHH,
+		                                     C.PRODUCTCATEGORY,
+		                                     C.PRODUCTIONTYPE
+		                            ORDER BY OPERATORID) TT1
+		                  GROUP BY TT1.OPERATORID
+		                  ORDER BY TT1.OPERATORID DESC) D
+		           WHERE B.OPERATORID = D.OPERATORID
+		        ORDER BY B.OPERATORID DESC) TT2,
+		                 WEBMGR.DAS_MDL_OPERATOR_INFO OP
+		   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+		ORDER BY TT2.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorYieldAVGnew" resultType="java.util.HashMap">
+		  SELECT TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.DESCRIPTION,
+	         SUM (TT2.DEFECTQTY) AS DEFECTQTY,
+	         SUM (TT2.OUTQTY) AS OUTQTY,
+	         TRUNC ( (SUM (TT2.DEFECTQTY) / SUM (TT2.OUTQTY)) * 100, 2)
+	            AS DEFECTRATIO
+	    FROM (
+	  SELECT B.OPERATORID,
+	         B.FACTORYNAME,
+	         B.OPER_DESC,
+	         B.PRODUCTCATEGORY,
+	         B.PRODUCTIONTYPE,
+	         B.DESCRIPTION,
+	         B.DEFECTQTY,
+	         B.OUTQTY,
+	         CASE
+	            WHEN D.OUTQTY = 0
+	            THEN
+	               0
+	            WHEN B.DEFECTQTY = 0
+	            THEN
+	               0
+	            WHEN B.OPERATORID != 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / D.OUTQTY) * 100, 2)
+	            WHEN B.OPERATORID = 'SUM'
+	            THEN
+	               TRUNC ( (B.DEFECTQTY / B.OUTQTY) * 100, 2)
+	         END
+	            AS DEFECTRATIO,
+	         D.OUTQTY AS OUTQTY_1
+	    FROM (  SELECT TT.OPERATORID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE,
+	                   TT.DESCRIPTION,
+	                   SUM (TT.DEFECTQTY) AS DEFECTQTY,
+	                   SUM (TT.OUTQTY) AS OUTQTY,
+	                   SUM (TT.DEFECTRATIO) AS DEFECTRATIO
+	              FROM (  SELECT A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.FACTORYDATE,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTSPECNAME,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE,
+	                             A.DEFECTCODE,
+	                             A.DESCRIPTION,
+	                             A.DEFECTQTY,
+	                             A.OUTQTY,
+	                             (A.DEFECTQTY/A.OUTQTY) * 100 AS DEFECTRATIO,
+	                             A.ETLTIME
+	                        FROM MDWMGR.FPS_OPINSDATA_DAY A
+	   WHERE     A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	         AND A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	         AND A.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+	         AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.DESCRIPTION = #{dataType1}
+	         --AND A.DEFECTQTY != '0'
+	         <if test="defectCode != 'All'">
+	               AND A.DESCRIPTION=#{defectCode,jdbcType=VARCHAR}
+	         </if>
+	         <if test="defectCode == 'All'">
+	               --AND A.DEFECTRATIOPK &lt;=5
+	         </if>                          
+	                             AND (   (    A.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+	                                      AND A.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR})
+	                                  )
+	                    ORDER BY OPERATORID) TT
+	          GROUP BY TT.DESCRIPTION,
+	                   TT.OPERATORID,
+	                   TT.FACTORYNAME,
+	                   TT.OPER_DESC,
+	                   TT.PRODUCTCATEGORY,
+	                   TT.PRODUCTIONTYPE
+	          ORDER BY TT.OPERATORID DESC) B,
+	         (  SELECT TT1.OPERATORID, SUM (TT1.OUTQTY) AS OUTQTY
+	              FROM (  SELECT C.OPERATORID,
+	                             C.FACTORYNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE,
+	                             MAX (C.OUTQTY) AS OUTQTY
+	                        FROM MDWMGR.FPS_OPINSDATA_DAY C
+	   WHERE     C.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	   		 AND C.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	         AND C.OPER_DESC = #{operationName,jdbcType=VARCHAR}
+	         AND C.DESCRIPTION =#{dataType1,jdbcType=VARCHAR}
+	         --AND C.DEFECTQTY != '0'
+	         AND C.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         --AND C.DEFECTRATIOPK &lt;=5
+	                             AND ( (    C.TIMEHH &lt;= #{endTime,jdbcType=VARCHAR}
+	                                    AND C.TIMEHH &gt;= #{startTime,jdbcType=VARCHAR}))
+	                    GROUP BY C.OPERATORID,
+	                             C.FACTORYNAME,
+	                             C.OPER_DESC,
+	                             C.PRODUCTSPECNAME,
+	                             C.FACTORYDATE,
+	                             C.TIMEHH,
+	                             C.PRODUCTCATEGORY,
+	                             C.PRODUCTIONTYPE
+	                    ORDER BY OPERATORID) TT1
+	          GROUP BY TT1.OPERATORID
+	          ORDER BY TT1.OPERATORID DESC) D
+	   WHERE B.OPERATORID = D.OPERATORID
+	ORDER BY B.OPERATORID DESC) TT2
+	GROUP BY TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.DESCRIPTION
+	</select>
+	
+	<select id="getOperatorMDLCHANNENGTotal" resultType="java.util.HashMap">
+		  SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.OUTQTY
+	    FROM (  SELECT TT1.OPERATORID,
+	                   TT1.FACTORYNAME,
+	                   TT1.OPER_DESC,
+	                   TT1.PRODUCTCATEGORY,
+	                   TT1.PRODUCTIONTYPE,
+	                   SUM (TT1.OUTQTY) AS OUTQTY
+	              FROM (  SELECT A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE,
+	                             MAX (A.OUTQTY) AS OUTQTY
+	                        FROM MDWMGR.DAS_OPDEFECT_MWD A
+	                       WHERE     1 = 1 
+	                             AND A.FACTORYNAME = #{shopName}
+	                             AND A.OPER_DESC = #{operationName}
+	                             AND A.PRODUCTIONTYPE = #{productionType}
+	                             AND A.PRODUCTCATEGORY = #{productCategory}
+	                             AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                             AND A.TIMEHH &gt;= #{startTime}
+	                             AND A.TIMEHH &lt; #{endTime}
+	                    GROUP BY A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE
+	                    ORDER BY OUTQTY DESC) TT1
+	          GROUP BY TT1.OPERATORID,
+	                   TT1.FACTORYNAME,
+	                   TT1.OPER_DESC,
+	                   TT1.PRODUCTCATEGORY,
+	                   TT1.PRODUCTIONTYPE) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>
+		
+
+	<select id="getOperatorMDLRENYUANBIETotal" resultType="java.util.HashMap">
+	 SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT5.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT5.FACTORYNAME,
+	         TT5.OPER_DESC,
+	         TT5.PRODUCTCATEGORY,
+	         TT5.PRODUCTIONTYPE,
+	         TT5.DESCRIPTION,
+	         TT5.DEFECTQTY,
+	         TT5.OUTQTY
+	    FROM (  SELECT TT3.OPERATORID,
+	                   TT3.FACTORYNAME,
+	                   TT3.OPER_DESC,
+	                   TT3.PRODUCTCATEGORY,
+	                   TT3.PRODUCTIONTYPE,
+	                   TT3.DESCRIPTION,
+	                   TT3.DEFECTQTY,
+	                   TT4.OUTQTY
+	              FROM (  SELECT TT.OPERATORID,
+	                             TT.FACTORYNAME,
+	                             TT.OPER_DESC,
+	                             TT.PRODUCTCATEGORY,
+	                             TT.PRODUCTIONTYPE,
+	                             TT.DESCRIPTION,
+	                             SUM (TT.DEFECTQTY) AS DEFECTQTY
+	                        FROM (SELECT C.OPERATORID,
+	                                     C.FACTORYNAME,
+	                                     C.TIMEHH,
+	                                     C.OPER_DESC,
+	                                     C.PRODUCTCATEGORY,
+	                                     C.PRODUCTIONTYPE,
+	                                     'OK' AS DESCRIPTION,
+	                                     (C.OUTQTY - C.DEFECTQTY) AS DEFECTQTY,
+	                                     C.OUTQTY
+	                                FROM (  SELECT B.OPERATORID,
+	                                               B.FACTORYNAME,
+	                                               B.TIMEHH,
+	                                               B.OPER_DESC,
+	                                               B.PRODUCTCATEGORY,
+	                                               B.PRODUCTIONTYPE,
+	                                               SUM (B.DEFECTQTY) AS DEFECTQTY,
+	                                               MAX (B.OUTQTY) AS OUTQTY
+	                                          FROM MDWMGR.DAS_OPDEFECT_MWD B
+	                             WHERE     1 = 1
+	                                   AND B.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	                                   AND B.OPER_DESC = #{operationName}
+	                                   AND B.PRODUCTIONTYPE = #{productionType}
+	                                   AND B.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                                   AND B.TIMEHH &gt;= #{startTime}
+	                                   AND B.TIMEHH &lt;= #{endTime}
+	                                      GROUP BY B.OPERATORID,
+	                                               B.FACTORYNAME,
+	                                               B.TIMEHH,
+	                                               B.OPER_DESC,
+	                                               B.PRODUCTCATEGORY,
+	                                               B.PRODUCTIONTYPE
+	                                      ORDER BY B.TIMEHH DESC) C
+	                              UNION ALL
+	                                SELECT A.OPERATORID,
+	                                       A.FACTORYNAME,
+	                                       A.TIMEHH,
+	                                       A.OPER_DESC,
+	                                       A.PRODUCTCATEGORY,
+	                                       A.PRODUCTIONTYPE,
+	                                       A.DESCRIPTION,
+	                                       SUM (A.DEFECTQTY) AS DEFECTQTY,
+	                                       MAX (A.OUTQTY) AS OUTQTY
+	                                  FROM MDWMGR.DAS_OPDEFECT_MWD A
+	                             WHERE     1 = 1
+	                                   AND A.FACTORYNAME = #{shopName}
+	                                   AND A.OPER_DESC = #{operationName}
+	                                   AND A.PRODUCTIONTYPE = #{productionType}
+	                                   AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                                   AND A.TIMEHH &gt;= #{startTime}
+	                                   AND A.TIMEHH &lt;= #{endTime}
+	                              GROUP BY A.OPERATORID,
+	                                       A.FACTORYNAME,
+	                                       A.TIMEHH,
+	                                       A.OPER_DESC,
+	                                       A.PRODUCTCATEGORY,
+	                                       A.PRODUCTIONTYPE,
+	                                       A.DESCRIPTION) TT
+	                    GROUP BY TT.OPERATORID,
+	                             TT.FACTORYNAME,
+	                             TT.OPER_DESC,
+	                             TT.PRODUCTCATEGORY,
+	                             TT.PRODUCTIONTYPE,
+	                             TT.DESCRIPTION
+	                    ORDER BY TT.OPERATORID) TT3,
+	                   (  SELECT *
+	                        FROM (  SELECT TT1.OPERATORID,
+	                                       TT1.FACTORYNAME,
+	                                       TT1.OPER_DESC,
+	                                       TT1.PRODUCTCATEGORY,
+	                                       TT1.PRODUCTIONTYPE,
+	                                       SUM (TT1.OUTQTY) AS OUTQTY
+	                                  FROM (  SELECT D.OPERATORID,
+	                                                 D.FACTORYNAME,
+	                                                 D.TIMEHH,
+	                                                 D.OPER_DESC,
+	                                                 D.PRODUCTCATEGORY,
+	                                                 D.PRODUCTIONTYPE,
+	                                                 MAX (D.OUTQTY) AS OUTQTY
+	                                            FROM MDWMGR.DAS_OPDEFECT_MWD D
+	                             WHERE     1 = 1
+	                                   AND D.FACTORYNAME = #{shopName}
+	                                   AND D.OPER_DESC = #{operationName}
+	                                   AND D.PRODUCTIONTYPE = #{productionType}
+	                                   AND D.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                                   AND D.TIMEHH &gt;= #{startTime}
+	                                   AND D.TIMEHH &lt;= #{endTime}
+	                                        GROUP BY D.OPERATORID,
+	                                                 D.FACTORYNAME,
+	                                                 D.TIMEHH,
+	                                                 D.OPER_DESC,
+	                                                 D.PRODUCTCATEGORY,
+	                                                 D.PRODUCTIONTYPE
+	                                        ORDER BY OUTQTY DESC) TT1
+	                              GROUP BY TT1.OPERATORID,
+	                                       TT1.FACTORYNAME,
+	                                       TT1.OPER_DESC,
+	                                       TT1.PRODUCTCATEGORY,
+	                                       TT1.PRODUCTIONTYPE) TT2
+	                    ORDER BY TT2.OUTQTY DESC) TT4
+	             WHERE TT3.OPERATORID = TT4.OPERATORID AND TT3.DEFECTQTY != 0
+	          ORDER BY TT4.OUTQTY DESC, TT3.DESCRIPTION) TT5,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT5.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT5.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorIdList" resultType="java.util.HashMap">
+		  SELECT CASE
+	            WHEN OP.OPERATORNAME IS NULL THEN TT2.OPERATORID
+	            ELSE OP.OPERATORNAME
+	         END
+	            OPERATORID,
+	         TT2.FACTORYNAME,
+	         TT2.OPER_DESC,
+	         TT2.PRODUCTCATEGORY,
+	         TT2.PRODUCTIONTYPE,
+	         TT2.OUTQTY
+	    FROM (  SELECT TT1.OPERATORID,
+	                   TT1.FACTORYNAME,
+	                   TT1.OPER_DESC,
+	                   TT1.PRODUCTCATEGORY,
+	                   TT1.PRODUCTIONTYPE,
+	                   SUM (TT1.OUTQTY) AS OUTQTY
+	              FROM (  SELECT A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE,
+	                             MAX (A.OUTQTY) AS OUTQTY
+	                        FROM MDWMGR.DAS_OPDEFECT_MWD A
+	      WHERE     1 = 1
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.TIMEHH &lt;= #{endTime}
+	                    GROUP BY A.OPERATORID,
+	                             A.FACTORYNAME,
+	                             A.TIMEHH,
+	                             A.OPER_DESC,
+	                             A.PRODUCTCATEGORY,
+	                             A.PRODUCTIONTYPE
+	                    ORDER BY OUTQTY DESC) TT1
+	          GROUP BY TT1.OPERATORID,
+	                   TT1.FACTORYNAME,
+	                   TT1.OPER_DESC,
+	                   TT1.PRODUCTCATEGORY,
+	                   TT1.PRODUCTIONTYPE) TT2,
+	         WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	   WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	ORDER BY TT2.OUTQTY DESC
+	</select>
+	
+	<select id="getOperatorMDLRENYUANBIEDefectDescription" resultType="java.util.HashMap">
+				  SELECT DISTINCT DESCRIPTION
+	    FROM MDWMGR.DAS_OPDEFECT_MWD A
+	      WHERE     1 = 1
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.TIMEHH &lt;= #{endTime}
+	         AND A.DESCRIPTION != '-'
+	ORDER BY A.DESCRIPTION 
+	</select>
+	
+	<select id="getOperatorMDLRENYUANBIETotalAVG" resultType="java.util.HashMap">
+			  SELECT TT.FACTORYNAME,
+	         TT.OPER_DESC,
+	         TT.PRODUCTCATEGORY,
+	         TT.PRODUCTIONTYPE,
+	         TT.DESCRIPTION,
+	         SUM (TT.DEFECTQTY) AS DEFECTQTY
+	    FROM (SELECT C.OPERATORID,
+	                 C.FACTORYNAME,
+	                 C.TIMEHH,
+	                 C.OPER_DESC,
+	                 C.PRODUCTCATEGORY,
+	                 C.PRODUCTIONTYPE,
+	                 'OK' AS DESCRIPTION,
+	                 (C.OUTQTY - C.DEFECTQTY) AS DEFECTQTY,
+	                 C.OUTQTY
+	            FROM (  SELECT B.OPERATORID,
+	                           B.FACTORYNAME,
+	                           B.TIMEHH,
+	                           B.OPER_DESC,
+	                           B.PRODUCTCATEGORY,
+	                           B.PRODUCTIONTYPE,
+	                           SUM (B.DEFECTQTY) AS DEFECTQTY,
+	                           MAX (B.OUTQTY) AS OUTQTY
+	                      FROM MDWMGR.DAS_OPDEFECT_MWD B
+	      WHERE     1 = 1
+	         AND B.FACTORYNAME = #{shopName}
+	         AND B.OPER_DESC = #{operationName}
+	         AND B.PRODUCTIONTYPE = #{productionType}
+	         AND B.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND B.TIMEHH &gt;= #{startTime}
+	         AND B.TIMEHH &lt;= #{endTime}
+	                  GROUP BY B.OPERATORID,
+	                           B.FACTORYNAME,
+	                           B.TIMEHH,
+	                           B.OPER_DESC,
+	                           B.PRODUCTCATEGORY,
+	                           B.PRODUCTIONTYPE
+	                  ORDER BY B.TIMEHH DESC) C
+	          UNION ALL
+	            SELECT A.OPERATORID,
+	                   A.FACTORYNAME,
+	                   A.TIMEHH,
+	                   A.OPER_DESC,
+	                   A.PRODUCTCATEGORY,
+	                   A.PRODUCTIONTYPE,
+	                   A.DESCRIPTION,
+	                   SUM (A.DEFECTQTY) AS DEFECTQTY,
+	                   MAX (A.OUTQTY) AS OUTQTY
+	              FROM MDWMGR.DAS_OPDEFECT_MWD A
+	      WHERE     1 = 1
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.TIMEHH &lt;= #{endTime}
+	          GROUP BY A.OPERATORID,
+	                   A.FACTORYNAME,
+	                   A.TIMEHH,
+	                   A.OPER_DESC,
+	                   A.PRODUCTCATEGORY,
+	                   A.PRODUCTIONTYPE,
+	                   A.DESCRIPTION) TT
+	   WHERE TT.DEFECTQTY != '0'
+	GROUP BY TT.FACTORYNAME,
+	         TT.OPER_DESC,
+	         TT.PRODUCTCATEGORY,
+	         TT.PRODUCTIONTYPE,
+	         TT.DESCRIPTION
+	</select>
+	
+	<select id="getlistOpRealName" resultType="java.util.HashMap">
+		SELECT *
+	  FROM WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	 WHERE OP.OPERATORNAME = #{opNameId}
+	</select>
+	
+	<select id="getOperatorMDLRENYUANBIEOne" resultType="java.util.HashMap">
+		SELECT * FROM (SELECT C.OPERATORID,
+	       C.FACTORYNAME,
+	       C.TIMEHH,
+	       C.OPER_DESC,
+	       C.PRODUCTCATEGORY,
+	       C.PRODUCTIONTYPE,
+	       C.DESCRIPTION,
+	       TO_NUMBER(C.DEFECTQTY) AS DEFECTQTY,
+	       TO_NUMBER(C.OUTQTY) AS OUTQTY
+	  FROM MDWMGR.DAS_OPDEFECT_MWD C
+	        WHERE     1 = 1
+	         AND C.FACTORYNAME = #{shopName}
+	         AND C.OPERATORID = #{opName}
+	         AND C.OPER_DESC = #{operationName}
+	         AND C.PRODUCTIONTYPE = #{productionType}
+	         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND C.TIMEHH &gt;= #{startTime}
+	         AND C.TIMEHH &lt;= #{endTime}
+	UNION ALL
+	SELECT TT2.OPERATORID,
+	       TT2.FACTORYNAME,
+	       TT2.TIMEHH,
+	       TT2.OPER_DESC,
+	       TT2.PRODUCTCATEGORY,
+	       TT2.PRODUCTIONTYPE,
+	       'OK' AS DESCRIPTION,
+	       (TT2.OUTQTY - TT3.DEFECTQTY) AS DEFECTQTY,
+	       TT2.OUTQTY
+	  FROM (  SELECT TT1.OPERATORID,
+	                 TT1.FACTORYNAME,
+	                 TT1.TIMEHH,
+	                 TT1.OPER_DESC,
+	                 TT1.PRODUCTCATEGORY,
+	                 TT1.PRODUCTIONTYPE,
+	                 SUM (TT1.OUTQTY) AS OUTQTY
+	            FROM (  SELECT A.OPERATORID,
+	                           A.FACTORYNAME,
+	                           A.TIMEHH,
+	                           A.OPER_DESC,
+	                           A.PRODUCTCATEGORY,
+	                           A.PRODUCTIONTYPE,
+	                           SUM (A.DEFECTQTY) AS DEFECTQTY,
+	                           MAX (A.OUTQTY) AS OUTQTY
+	                      FROM MDWMGR.DAS_OPDEFECT_MWD A
+	        WHERE     1 = 1
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPERATORID = #{opName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.TIMEHH &lt;= #{endTime}
+	                  GROUP BY A.OPERATORID,
+	                           A.FACTORYNAME,
+	                           A.TIMEHH,
+	                           A.OPER_DESC,
+	                           A.PRODUCTCATEGORY,
+	                           A.PRODUCTIONTYPE
+	                  ORDER BY OUTQTY DESC) TT1
+	        GROUP BY TT1.OPERATORID,
+	                 TT1.FACTORYNAME,
+	                 TT1.TIMEHH,
+	                 TT1.OPER_DESC,
+	                 TT1.PRODUCTCATEGORY,
+	                 TT1.PRODUCTIONTYPE
+	        ORDER BY TT1.TIMEHH) TT2,
+	       (  SELECT *
+	            FROM (  SELECT B.OPERATORID,
+	                           B.FACTORYNAME,
+	                           B.TIMEHH,
+	                           B.OPER_DESC,
+	                           B.PRODUCTCATEGORY,
+	                           B.PRODUCTIONTYPE,
+	                           SUM (B.DEFECTQTY) AS DEFECTQTY
+	                      FROM MDWMGR.DAS_OPDEFECT_MWD B
+	        WHERE     1 = 1
+	         AND B.FACTORYNAME = #{shopName}
+	         AND B.OPERATORID = #{opName}
+	         AND B.OPER_DESC = #{operationName}
+	         AND B.PRODUCTIONTYPE = #{productionType}
+	         AND B.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND B.TIMEHH &gt;= #{startTime}
+	         AND B.TIMEHH &lt;= #{endTime}
+	                  GROUP BY B.OPERATORID,
+	                           B.FACTORYNAME,
+	                           B.TIMEHH,
+	                           B.OPER_DESC,
+	                           B.PRODUCTCATEGORY,
+	                           B.PRODUCTIONTYPE
+	                  ORDER BY OUTQTY DESC) TT2
+	        ORDER BY TT2.TIMEHH) TT3
+	 WHERE TT2.TIMEHH = TT3.TIMEHH) ORDER BY TIMEHH
+	</select>
+	
+	<select id="getOperatorYieldOne" resultType="java.util.HashMap">
+			SELECT A.TIMEHH,
+	       A.FACTORYNAME,
+	       A.EVENTUSER,
+	       A.YIELDTYPE,
+	       A.OPER_DESC,
+	       A.PRODUCTIONTYPE,
+	       A.PRODUCTCATEGORY,
+	       A.PRODUCTOKQTY,
+	       A.PRODUCTTOTALQTY,
+	       TRUNC ((A.PRODUCTOKQTY / A.PRODUCTTOTALQTY)*100, 2) AS YIELDRATIO
+	  FROM MDWMGR.DAS_OPYIELD_MWD A
+	 WHERE     1 = 1
+	       AND A.EVENTUSER = #{opName}
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.PRODUCTIONTYPE = #{productionType}
+	       AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	       AND A.YIELDTYPE = 'OPERATOR'
+	</select>
+	
+	<select id="getOperatorDefectDescription" resultType="java.util.HashMap">
+	SELECT DISTINCT A.DESCRIPTION
+	  FROM MDWMGR.DAS_OPDEFECT_MWD A
+	        WHERE     1 = 1
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPERATORID = #{opName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.TIMEHH &gt;= #{startTime}
+	         AND A.TIMEHH &lt;= #{endTime}
+	</select>
+	
+	<select id="getOperatorMDLRENYUANBIEOneAVG" resultType="java.util.HashMap">
+  SELECT TT6.FACTORYNAME,
+         TT6.TIMEHH,
+         TT6.OPER_DESC,
+         TT6.PRODUCTCATEGORY,
+         TT6.PRODUCTIONTYPE,
+         TT6.DESCRIPTION,
+         TT6.DEFECTQTY AS TOTALDEFECTQTY,
+         TT8.OPCOUNT,
+         ROUND ( (TT6.DEFECTQTY / TT8.OPCOUNT), 2) AS DEFECTQTY,
+         ROUND ( (TT9.OUTQTY / TT8.OPCOUNT), 2) AS OUTQTY
+    FROM (  SELECT TT5.FACTORYNAME,
+                   TT5.TIMEHH,
+                   TT5.OPER_DESC,
+                   TT5.PRODUCTCATEGORY,
+                   TT5.PRODUCTIONTYPE,
+                   TT5.DESCRIPTION,
+                   SUM (TT5.DEFECTQTY) AS DEFECTQTY
+              FROM (SELECT C.OPERATORID,
+                           C.FACTORYNAME,
+                           C.TIMEHH,
+                           C.OPER_DESC,
+                           C.PRODUCTCATEGORY,
+                           C.PRODUCTIONTYPE,
+                           C.DESCRIPTION,
+                           C.DEFECTQTY
+                      FROM MDWMGR.DAS_OPDEFECT_MWD C
+                              WHERE     1 = 1
+         AND C.FACTORYNAME = #{shopName}
+         AND C.OPER_DESC = #{operationName}
+         AND C.PRODUCTIONTYPE = #{productionType}
+         AND C.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+         AND C.TIMEHH &gt;= #{startTime}
+         AND C.TIMEHH &lt;= #{endTime}
+         AND C.DEFECTQTY != 0 ) TT5
+          GROUP BY TT5.FACTORYNAME,
+                   TT5.TIMEHH,
+                   TT5.OPER_DESC,
+                   TT5.PRODUCTCATEGORY,
+                   TT5.PRODUCTIONTYPE,
+                   TT5.DESCRIPTION
+          UNION ALL
+          SELECT TT3.FACTORYNAME,
+                 TT3.TIMEHH,
+                 TT3.OPER_DESC,
+                 TT3.PRODUCTCATEGORY,
+                 TT3.PRODUCTIONTYPE,
+                 'OK' AS DESCRIPTION,
+                 (TT4.OUTQTY - TT3.DEFECTQTY) AS DEFECTQTY
+            FROM (  SELECT TT1.FACTORYNAME,
+                           TT1.TIMEHH,
+                           TT1.OPER_DESC,
+                           TT1.PRODUCTCATEGORY,
+                           TT1.PRODUCTIONTYPE,
+                           SUM (TT1.DEFECTQTY) AS DEFECTQTY
+                      FROM (SELECT A.OPERATORID,
+                                   A.FACTORYNAME,
+                                   A.TIMEHH,
+                                   A.OPER_DESC,
+                                   A.PRODUCTCATEGORY,
+                                   A.PRODUCTIONTYPE,
+                                   A.DEFECTQTY
+                              FROM MDWMGR.DAS_OPDEFECT_MWD A
+                              WHERE     1 = 1
+         AND A.FACTORYNAME = #{shopName}
+         AND A.OPER_DESC = #{operationName}
+         AND A.PRODUCTIONTYPE = #{productionType}
+         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+         AND A.TIMEHH &gt;= #{startTime}
+         AND A.TIMEHH &lt;= #{endTime}
+         AND A.DEFECTQTY != 0 ) TT1
+                  GROUP BY TT1.FACTORYNAME,
+                           TT1.TIMEHH,
+                           TT1.OPER_DESC,
+                           TT1.PRODUCTCATEGORY,
+                           TT1.PRODUCTIONTYPE
+                  ORDER BY TT1.TIMEHH) TT3,
+                 (  SELECT TT2.FACTORYNAME,
+                           TT2.TIMEHH,
+                           TT2.OPER_DESC,
+                           TT2.PRODUCTCATEGORY,
+                           TT2.PRODUCTIONTYPE,
+                           SUM (TT2.OUTQTY) AS OUTQTY
+                      FROM (  SELECT B.OPERATORID,
+                                     B.FACTORYNAME,
+                                     B.TIMEHH,
+                                     B.OPER_DESC,
+                                     B.PRODUCTCATEGORY,
+                                     B.PRODUCTIONTYPE,
+                                     (MAX (B.OUTQTY)) AS OUTQTY
+                                FROM MDWMGR.DAS_OPDEFECT_MWD B
+                                                              WHERE     1 = 1
+         AND B.FACTORYNAME = #{shopName}
+         AND B.OPER_DESC = #{operationName}
+         AND B.PRODUCTIONTYPE = #{productionType}
+         AND B.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+         AND B.TIMEHH &gt;= #{startTime}
+         AND B.TIMEHH &lt;= #{endTime}
+                            GROUP BY B.OPERATORID,
+                                     B.FACTORYNAME,
+                                     B.TIMEHH,
+                                     B.OPER_DESC,
+                                     B.PRODUCTCATEGORY,
+                                     B.PRODUCTIONTYPE) TT2
+                  GROUP BY TT2.FACTORYNAME,
+                           TT2.TIMEHH,
+                           TT2.OPER_DESC,
+                           TT2.PRODUCTCATEGORY,
+                           TT2.PRODUCTIONTYPE
+                  ORDER BY TT2.TIMEHH) TT4
+           WHERE TT3.TIMEHH = TT4.TIMEHH) TT6,
+         (  SELECT TT7.FACTORYNAME,
+                   TT7.TIMEHH,
+                   TT7.OPER_DESC,
+                   TT7.PRODUCTCATEGORY,
+                   TT7.PRODUCTIONTYPE,
+                   COUNT (TT7.OPERATORID) AS OPCOUNT
+              FROM (  SELECT D.OPERATORID,
+                             D.FACTORYNAME,
+                             D.TIMEHH,
+                             D.OPER_DESC,
+                             D.PRODUCTCATEGORY,
+                             D.PRODUCTIONTYPE,
+                             (MAX (D.OUTQTY)) AS OUTQTY
+                        FROM MDWMGR.DAS_OPDEFECT_MWD D
+                                                      WHERE     1 = 1
+         AND D.FACTORYNAME = #{shopName}
+         AND D.OPER_DESC = #{operationName}
+         AND D.PRODUCTIONTYPE = #{productionType}
+         AND D.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+         AND D.TIMEHH &gt;= #{startTime}
+         AND D.TIMEHH &lt;= #{endTime}
+                    GROUP BY D.OPERATORID,
+                             D.FACTORYNAME,
+                             D.TIMEHH,
+                             D.OPER_DESC,
+                             D.PRODUCTCATEGORY,
+                             D.PRODUCTIONTYPE) TT7
+          GROUP BY TT7.FACTORYNAME,
+                   TT7.TIMEHH,
+                   TT7.OPER_DESC,
+                   TT7.PRODUCTCATEGORY,
+                   TT7.PRODUCTIONTYPE
+          ORDER BY TT7.TIMEHH) TT8,
+                   (  SELECT TT2.FACTORYNAME,
+                   TT2.TIMEHH,
+                   TT2.OPER_DESC,
+                   TT2.PRODUCTCATEGORY,
+                   TT2.PRODUCTIONTYPE,
+                   SUM (TT2.OUTQTY) AS OUTQTY
+              FROM (  SELECT B.OPERATORID,
+                             B.FACTORYNAME,
+                             B.TIMEHH,
+                             B.OPER_DESC,
+                             B.PRODUCTCATEGORY,
+                             B.PRODUCTIONTYPE,
+                             (MAX (B.OUTQTY)) AS OUTQTY
+                        FROM MDWMGR.DAS_OPDEFECT_MWD B
+                         WHERE     1 = 1
+         AND B.FACTORYNAME = #{shopName}
+         AND B.OPER_DESC = #{operationName}
+         AND B.PRODUCTIONTYPE = #{productionType}
+         AND B.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+         AND B.TIMEHH &gt;= #{startTime}
+         AND B.TIMEHH &lt;= #{endTime}
+                    GROUP BY B.OPERATORID,
+                             B.FACTORYNAME,
+                             B.TIMEHH,
+                             B.OPER_DESC,
+                             B.PRODUCTCATEGORY,
+                             B.PRODUCTIONTYPE) TT2
+          GROUP BY TT2.FACTORYNAME,
+                   TT2.TIMEHH,
+                   TT2.OPER_DESC,
+                   TT2.PRODUCTCATEGORY,
+                   TT2.PRODUCTIONTYPE
+          ORDER BY TT2.TIMEHH) TT9
+   WHERE TT6.TIMEHH = TT8.TIMEHH AND TT8.TIMEHH = TT9.TIMEHH
+ORDER BY TT6.TIMEHH
+	</select>
+	
+	<select id="getOperatorYieldOneAVG" resultType="java.util.HashMap">
+		  SELECT TT.TIMEHH,
+	         TT.FACTORYNAME,
+	         TT.YIELDTYPE,
+	         TT.OPER_DESC,
+	         TT.PRODUCTCATEGORY,
+	         TT.PRODUCTIONTYPE,
+	         SUM (TT.PRODUCTOKQTY) AS PRODUCTOKQTY,
+	         SUM (PRODUCTTOTALQTY) AS PRODUCTTOTALQTY,
+	         ROUND (SUM (TT.PRODUCTOKQTY) * 100 / SUM (PRODUCTTOTALQTY), 2)
+	            AS YIELDRATIO
+	    FROM (SELECT *
+	            FROM MDWMGR.DAS_OPYIELD_MWD A
+	           WHERE     1 = 1
+	                 AND A.FACTORYNAME = #{shopName}
+	                 AND A.OPER_DESC = #{operationName}
+	                 AND A.PRODUCTIONTYPE = #{productionType}
+	                 AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	                 AND A.TIMEHH &gt;= #{startTime}
+	                 AND A.TIMEHH &lt;= #{endTime}
+	                 AND A.YIELDTYPE = 'OPERATOR') TT
+	GROUP BY TT.TIMEHH,
+	         TT.FACTORYNAME,
+	         TT.YIELDTYPE,
+	         TT.OPER_DESC,
+	         TT.PRODUCTCATEGORY,
+	         TT.PRODUCTIONTYPE
+	ORDER BY TT.TIMEHH
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIECategory" resultType="java.util.HashMap">
+			  SELECT DISTINCT A.PRODUCTCATEGORY
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	   WHERE  1=1 
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.OPER_DESC = #{operationName}
+	         AND A.DATATYPE = #{dataType}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIECategoryAllType" resultType="java.util.HashMap">
+		  SELECT DISTINCT A.PRODUCTCATEGORY
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	   WHERE     1 = 1
+	          AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	ORDER BY A.PRODUCTCATEGORY
+	</select>	
+	
+	<select id="getStandardTarget" resultType="java.util.HashMap">
+	  	SELECT *
+	  FROM WEBMGR.DAS_OPERATOR_TARGET A
+	 WHERE A.OPERATORID = 'STANDARD'
+	</select>	
+	
+	<select id="getOperatorDefectEACXIAOSHIBIETotalByHour" resultType="java.util.HashMap">
+	  SELECT A.PRODUCTCATEGORY,
+	         A.PRODUCTIONTYPE,
+	         A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH,
+	         SUM (A.OUTQTY) AS OUTQTY
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	 WHERE     A.PRODUCTIONTYPE = #{productionType}
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.PRODUCTCATEGORY = #{productCategory}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	GROUP BY A.PRODUCTCATEGORY,
+	         A.PRODUCTIONTYPE,
+	         A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH
+	ORDER BY TIMEHH
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIETotalByHourAllType" resultType="java.util.HashMap">
+			  SELECT A.PRODUCTCATEGORY,
+	         A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH,
+	         SUM (A.OUTQTY) AS OUTQTY
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	 WHERE  1=1  
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.PRODUCTCATEGORY = #{productCategory}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	GROUP BY A.PRODUCTCATEGORY,
+	         A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH
+	ORDER BY TIMEHH
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIETotalByHourAllCategory" resultType="java.util.HashMap">
+				  SELECT 
+		         A.PRODUCTIONTYPE,
+		         A.FACTORYNAME,
+		         A.OPER_DESC,
+		         A.TIMEHH,
+		         SUM (A.OUTQTY) AS OUTQTY
+		    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+		 WHERE  1=1 AND  A.PRODUCTIONTYPE = #{productionType}
+		       AND A.FACTORYNAME = #{shopName}
+		       AND A.OPER_DESC = #{operationName}
+		       AND A.DATATYPE = #{dataType}
+		       AND A.TIMEHH &gt;= #{startTime}
+		       AND A.TIMEHH &lt;= #{endTime}
+		GROUP BY A.PRODUCTIONTYPE,
+		         A.FACTORYNAME,
+		         A.OPER_DESC,
+		         A.TIMEHH
+		ORDER BY TIMEHH
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIETotalByHourAllTypeCategory" resultType="java.util.HashMap">
+			  SELECT 
+	         A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH,
+	         SUM (A.OUTQTY) AS OUTQTY
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	 WHERE  1=1 
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	GROUP BY A.FACTORYNAME,
+	         A.OPER_DESC,
+	         A.TIMEHH
+	ORDER BY TIMEHH
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIEOperatorMachineList" resultType="java.util.HashMap">
+		  SELECT CASE
+	          WHEN OP.OPERATORID IS NULL THEN TT2.OPERATORID
+	          ELSE OP.OPERATORNAME
+	       END
+	          OPERATORID
+	  FROM (SELECT DISTINCT A.OPERATORID
+	    FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A
+	 WHERE 1=1 
+	 		 <if test='productCategory != "ALL"'>
+	       AND A.PRODUCTCATEGORY = #{productCategory}
+	  		 </if>
+	  		 <if test='productionType != "ALL"'>
+	       AND A.PRODUCTIONTYPE = #{productionType}
+	  		 </if>
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.OPER_DESC = #{operationName}
+	       AND A.DATATYPE = #{dataType}
+	       AND A.TIMEHH &gt;= #{startTime}
+	       AND A.TIMEHH &lt;= #{endTime}
+	ORDER BY OPERATORID) TT2,
+	       WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	 WHERE TT2.OPERATORID = OP.OPERATORID(+)
+	 ORDER BY OPERATORID
+	</select>
+	
+	<select id="getOperatorDefectEACXIAOSHIBIETableByOperatorID" resultType="java.util.HashMap">
+			  SELECT 
+			 <if test='productCategory != "ALL"'>
+	  			TT.PRODUCTCATEGORY,
+	  		 </if>
+	  		 <if test='productionType != "ALL"'>
+	  			TT.PRODUCTIONTYPE,
+	  		 </if>
+	         TT.FACTORYNAME,
+	         TT.OPER_DESC,
+	         TT.TIMEHH,
+	         SUM (TT.OUTQTY) AS OUTQTY
+	    FROM (SELECT A.FACTORYDATE,
+	       A.PRODUCTSPECNAME,
+	       A.PRODUCTCATEGORY,
+	       A.PRODUCTIONTYPE,
+	       A.FACTORYNAME,
+	       A.OPER_DESC,
+	       CASE
+	          WHEN OP.OPERATORID IS NULL THEN A.OPERATORID
+	          ELSE OP.OPERATORNAME
+	       END
+	          OPERATORID,
+	       A.DATATYPE,
+	       A.OUTQTY,
+	       A.TIMEHH
+	  FROM MDWMGR.DAS_OP_MACHINEDATA_MWD A, WEBMGR.DAS_MDL_OPERATOR_INFO OP
+	 WHERE A.OPERATORID = OP.OPERATORID(+)) TT
+	 WHERE 1=1 
+	 		 <if test='productCategory != "ALL"'>
+	       AND TT.PRODUCTCATEGORY = #{productCategory}
+	  		 </if>
+	  		 <if test='productionType != "ALL"'>
+	 	   AND TT.PRODUCTIONTYPE = #{productionType}
+	  		 </if>
+	       AND TT.FACTORYNAME = #{shopName}
+	       AND TT.OPER_DESC = #{operationName}
+	       AND TT.DATATYPE = #{dataType}
+	       AND TT.TIMEHH &gt;= #{startTime}
+	       AND TT.TIMEHH &lt;= #{endTime}
+	         AND TT.OPERATORID = #{operatorID}
+	GROUP BY <if test='productCategory != "ALL"'>
+	  			TT.PRODUCTCATEGORY,
+	  		 </if>
+	  		 <if test='productionType != "ALL"'>
+	  			TT.PRODUCTIONTYPE,
+	  		 </if>
+	         TT.FACTORYNAME,
+	         TT.OPER_DESC,
+	         TT.TIMEHH
+	ORDER BY TIMEHH
+	</select>
+	
+	<select id="getBPPrdHourMonitorLineType" resultType="java.lang.String">
+		  SELECT DISTINCT A.PROCESSTYPE
+	    FROM MDWMGR.DSB_MMSPRDMONITOR_D A
+	   WHERE A.FACTORYNAME = #{shopName} AND A.DATATYPE = #{datatype}
+	ORDER BY A.PROCESSTYPE
+	</select>
+	
+	<select id="getBPPrdHourMonitorGridValue" resultType="java.util.HashMap">
+		  SELECT *
+	    FROM MDWMGR.DSB_MMSPRDMONITOR_D A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.DATATYPE = #{datatype}
+	         AND A.PROCESSTYPE = #{lineType}
+	         AND A.FACTORYDATE = #{date}
+	ORDER BY A.MACHINENAME, A.TIMEHH
+	</select>
+	
+	<select id="getBPPrdHourMonitorGridValueMachineList" resultType="java.lang.String">
+		  SELECT DISTINCT A.MACHINENAME 
+	    FROM MDWMGR.DSB_MMSPRDMONITOR_D A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.DATATYPE = #{datatype}
+	         AND A.PROCESSTYPE = #{lineType}
+	         AND A.FACTORYDATE = #{date}
+	ORDER BY A.MACHINENAME
+	</select>
+	
+	<select id="getBPPrdHourMonitorGridValueTotal" resultType="java.lang.String">
+		  SELECT SUM (A.OUTQTY) AS OUTQTY
+	    FROM MDWMGR.DSB_MMSPRDMONITOR_D A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.DATATYPE = #{datatype}
+	         AND A.PROCESSTYPE = #{lineType}
+	         AND A.FACTORYDATE = #{date}
+	         AND A.MACHINENAME = #{machineName}
+	GROUP BY A.FACTORYDATE,
+	         A.DATATYPE,
+	         A.FACTORYNAME,
+	         A.PROCESSTYPE,
+	         A.MACHINENAME
+	ORDER BY A.MACHINENAME
+	</select>
+	
+		<select id="GetBpTMSOperatorData" resultType="java.util.HashMap">
+SELECT DISTINCT OPERATORNAME,
+       DEFECTQTY
+  FROM (SELECT B.DEFECTQTY,
+               B.DATATYPE,
+               B.OPERATORID,
+               NVL (C.OPERATORNAME, B.OPERATORID) AS OPERATORNAME
+          FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                         A.DATATYPE,
+                         A.OPERATORID
+                    FROM MDWMGR.FPS_OPINSDATA_DAY A
+                   WHERE     A.FACTORYNAME = #{FactoryName}
+                         AND A.DATATYPE = #{DataType}
+                         AND TIMEHH &gt;= #{StartTime}
+                         AND TIMEHH &lt;= #{EndTime}
+                GROUP BY A.DATATYPE, A.OPERATORID
+                ORDER BY DEFECTQTY DESC) B
+               FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) C
+                  ON B.OPERATORID = C.OPERATORID
+         WHERE B.OPERATORID IS NOT NULL)
+         WHERE DEFECTQTY > '20'
+         ORDER BY DEFECTQTY DESC
+</select>
+
+<select id="GetBpTMSAllData" resultType="java.util.HashMap">
+SELECT B.DEFECTQTY,
+       B.OUTQTY,
+       B.DATATYPE,
+       B.OPERATORID,
+       B.OPER_DESC,
+       NVL (C.OPERATORNAME, B.OPERATORID) AS OPERATORNAME
+  FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                 SUM (A.OUTQTY) AS OUTQTY,
+                 A.DATATYPE,
+                 A.OPERATORID,
+                 A.OPER_DESC
+            FROM MDWMGR.FPS_OPINSDATA_DAY A
+           WHERE     A.FACTORYNAME =  #{FactoryName}
+                 AND A.DATATYPE = #{DataType}
+                 AND TIMEHH &gt;= #{StartTime}
+                 AND TIMEHH &lt;= #{EndTime}
+        GROUP BY A.DATATYPE,
+                 A.OPERATORID,
+                 A.OPER_DESC,
+                 A.OUTQTY) B
+       FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) C
+          ON B.OPERATORID = C.OPERATORID
+ WHERE B.OPERATORID IS NOT NULL
+</select>
+
+<select id="GetBpTMSLegendData" resultType="java.util.HashMap">
+SELECT DISTINCT OPER_DESC
+    FROM MDWMGR.FPS_OPINSDATA_DAY A
+   WHERE     A.FACTORYNAME = #{FactoryName}
+         AND A.DATATYPE = #{DataType}
+         AND TIMEHH &gt;= #{StartTime}
+         AND TIMEHH &lt;= #{EndTime}
+</select>
+
+<select id="GetBpTMSLegendDataOperatorID" resultType="java.util.HashMap">
+SELECT DISTINCT OPER_DESC
+  FROM (SELECT *
+          FROM MDWMGR.FPS_OPINSDATA_DAY A
+         WHERE     A.FACTORYNAME = #{FactoryName}
+               AND A.DATATYPE = #{DataType}
+               AND A.TIMEHH &gt;= #{StartTime}
+               AND A.TIMEHH &lt;= #{EndTime}) T1
+       INNER JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+          ON     T1.OPERATORID = T2.OPERATORID
+             AND T2.OPERATORID IS NOT NULL
+       <if test = "OperatorId != 'AVG'">
+       AND OPERATORNAME = #{OperatorId}
+       </if>
+</select>
+
+<select id="GetBpTMSAVGDataForPeople" resultType="java.util.HashMap">
+SELECT T1.*, T2.COUNT, T1.DEFECTQTY / T2.COUNT AS AVGDATA
+  FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                 A.OPER_DESC,
+                 A.FACTORYNAME,
+                 A.DATATYPE,
+                 A.TIMEHH
+            FROM (SELECT T2.*, T1.OPERATORID AS OPERATORID2
+                    FROM (SELECT *
+                            FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                                           A.OPERATORID,
+                                           A.FACTORYNAME,
+                                           A.DATATYPE,
+                                           A.TIMEHH
+                                      FROM MDWMGR.FPS_OPINSDATA_DAY A
+                                     WHERE     A.FACTORYNAME = #{FactoryName}
+                                           AND A.DATATYPE = #{DataType}
+                                           AND A.TIMEHH &gt;= #{StartTime}
+                                           AND A.TIMEHH &lt;= #{EndTime}
+                                  GROUP BY A.OPERATORID,
+                                           A.FACTORYNAME,
+                                           A.DATATYPE,
+                                           A.TIMEHH
+                                  ORDER BY DEFECTQTY DESC)
+                           WHERE DEFECTQTY > '20') T1
+                         INNER JOIN
+                         (SELECT *
+                            FROM MDWMGR.FPS_OPINSDATA_DAY A
+                           WHERE     A.FACTORYNAME = #{FactoryName}
+                                 AND A.DATATYPE = #{DataType}
+                                 AND A.TIMEHH &gt;= #{StartTime}
+                                 AND A.TIMEHH &lt;= #{EndTime}) T2
+                            ON T1.OPERATORID = T2.OPERATORID) A
+           WHERE     A.FACTORYNAME = #{FactoryName}
+                 AND A.DATATYPE = #{DataType}
+                 AND TIMEHH &gt;= #{StartTime}
+                 AND TIMEHH &lt;= #{EndTime}
+        GROUP BY A.OPER_DESC,
+                 A.FACTORYNAME,
+                 A.DATATYPE,
+                 A.TIMEHH) T1
+       INNER JOIN
+       (SELECT COUNT (OPERATORID) AS COUNT
+          FROM (SELECT DISTINCT OPERATORID
+                  FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                                 A.OPERATORID,
+                                 A.FACTORYNAME,
+                                 A.DATATYPE,
+                                 A.TIMEHH
+                            FROM MDWMGR.FPS_OPINSDATA_DAY A
+                           WHERE     A.FACTORYNAME = #{FactoryName}
+                                 AND A.DATATYPE = #{DataType}
+                                 AND A.TIMEHH &gt;= #{StartTime}
+                                 AND A.TIMEHH &lt;= #{EndTime}
+                        GROUP BY A.OPERATORID,
+                                 A.FACTORYNAME,
+                                 A.DATATYPE,
+                                 A.TIMEHH
+                        ORDER BY DEFECTQTY DESC)
+                 WHERE DEFECTQTY > '20')) T2
+          ON 1 = 1          
+</select>
+
+
+<select id="GetBpTMSAVGData" resultType="java.util.HashMap">
+SELECT T1.*, T1.DEFECTQTY / T2.COUNT AS AVGDATA
+  FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY, A.OPER_DESC
+            FROM MDWMGR.FPS_OPINSDATA_DAY A
+           WHERE     A.FACTORYNAME = #{FactoryName}
+                  AND A.DATATYPE =#{DataType}
+                  AND TIMEHH  &gt;= #{StartTime}
+                  AND TIMEHH  &lt;= #{EndTime}
+        GROUP BY A.OPER_DESC) T1
+       INNER JOIN
+       (SELECT COUNT (OPERATORID) AS COUNT
+          FROM (SELECT DISTINCT OPERATORID
+                  FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                                 A.OPERATORID,
+                                 A.FACTORYNAME,
+                                 A.DATATYPE
+                            FROM MDWMGR.FPS_OPINSDATA_DAY A
+                           WHERE     A.FACTORYNAME = #{FactoryName}
+                                 AND A.DATATYPE =#{DataType}
+                                 AND TIMEHH  &gt;= #{StartTime}
+                                 AND TIMEHH  &lt;= #{EndTime}
+                        GROUP BY A.OPERATORID, A.FACTORYNAME, A.DATATYPE
+                        ORDER BY DEFECTQTY DESC)
+                 WHERE DEFECTQTY > '20')) T2
+          ON 1 = 1
+</select>
+
+<select id="GetBpTMSLineAllData" resultType="java.util.HashMap">
+SELECT SUM (DEFECTQTY) AS DEFECTQTY,
+         SUM (OUTQTY) AS OUTQTY,
+         FACTORYNAME,
+         DATATYPE,
+         OPERATORNAME
+    FROM (SELECT A.FACTORYDATE,
+                 A.FACTORYNAME,
+                 A.DATATYPE,
+                 A.OPERATORID,
+                 A.OPER_DESC,
+                 A.DEFECTQTY,
+                 A.OUTQTY,
+                 NVL (B.OPERATORNAME, A.OPERATORID) AS OPERATORNAME
+            FROM (SELECT *
+                    FROM MDWMGR.FPS_OPINSDATA_DAY A
+                   WHERE     A.DATATYPE = #{DataType}
+                         AND A.FACTORYNAME = #{FactoryName}
+                         AND A.FACTORYDATE &gt;= #{StartTime}
+                         AND A.FACTORYDATE &lt;= #{EndTime}) A
+                 FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+                    ON A.OPERATORID = B.OPERATORID
+           WHERE A.OPERATORID IS NOT NULL)
+GROUP BY FACTORYNAME, DATATYPE, OPERATORNAME
+</select>
+
+<select id="GetBpTMSLineSingleData" resultType="java.util.HashMap">
+SELECT SUM (DEFECTQTY) AS DEFECTQTY,
+         SUM (OUTQTY) AS OUTQTY,
+         FACTORYNAME,
+         DATATYPE,
+         OPERATORNAME
+    FROM (SELECT A.FACTORYDATE,
+                 A.FACTORYNAME,
+                 A.DATATYPE,
+                 A.OPERATORID,
+                 A.OPER_DESC,
+                 A.DEFECTQTY,
+                 A.OUTQTY,
+                 NVL (B.OPERATORNAME, A.OPERATORID) AS OPERATORNAME
+            FROM (SELECT *
+                    FROM MDWMGR.FPS_OPINSDATA_DAY A
+                   WHERE     A.DATATYPE = #{DataType}
+                         AND A.FACTORYNAME = #{FactoryName}
+                         AND A.FACTORYDATE &gt;= #{StartTime}
+                         AND A.FACTORYDATE &lt;= #{EndTime}) A
+                 FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+                    ON A.OPERATORID = B.OPERATORID
+           WHERE A.OPERATORID IS NOT NULL
+                 AND A.OPER_DESC = #{Oper_Desc})
+GROUP BY FACTORYNAME, DATATYPE, OPERATORNAME
+</select>
+
+<select id="GetBpTMSOperatorIDData" resultType="java.util.HashMap">
+SELECT T1.*, NVL (T2.OPERATORNAME, T1.OPERATORID) AS OPERATORNAME
+  FROM (SELECT *
+          FROM MDWMGR.FPS_OPINSDATA_DAY A
+         WHERE     A.FACTORYNAME = #{FactoryName}
+               AND A.DATATYPE = #{DataType}
+               AND A.TIMEHH &gt;= #{StartTime}
+               AND A.TIMEHH &lt;= #{EndTime}) T1
+       INNER JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+          ON     T1.OPERATORID = T2.OPERATORID
+             AND T2.OPERATORID IS NOT NULL
+       <if test = "OperatorId != 'AVG'">
+       AND OPERATORNAME = #{OperatorId}
+       </if>
+</select>
+	
+	
+<select id="GetEacOkQtyAllData" resultType="java.util.HashMap">
+SELECT T1.DEFECTQTY,
+       T1.OKQTY,
+       T1.OUTQTY,
+       NVL(T2.OPERATORNAME,T1.OPERATORID) AS OPERATORNAME 
+  FROM (  SELECT SUM (B.DEFECTQTY) AS DEFECTQTY,
+                 SUM (B.OKQTY) AS OKQTY,
+                 SUM (B.OUTQTY) AS OUTQTY,
+                 B.OPERATORID
+            FROM (  SELECT SUM (A.DEFECTQTY) AS DEFECTQTY,
+                           (A.OUTQTY - SUM (A.DEFECTQTY)) AS OKQTY,
+                           A.OUTQTY,
+                           A.OPERATORID,
+                           A.TIMEHH
+                      FROM MDWMGR.FPS_OPDEFECT_DAY A
+                     WHERE      A.FACTORYNAME = #{FactoryName}
+                            AND A.OPER_DESC = #{Oper_Desc}
+                            AND A.PRODUCTCATEGORY = #{ProductCategory}
+                            AND A.PRODUCTIONTYPE = #{ProductionType}
+                            AND TIMEHH &gt;= #{StartTime}
+                            AND TIMEHH &lt; #{EndTime}
+                  GROUP BY A.OPERATORID, A.TIMEHH, A.OUTQTY) B
+        GROUP BY B.OPERATORID
+        ORDER BY OUTQTY DESC) T1
+       FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+          ON T1.OPERATORID = T2.OPERATORID
+ WHERE T1.OPERATORID IS NOT NULL
+ ORDER BY T1.OUTQTY DESC
+</select>
+
+<select id="GetEacOkQtyCategory" resultType="java.util.HashMap">
+SELECT DISTINCT PRODUCTCATEGORY
+  FROM MDWMGR.FPS_OPDEFECT_DAY A
+ WHERE     A.FACTORYNAME = #{FactoryName}
+       AND A.OPER_DESC = #{Oper_Desc}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND TIMEHH &gt;= #{StartTime}
+       AND TIMEHH &lt; #{EndTime}
+</select>
+
+<select id="GetEacPeopleOkQtyAllData" resultType="java.util.HashMap">
+SELECT *
+  FROM (SELECT T1.FACTORYNAME,
+       T1.FACTORYDATE,
+       T1.TIMEHH,
+       T1.OPER_DESC,
+       T1.PRODUCTCATEGORY,
+       T1.PRODUCTIONTYPE,
+       T1.DESCRIPTION,
+       T1.DEFECTQTY,
+       T1.OUTQTY,
+       T1.DEFECTRATIO,
+       NVL (T2.OPERATORNAME, T1.OPERATORID) AS OPERATORNAME
+  FROM (SELECT *
+          FROM MDWMGR.FPS_OPDEFECT_DAY A
+         WHERE     A.FACTORYNAME = #{FactoryName}
+               AND A.OPER_DESC = #{Oper_Desc}
+               AND A.PRODUCTCATEGORY = #{ProductCategory}
+               AND A.PRODUCTIONTYPE = #{ProductionType}
+               AND TIMEHH &gt;= #{StartTime}
+               AND TIMEHH &lt; #{EndTime}
+                <if test = "Description != 'ALL'">
+               AND A.DESCRIPTION = #{Description}
+                </if>
+               ) T1
+       FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+          ON T1.OPERATORID = T2.OPERATORID
+ WHERE T1.OPERATORID IS NOT NULL)
+  WHERE OPERATORNAME = #{OperatorId}
+</select>
+
+<select id="GetEacPeopleOkQtyDefectCode" resultType="java.util.HashMap">
+SELECT DISTINCT DESCRIPTION
+  FROM (SELECT NVL (T2.OPERATORNAME, T1.OPERATORID) AS OPERATORNAME, T1.*
+          FROM (SELECT *
+                  FROM MDWMGR.FPS_OPDEFECT_DAY A
+                 WHERE      A.FACTORYNAME = #{FactoryName}
+                        AND A.OPER_DESC = #{Oper_Desc}
+                        AND A.PRODUCTCATEGORY = #{ProductCategory}
+                        AND A.PRODUCTIONTYPE = #{ProductionType}
+                        AND TIMEHH &gt;= #{StartTime}
+                        AND TIMEHH &lt; #{EndTime}) T1
+               FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+                  ON T1.OPERATORID = T2.OPERATORID
+         WHERE T1.OPERATORID IS NOT NULL)
+ WHERE OPERATORNAME = #{OperatorId}
+</select>
+
+<select id="GetEacPeopleOkQtyLineData" resultType="java.util.HashMap">
+SELECT TT.OUTQTY - SUM (TT.DEFECTQTY) AS OKQTY, TT.TIMEHH, TT.OUTQTY
+    FROM (SELECT T1.FACTORYNAME,
+                 T1.FACTORYDATE,
+                 T1.TIMEHH,
+                 T1.OPER_DESC,
+                 T1.PRODUCTCATEGORY,
+                 T1.PRODUCTIONTYPE,
+                 T1.DESCRIPTION,
+                 T1.DEFECTQTY,
+                 T1.OUTQTY,
+                 T1.DEFECTRATIO,
+                 NVL (T2.OPERATORNAME, T1.OPERATORID) AS OPERATORNAME
+            FROM (SELECT *
+                    FROM MDWMGR.FPS_OPDEFECT_DAY A
+                   WHERE     A.FACTORYNAME = #{FactoryName}
+                         AND A.OPER_DESC = #{Oper_Desc}
+                         AND A.PRODUCTCATEGORY = #{ProductCategory}
+                         AND A.PRODUCTIONTYPE = #{ProductionType}
+                         AND TIMEHH &gt;= #{StartTime}
+                         AND TIMEHH &lt; #{EndTime}
+                         ) T1
+                 FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) T2
+                    ON T1.OPERATORID = T2.OPERATORID
+           WHERE T1.OPERATORID IS NOT NULL) TT
+           WHERE OPERATORNAME = #{OperatorId}
+GROUP BY TT.TIMEHH, TT.OUTQTY
+</select>
+	
+	<select id="EACOutFactoryqulityChartCategory" resultType="java.util.HashMap">
+SELECT DISTINCT A.PRODUCTCATEGORY
+  FROM MDWMGR.DAS_EACPRDOPDATA_MWD A
+ WHERE     A.FACTORYNAME = #{FactoryName}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND A.OPER_DESC = #{Oper_Desc}
+       AND A.DEFECTCODE = #{DefectCode}
+</select>
+
+<select id="EACOutFactoryqulityChart" resultType="java.util.HashMap">
+SELECT A.*,A.DEFECTQTY/A.OUTQTY AS DYIELD
+  FROM MDWMGR.DAS_EACPRDOPDATA_MWD A
+ WHERE    A.FACTORYNAME = #{FactoryName}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND A.OPER_DESC = #{Oper_Desc}
+       AND A.DEFECTCODE = #{DefectCode}
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+       AND A.SHIFTNAME = #{ShiftName}
+</select>
+
+<select id="getAETloujianPeopleCategory" resultType="java.util.HashMap">
+SELECT DISTINCT PRODUCTCATEGORY
+  FROM MDWMGR.FPS_OPINSDATA_DAY A
+ WHERE     A.DATATYPE = #{DataType}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND A.DESCRIPTION &lt;&gt; '-'
+       AND A.FACTORYDATE &gt;= #{StartTime}
+       AND A.FACTORYDATE &lt;= #{EndTime}
+</select>
+
+<select id="getAETloujianPeopleData" resultType="java.util.HashMap">
+SELECT DEFECTQTY,
+       OUTQTY,
+       C.OPERATORNAME,
+       DESCRIPTION
+  FROM (  SELECT SUM (T1.DEFECTQTY) AS DEFECTQTY,
+                 T1.OPERATORNAME,
+                 T1.DESCRIPTION
+            FROM (  SELECT SUM (T.DEFECTQTY) AS DEFECTQTY,
+                           T.FACTORYDATE,
+                           T.OPERATORNAME,
+                           T.OUTQTY,
+                           T.DESCRIPTION
+                      FROM (SELECT A.FACTORYDATE,
+                                   A.FACTORYNAME,
+                                   A.DATATYPE,
+                                   A.PRODUCTCATEGORY,
+                                   A.PRODUCTIONTYPE,
+                                   A.OPER_DESC,
+                                   A.DESCRIPTION,
+                                   A.DEFECTQTY,
+                                   A.OUTQTY,
+                                   NVL (B.OPERATORNAME, A.OPERATORID)
+                                      AS OPERATORNAME,
+                                   B.GROUPNAME
+                              FROM (SELECT *
+                                      FROM MDWMGR.FPS_OPINSDATA_DAY A
+                                     WHERE     A.DATATYPE = #{DataType}
+                                           AND A.PRODUCTIONTYPE  = #{ProductionType}
+                                           AND A.DESCRIPTION &lt;&gt; '-'
+                                           AND A.FACTORYDATE &gt;= #{StartTime}
+                                           AND A.FACTORYDATE &lt;= #{EndTime}) A
+                                   FULL JOIN
+                                   (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+                                      ON A.OPERATORID = B.OPERATORID
+                             WHERE     A.DESCRIPTION IS NOT NULL
+                                   AND A.PRODUCTCATEGORY = #{ProductCategory}
+                                   <if test = "Description != 'ALL'">
+                                   AND A.DESCRIPTION = #{Description}
+                                   </if>) T
+                  GROUP BY T.FACTORYDATE,
+                           T.OPERATORNAME,
+                           T.OUTQTY,
+                           T.DESCRIPTION) T1
+        GROUP BY T1.OPERATORNAME, T1.DESCRIPTION) B
+       RIGHT JOIN
+       (  SELECT SUM (T1.OUTQTY) AS OUTQTY, T1.OPERATORNAME
+            FROM (  SELECT T.FACTORYDATE,
+                           T.OPERATORNAME,
+                           MAX (T.OUTQTY) AS OUTQTY
+                      FROM (SELECT A.FACTORYDATE,
+                                   A.FACTORYNAME,
+                                   A.DATATYPE,
+                                   A.PRODUCTCATEGORY,
+                                   A.PRODUCTIONTYPE,
+                                   A.OPER_DESC,
+                                   A.DESCRIPTION,
+                                   A.DEFECTQTY,
+                                   A.OUTQTY,
+                                   NVL (B.OPERATORNAME, A.OPERATORID)
+                                      AS OPERATORNAME,
+                                   B.GROUPNAME
+                              FROM (SELECT *
+                                      FROM MDWMGR.FPS_OPINSDATA_DAY A
+                                     WHERE     A.DATATYPE = #{DataType}
+                                           AND A.PRODUCTIONTYPE  = #{ProductionType}
+                                           AND A.DESCRIPTION &lt;&gt; '-'
+                                           AND A.FACTORYDATE &gt;= #{StartTime}
+                                           AND A.FACTORYDATE &lt;= #{EndTime}) A
+                                   FULL JOIN
+                                   (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+                                      ON A.OPERATORID = B.OPERATORID
+                             WHERE     A.DESCRIPTION IS NOT NULL
+                                   AND A.PRODUCTCATEGORY = #{ProductCategory}
+                                   <if test = "Description != 'ALL'">
+                                   AND A.DESCRIPTION = #{Description}
+                                   </if>) T
+                  GROUP BY T.FACTORYDATE, T.OPERATORNAME) T1
+        GROUP BY T1.OPERATORNAME) C
+          ON B.OPERATORNAME = C.OPERATORNAME
+</select>
+
+<select id="getAETloujianPeopleXdata" resultType="java.util.HashMap">
+SELECT DISTINCT
+       NVL (A.OPERATORID, '-') AS OPERATORID,
+       NVL (B.OPERATORNAME, A.OPERATORID) AS OPERATORNAME
+  FROM (SELECT *
+          FROM MDWMGR.FPS_OPINSDATA_DAY A
+         WHERE     A.DATATYPE = #{DataType}
+               AND A.PRODUCTIONTYPE = #{ProductionType}
+               AND A.DESCRIPTION &lt;&gt; '-'
+               AND A.FACTORYDATE &gt;= #{StartTime}
+               AND A.FACTORYDATE &lt;= #{EndTime}) A
+       FULL JOIN (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+          ON A.OPERATORID = B.OPERATORID
+ WHERE     A.DESCRIPTION IS NOT NULL
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+</select>
+
+
+<select id="getAETloujianPeopleDefectData" resultType="java.util.HashMap" >
+SELECT DISTINCT A.DESCRIPTION
+  FROM MDWMGR.FPS_OPINSDATA_DAY A
+ WHERE     A.DATATYPE = #{DataType}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND A.DESCRIPTION &lt;&gt; '-'
+       AND A.FACTORYDATE &gt;= #{StartTime}
+       AND A.FACTORYDATE &lt;= #{EndTime}
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+</select>
+
+<select id="getAETPeopleSumData" resultType="java.util.HashMap">
+SELECT SUM (T1.DEFECTQTY) AS DEFECTQTY,
+         SUM (T1.OUTQTY) AS OUTQTY,
+         T1.OPERATORNAME
+    FROM (  SELECT SUM (T.DEFECTQTY) AS DEFECTQTY,
+                   T.OPERATORNAME,
+                   T.OUTQTY,
+                   T.FACTORYDATE
+              FROM (SELECT A.FACTORYDATE,
+                           A.FACTORYNAME,
+                           A.DATATYPE,
+                           NVL (A.OPERATORID, '-') AS OPERATORID,
+                           A.PRODUCTCATEGORY,
+                           A.PRODUCTIONTYPE,
+                           A.OPER_DESC,
+                           A.DESCRIPTION,
+                           A.DEFECTQTY,
+                           A.OUTQTY,
+                           NVL (B.OPERATORNAME, A.OPERATORID) AS OPERATORNAME,
+                           B.GROUPNAME
+                      FROM (SELECT *
+                              FROM MDWMGR.FPS_OPINSDATA_DAY A
+                             WHERE     A.DATATYPE = #{DataType}
+                                   AND A.PRODUCTIONTYPE = #{ProductionType}
+                                   AND A.DESCRIPTION &lt;&gt; '-'
+                                   AND A.FACTORYDATE &gt;= #{StartTime}
+                                   AND A.FACTORYDATE &lt;= #{EndTime}) A
+                           FULL JOIN
+                           (SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO) B
+                              ON A.OPERATORID = B.OPERATORID
+                     WHERE     A.DESCRIPTION IS NOT NULL
+                           AND A.PRODUCTCATEGORY = #{ProductCategory}) T
+          GROUP BY T.OPERATORNAME,
+                   T.OUTQTY,
+                   T.OPERATORNAME,
+                   T.FACTORYDATE) T1
+GROUP BY T1.OPERATORNAME
+</select>
+
+
+</mapper>

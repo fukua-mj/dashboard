@@ -1,0 +1,15 @@
+<p-tabView>
+
+    <p-tabPanel header="TMS">
+        <app-bpmonitorcommon  #Child_TMScomponent [Items]="TMSItems" [DataType]="TMSDataType" [StartTime]="StartTime" [EndTime]="EndTime" [selectedGetDataWay]="SelectTMSDataType" > 
+        </app-bpmonitorcommon>
+    </p-tabPanel>
+
+    <p-tabPanel header="Repair">
+        <app-bpmonitorcommon  #Child_RepairComponent [Items]="RepairItems" [DataType]="RepairDataType" [StartTime]="StartTime" [EndTime]="EndTime" [selectedGetDataWay]="SelectRepairDataType" > 
+        </app-bpmonitorcommon>
+    </p-tabPanel>
+
+</p-tabView>
+
+

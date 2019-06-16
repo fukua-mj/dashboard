@@ -1,0 +1,91 @@
+<!-- <div class="ui-g">
+  <div class="ui-g-10">
+    <div id="BPTMSChart" echarts [options]="ChartOption" (chartClick)="chartclick($event)" class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+    <div id="BPTMSChart1" #divChangeChart echarts [options]="PeopleChartOption" class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-12 ui-sm-12 chartArea xl-chartArea-12 md-chartArea-12 lg-chartArea-12 sm-chartArea-12"></div>
+
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="xl-title lg-title">
+        <strong>统计方式</strong>
+      </div>
+      <ul class="optionul">
+        <li *ngFor="let item of DataType" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton value="{{item.value}}" label="{{item.Type}}" [(ngModel)]="selectedGetDataWay" inputId="GetDataWay+{{item.value}}"
+            (click)="Drawchart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-16 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title">
+        <strong>当前膜层</strong>
+      </div>
+      <div>
+        <ul class="optionul">
+          <li *ngFor="let item of Items" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton value="{{item}}" label="{{item}}" [(ngModel)]="selectedFilm" (click)="Drawchart()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-lg-4 lg-timechoose" align="center">
+    <Strong>开始时间：</Strong>
+    <p-calendar [(ngModel)]="StartTime" [showTime]="true" [showIcon]="true"></p-calendar>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-lg-4 lg-timechoose" align="center">
+    <Strong>结束时间：</Strong>
+    <p-calendar [(ngModel)]="EndTime" [showTime]="true" [showIcon]="true"></p-calendar>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-lg-4 lg-timechoose" align="left">
+    <p-button label="Serach" (onClick)="Drawchart()"></p-button>
+  </div>
+
+
+
+</div> -->
+
+<div class="ui-g">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea">
+    <div id="BPTMSChart" echarts [options]="ChartOption" (chartClick)="chartclick($event)" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+    <div id="BPTMSChart1" #divChangeChart echarts [options]="PeopleChartOption" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="xl-title lg-title"><strong>统计方式</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of DataType" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton value="{{item.value}}" label="{{item.Type}}"
+            [(ngModel)]="selectedGetDataWay" inputId="GetDataWay+{{item.value}}"
+            (click)="Drawchart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title"><strong>当前膜层</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of Items" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton value="{{item}}" label="{{item}}" [(ngModel)]="selectedFilm" (click)="Drawchart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 lineNameArea xl-lineNameArea md-lineNameArea lg-lineNameArea sm-lineNameArea">
+      <div class="xl-title lg-title"><strong>日期时间</strong></div>
+      <div class="ui-g">
+        <div class="ui-g-10 ui-xl-10 ui-lg-10 xl-datetimelabel lg-datetimelabel">
+          <span>开始时间 :</span>
+          <p-calendar [(ngModel)]="StartTime" [showTime]="true" [showIcon]="true"></p-calendar>
+          <br />
+          <span>结束时间 :</span>
+          <p-calendar [(ngModel)]="EndTime" [showTime]="true" [showIcon]="true"></p-calendar>
+        </div>
+        <div class="ui-g-2 ui-xl-2 ui-lg-2 searchbutton">
+          <br />
+          <button class="button" pButton type="button" (click)="Drawchart()" icon='fa fa-search'></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

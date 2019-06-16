@@ -1,0 +1,19 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index" >
+  <p-tabPanel header="CUT" >
+        <app-common  #Child_CommonCUT [shopName]="shopName"  [deviceType]="deviceType" [currentUserName]="currentUserName" [cols]="cols" [test]="ngIf[0]"
+        [Oper_Desc]="Oper_Desc[0]"></app-common>
+    </p-tabPanel>
+    <p-tabPanel header="Aging" >
+        <app-common #Child_CommonAging [shopName]="shopName"  [deviceType]="deviceType" [currentUserName]="currentUserName" [cols]="cols" [test]="ngIf[1]"
+        [Oper_Desc]="Oper_Desc[1]"></app-common>
+    </p-tabPanel>
+    <p-tabPanel header="AET">
+        <app-common #Child_CommonAET [shopName]="shopName"  [deviceType]="deviceType" [currentUserName]="currentUserName" [cols]="cols" [test]="ngIf[2]"
+        [Oper_Desc]="Oper_Desc[2]"></app-common>
+    </p-tabPanel>
+    <p-tabPanel header="EAPP">
+        <app-common #Child_CommonEAPP [shopName]="shopName"  [deviceType]="deviceType"  [currentUserName]="currentUserName"  [cols]="cols" [test]="ngIf[3]"
+         [Oper_Desc]="Oper_Desc[3]"></app-common>
+    </p-tabPanel>
+</p-tabView>     

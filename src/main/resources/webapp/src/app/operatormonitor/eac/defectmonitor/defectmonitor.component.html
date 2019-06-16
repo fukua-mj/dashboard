@@ -1,0 +1,34 @@
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index">
+  <!--   <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+    <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+      <app-eacmonitor [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+        [processType]="item.processType"></app-eacmonitor>
+    </p-tabPanel>
+  </ng-template> -->
+  <p-tabPanel #EacMonitorAet [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+    <app-eacmonitor [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[0].processType"></app-eacmonitor>
+  </p-tabPanel>
+  <p-tabPanel #EacMonitorReaet [header]="items[1].header" [selected]="items[1].selected" *ngIf="items[1].display">
+    <app-eacmonitor [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[1].processType"></app-eacmonitor>
+  </p-tabPanel>
+  <p-tabPanel #EacMonitorMet [header]="items[2].header" [selected]="items[2].selected" *ngIf="items[2].display">
+    <app-eacmonitor [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[2].processType"></app-eacmonitor>
+  </p-tabPanel>
+</p-tabView>
+<button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button>
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}} :</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display ? 'TRUE' : 'FALSE'}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

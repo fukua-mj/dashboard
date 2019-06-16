@@ -1,0 +1,107 @@
+<div class="ui-g">
+  <!-- intro/image area -->
+  <div class="ui-g-12">
+    <p-galleria #galleria [images]="images" panelWidth="1150" panelHeight="465" [showCaption]="false" (onImageClicked)="click()"></p-galleria>
+  </div>
+  <!-- end intro/image area -->
+
+  <!-- panel area -->
+  <div class="ui-g-12">
+    <!-- panel1 -->
+    <div class="ui-g-12 ui-lg-4 lg-card">
+      <p-card styleClass="lg-card">
+        <p-header>
+          <div class="hmtitle"><b>浏 览 记 录</b></div>
+        </p-header>
+        <ul class="ulviewHistory">
+          <li *ngFor="let url of viewHistory" class="xl-viewHistory lg-viewHistory"><a [href]="url" class="xl-viewHistory_a lg-viewHistory_a">{{url}}</a></li>
+        </ul>
+        <!--         <p-listbox [value]="noticelist" [listStyle]="{'height':'285px','width':'450px'}" [style]="{'width':'450px'}">
+            <ng-template let-notice pTemplate="item">
+                <div class="ui-helper-clearfix">
+                    <div style="font-size:14px;float:left;margin:15px 5px 0 0">
+                        <a [routerLink]="['/boe/communication/noticeboard']" [queryParams]="{subject:notice.subject,timekey:notice.timekey}" (click)="onClick()">{{notice.subject}}</a>
+                        </div>
+                    <div style="font-size:12px;float:right;margin:15px 5px 0 0">{{notice.timekey}}</div>
+                </div>
+            </ng-template>
+        </p-listbox> -->
+      </p-card>
+    </div>
+    <!-- end panel1 -->
+    <div class="ui-g-12 ui-lg-4 lg-card">
+      <p-card styleClass="lg-card">
+        <p-header>
+          <div class="hmtitle"><b>更 新 履 历</b></div>
+        </p-header>
+        <div>
+          <div class="release-title"><b>Ver 1.0.0 Latest</b></div>
+          <p class="release-authorship">
+            <i class="fa fa-user-secret fa-1x" aria-hidden="true"></i>
+            &emsp;released this in <b>2019-02-14</b>
+          </p>
+          <br />
+          <ul class="release-body">
+            <li>增加EAC MDL RT页面&emsp;<b></b></li>
+            <li>增加BP不良下降率页面&emsp;<b></b></li>
+            <li>增加BP Dummy页面&emsp;<b></b></li>
+            <li>增加BP 小时别产能监控页面&emsp;<b></b></li>
+            <li>修改EAC 产能监控 "E级检出率"指标&emsp;<b></b></li>
+          </ul>
+        </div>
+        <p-footer>
+          <button pButton label="历史" icon="fa fa-history" class="historyButton" (click)="showDialog()"></button>
+        </p-footer>
+      </p-card>
+    </div>
+    <div class="ui-g-12 ui-lg-4">
+      <p-card styleClass="lg-card">
+        <p-header>
+          <div class="hmtitle"><b>近 期 公 告</b></div>
+        </p-header>
+        <app-noticeboard-history></app-noticeboard-history>
+      </p-card>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Release Note" [(visible)]="display_releaseHistory" [modal]="true" [responsive]="true" [style]="{width: '550px', minWidth: '400px'}"
+  [minY]="70" [baseZIndex]="10000">
+  <div class="width:700px" id="releaseNote">
+    <div class="release-title" style="width:500px">
+      <b>Ver 1.0.0 Latest</b>
+    </div>
+    <p class="release-authorship">
+      <i class="fa fa-user-secret" aria-hidden="true"></i>
+      &emsp;released this in <b>2019-02-14</b>
+    </p>
+    <br />
+    <ul class="release-body">
+      <li>增加EAC MDL RT页面&emsp;<b></b></li>
+      <li>增加BP不良下降率页面&emsp;<b></b></li>
+      <li>增加BP Dummy页面&emsp;<b></b></li>
+      <li>增加BP 小时别产能监控页面&emsp;<b></b></li>
+      <li>修改EAC 产能监控 "E级检出率"指标&emsp;<b></b></li>
+    </ul>
+    <br/>
+    <div class="release-title" style="width:500px">
+      <b>Ver 0.0.1 Latest</b>
+    </div>
+    <p class="release-authorship">
+      <i class="fa fa-user-secret" aria-hidden="true"></i>
+      &emsp;released this in <b>2019-01-21</b>
+    </p>
+    <br />
+    <ul class="release-body">
+      <li>增加产能热点监控页面&emsp;<b></b></li>
+      <li>增加BP Dummy页面&emsp;<b></b></li>
+      <li>增加OEE Wet Strip/Pre Clean页面&emsp;<b></b></li>
+      <li>修改设备状态监控数据逻辑&emsp;<b></b></li>
+      <li>修改WIP/Move数据计算逻辑&emsp;<b></b></li>
+    </ul>
+  </div>
+  <p-footer>
+    <!--     <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Yes"></button>
+    <button type="button" pButton icon="pi pi-close" (click)="display=false" label="No" class="ui-button-secondary"></button> -->
+  </p-footer>
+</p-dialog>

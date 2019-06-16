@@ -1,0 +1,325 @@
+<p-panel>
+    <p-table #menutable [columns]='cols' [value]="menuInfoList" selectionMode="single" [(selection)]="selectedMenu"
+        (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [style]="{width:'100%;height:800px'}"
+        scrollHeight="200px" [resizableColumns]="true" [paginator]="true" [rows]="14" [globalFilterFields]="['menuname','chinese']">
+        <ng-template pTemplate="caption">
+            菜单信息
+        </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col *ngFor="let col of columns" style="width:250px">
+            </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of cols" pResizableColumn>{{col.header}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-menuInfoList let-columns="columns">
+            <tr [pSelectableRow]="menuInfoList">
+                <td *ngFor="let col of columns" class="ui-resizable-column">{{menuInfoList[col.field]}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div style="text-align: left">
+                <input type="text" pInputText placeholder="菜单名称" (input)="menutable.filterGlobal($event.target.value, 'contains')"
+                    style="background-color: rgb(221, 236, 243)">
+                <p-button (click)="showAddMenuDialog()" icon="fa fa-plus" label="新增"></p-button>
+                <p-button (click)="showUpdateMenuDialog()" icon="fa fa-plus" label="修改"></p-button>
+                <p-button (click)="showDeleteMenuDialog()" icon="fa fa-minus" label="删除"></p-button>
+                <p-button (click)="showMenuRoleLinkDialog()" icon="fa fa-connectdevelop" label="菜单关联用户"></p-button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-panel>
+
+
+<p-dialog header="添加菜单" [(visible)]="display_add" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="menuname">菜单标识</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="menuname" [(ngModel)]="addedMenu.menuname" placeholder="英文字母">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="chinese">菜单中文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="chinese" [(ngModel)]="addedMenu.chinese">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="english">菜单英文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="english" [(ngModel)]="addedMenu.english" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="korean">菜单韩文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="korean" [(ngModel)]="addedMenu.korean">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="icon">图标</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="icon" [(ngModel)]="addedMenu.icon">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="parentname">父菜单</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="parentname" [(ngModel)]="addedMenu.parentname">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="url">URL</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="url" [(ngModel)]="addedMenu.url">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="routerlink">RouterLink</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="routerlink" [(ngModel)]="addedMenu.routerlink" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="isparent">是否父菜单</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="isparent" [(ngModel)]="addedMenu.isparent">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description">菜单描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description" [(ngModel)]="addedMenu.description">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="sort">排序</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="sort" [(ngModel)]="addedMenu.sort" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="hideflag">隐藏标志位</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="hideflag" [(ngModel)]="addedMenu.hideflag">
+            </div>
+        </div>
+        <!--         <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="reserved1">Reserved1</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="reserved1" [(ngModel)]="addedMenu.reserved1">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="reserved2">Reserved2</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="reserved2" [(ngModel)]="addedMenu.reserved2" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="reserved3">Reserved3</label>
+                </div>
+                <div class="ui-g-7">
+                    <input pInputText id="reserved3" [(ngModel)]="addedMenu.reserved3">
+                </div>
+        </div> -->
+
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Save" (click)="addMenu()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Modify菜单" [(visible)]="display_modify" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="menuname_modify">菜单标识</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="menuname_modify" [(ngModel)]="selectedMenu.menuname" placeholder="英文字母">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="chinese_modify">菜单中文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="chinese_modify" [(ngModel)]="selectedMenu.chinese">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="english_modify">菜单英文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="english_modify" [(ngModel)]="selectedMenu.english" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="korea_modify">菜单韩文名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="korean_modify" [(ngModel)]="selectedMenu.korean">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="icon_modify">图标</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="icon_modify" [(ngModel)]="selectedMenu.icon">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="parentname_modify">父菜单</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="parentname_modify" [(ngModel)]="selectedMenu.parentname">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="url_modify">URL</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="url_modify" [(ngModel)]="selectedMenu.url">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="routerlink_modify">RouterLink</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="routerlink_modify" [(ngModel)]="selectedMenu.routerlink" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="isparent_modify">是否父菜单</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="isparent_modify" [(ngModel)]="selectedMenu.isparent">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description_modify">菜单描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description_modify" [(ngModel)]="selectedMenu.description">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="sort_modify">排序</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="sort_modify" [(ngModel)]="selectedMenu.sort" placeholder="">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="hideflag_modify">隐藏标志位</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="hideflag_modify" [(ngModel)]="selectedMenu.hideflag">
+            </div>
+        </div>
+        <!--                 <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="reserved1_modify">Reserved1</label>
+                    </div>
+                    <div class="ui-g-7">
+                        <input pInputText id="reserved1_modify" [(ngModel)]="selectedMenu.reserved1">
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="reserved2_modify">Reserved2</label>
+                    </div>
+                    <div class="ui-g-7">
+                        <input pInputText id="reserved2_modify" [(ngModel)]="selectedMenu.reserved2" placeholder="">
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                        <div class="ui-g-4">
+                            <label for="reserved3_modify">Reserved3</label>
+                        </div>
+                        <div class="ui-g-7">
+                            <input pInputText id="reserved3_modify" [(ngModel)]="selectedMenu.reserved3">
+                        </div>
+                </div> -->
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Update" (click)="updateMenu()" *ngIf="display_update"></p-button>
+            <p-button label="Delete" (click)="deleteMenu()" *ngIf="display_delete"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="菜单关联角色" [(visible)]="display_MenuRoleLink" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <p-pickList [source]="fromroles" [target]="toroles" sourceHeader="Available" targetHeader="Selected"
+                [showSourceControls]=false [showTargetControls]=false [responsive]="true" filterBy="rolename" dragdrop="true"
+                dragdropScope="users" sourceFilterPlaceholder="RoleName" targetFilterPlaceholder="RoleName"
+                [sourceStyle]="{'height':'200px'}" [targetStyle]="{'height':'200px'}" (onMoveToTarget)="onMoveToRoleTarget($event)">
+                <ng-template let-roleinfo pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <!-- <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
+                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{roleinfo.rolename}} -
+                            {{roleinfo.description}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+        </div>
+
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Commit" (click)="addMenuRoleLink()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.LossIndexMapper">
+
+<select id="getPanelLossCategory" resultType="java.util.HashMap">
+SELECT DISTINCT A.PRODUCTCATEGORY
+  FROM MDWMGR.DAS_PANELLOSS_MWD A
+ WHERE     A.DATATYPE = #{DataType}
+       AND A.FACTORYNAME = #{FactoryName}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+</select>
+
+<select id="getPanelLossLegenddata" resultType="java.util.HashMap">
+SELECT DISTINCT A.SCRAPCODE
+  FROM MDWMGR.DAS_PANELLOSS_MWD A
+ WHERE     A.DATATYPE = #{DataType}
+       AND A.FACTORYNAME = #{FactoryName}
+       AND A.PRODUCTIONTYPE =  #{ProductionType} 
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+</select>
+
+<select id="getPanelLossAllData" resultType="java.util.HashMap">
+SELECT A.*,
+CASE WHEN A.AGINGOUTQTY =0
+THEN 0
+ELSE     
+A.SCRAPQTY/A.AGINGOUTQTY 
+END AS NotYield
+  FROM MDWMGR.DAS_PANELLOSS_MWD A
+ WHERE    A.DATATYPE = #{DataType}
+       AND A.FACTORYNAME = #{FactoryName}
+       AND A.PRODUCTIONTYPE =  #{ProductionType} 
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+</select>
+
+</mapper>

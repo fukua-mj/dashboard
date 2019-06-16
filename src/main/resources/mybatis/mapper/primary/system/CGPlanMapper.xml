@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.CGPlanMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.CGPlan">
+    <result column="FACTORYNAME" jdbcType="VARCHAR" property="factoryname" />
+    <result column="PRODUCTCATEGORY" jdbcType="VARCHAR" property="productcategory" />
+    <result column="CATEGORY" jdbcType="VARCHAR" property="category" />
+    <result column="IN_OUT" jdbcType="VARCHAR" property="inOut" />
+    <result column="DAY_01" jdbcType="DECIMAL" property="day01" />
+    <result column="DAY_02" jdbcType="DECIMAL" property="day02" />
+    <result column="DAY_03" jdbcType="DECIMAL" property="day03" />
+    <result column="DAY_04" jdbcType="DECIMAL" property="day04" />
+    <result column="DAY_05" jdbcType="DECIMAL" property="day05" />
+    <result column="DAY_06" jdbcType="DECIMAL" property="day06" />
+    <result column="DAY_07" jdbcType="DECIMAL" property="day07" />
+    <result column="DAY_08" jdbcType="DECIMAL" property="day08" />
+    <result column="DAY_09" jdbcType="DECIMAL" property="day09" />
+    <result column="DAY_10" jdbcType="DECIMAL" property="day10" />
+    <result column="DAY_11" jdbcType="DECIMAL" property="day11" />
+    <result column="DAY_12" jdbcType="DECIMAL" property="day12" />
+    <result column="DAY_13" jdbcType="DECIMAL" property="day13" />
+    <result column="DAY_14" jdbcType="DECIMAL" property="day14" />
+    <result column="DAY_15" jdbcType="DECIMAL" property="day15" />
+    <result column="DAY_16" jdbcType="DECIMAL" property="day16" />
+    <result column="DAY_17" jdbcType="DECIMAL" property="day17" />
+    <result column="DAY_18" jdbcType="DECIMAL" property="day18" />
+    <result column="DAY_19" jdbcType="DECIMAL" property="day19" />
+    <result column="DAY_20" jdbcType="DECIMAL" property="day20" />
+    <result column="DAY_21" jdbcType="DECIMAL" property="day21" />
+    <result column="DAY_22" jdbcType="DECIMAL" property="day22" />
+    <result column="DAY_23" jdbcType="DECIMAL" property="day23" />
+    <result column="DAY_24" jdbcType="DECIMAL" property="day24" />
+    <result column="DAY_25" jdbcType="DECIMAL" property="day25" />
+    <result column="DAY_26" jdbcType="DECIMAL" property="day26" />
+    <result column="DAY_27" jdbcType="DECIMAL" property="day27" />
+    <result column="DAY_28" jdbcType="DECIMAL" property="day28" />
+    <result column="DAY_29" jdbcType="DECIMAL" property="day29" />
+    <result column="DAY_30" jdbcType="DECIMAL" property="day30" />
+    <result column="DAY_31" jdbcType="DECIMAL" property="day31" />
+    <result column="UPDATEUSER" jdbcType="VARCHAR" property="updateuser" />
+    <result column="LAST_UPDATE_DATE" jdbcType="DATE" property="lastUpdateDate" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.CGPlan">
+    insert into DAS_CGPLAN (FACTORYNAME, PRODUCTCATEGORY, CATEGORY, 
+      IN_OUT, DAY_01, DAY_02, 
+      DAY_03, DAY_04, DAY_05, 
+      DAY_06, DAY_07, DAY_08, 
+      DAY_09, DAY_10, DAY_11, 
+      DAY_12, DAY_13, DAY_14, 
+      DAY_15, DAY_16, DAY_17, 
+      DAY_18, DAY_19, DAY_20, 
+      DAY_21, DAY_22, DAY_23, 
+      DAY_24, DAY_25, DAY_26, 
+      DAY_27, DAY_28, DAY_29, 
+      DAY_30, DAY_31, UPDATEUSER, 
+      LAST_UPDATE_DATE)
+    values (#{factoryname,jdbcType=VARCHAR}, #{productcategory,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, 
+      #{inOut,jdbcType=VARCHAR}, #{day01,jdbcType=DECIMAL}, #{day02,jdbcType=DECIMAL}, 
+      #{day03,jdbcType=DECIMAL}, #{day04,jdbcType=DECIMAL}, #{day05,jdbcType=DECIMAL}, 
+      #{day06,jdbcType=DECIMAL}, #{day07,jdbcType=DECIMAL}, #{day08,jdbcType=DECIMAL}, 
+      #{day09,jdbcType=DECIMAL}, #{day10,jdbcType=DECIMAL}, #{day11,jdbcType=DECIMAL}, 
+      #{day12,jdbcType=DECIMAL}, #{day13,jdbcType=DECIMAL}, #{day14,jdbcType=DECIMAL}, 
+      #{day15,jdbcType=DECIMAL}, #{day16,jdbcType=DECIMAL}, #{day17,jdbcType=DECIMAL}, 
+      #{day18,jdbcType=DECIMAL}, #{day19,jdbcType=DECIMAL}, #{day20,jdbcType=DECIMAL}, 
+      #{day21,jdbcType=DECIMAL}, #{day22,jdbcType=DECIMAL}, #{day23,jdbcType=DECIMAL}, 
+      #{day24,jdbcType=DECIMAL}, #{day25,jdbcType=DECIMAL}, #{day26,jdbcType=DECIMAL}, 
+      #{day27,jdbcType=DECIMAL}, #{day28,jdbcType=DECIMAL}, #{day29,jdbcType=DECIMAL}, 
+      #{day30,jdbcType=DECIMAL}, #{day31,jdbcType=DECIMAL}, #{updateuser,jdbcType=VARCHAR}, 
+      #{lastUpdateDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.CGPlan">
+    insert into DAS_CGPLAN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        FACTORYNAME,
+      </if>
+      <if test="productcategory != null">
+        PRODUCTCATEGORY,
+      </if>
+      <if test="category != null">
+        CATEGORY,
+      </if>
+      <if test="inOut != null">
+        IN_OUT,
+      </if>
+      <if test="day01 != null">
+        DAY_01,
+      </if>
+      <if test="day02 != null">
+        DAY_02,
+      </if>
+      <if test="day03 != null">
+        DAY_03,
+      </if>
+      <if test="day04 != null">
+        DAY_04,
+      </if>
+      <if test="day05 != null">
+        DAY_05,
+      </if>
+      <if test="day06 != null">
+        DAY_06,
+      </if>
+      <if test="day07 != null">
+        DAY_07,
+      </if>
+      <if test="day08 != null">
+        DAY_08,
+      </if>
+      <if test="day09 != null">
+        DAY_09,
+      </if>
+      <if test="day10 != null">
+        DAY_10,
+      </if>
+      <if test="day11 != null">
+        DAY_11,
+      </if>
+      <if test="day12 != null">
+        DAY_12,
+      </if>
+      <if test="day13 != null">
+        DAY_13,
+      </if>
+      <if test="day14 != null">
+        DAY_14,
+      </if>
+      <if test="day15 != null">
+        DAY_15,
+      </if>
+      <if test="day16 != null">
+        DAY_16,
+      </if>
+      <if test="day17 != null">
+        DAY_17,
+      </if>
+      <if test="day18 != null">
+        DAY_18,
+      </if>
+      <if test="day19 != null">
+        DAY_19,
+      </if>
+      <if test="day20 != null">
+        DAY_20,
+      </if>
+      <if test="day21 != null">
+        DAY_21,
+      </if>
+      <if test="day22 != null">
+        DAY_22,
+      </if>
+      <if test="day23 != null">
+        DAY_23,
+      </if>
+      <if test="day24 != null">
+        DAY_24,
+      </if>
+      <if test="day25 != null">
+        DAY_25,
+      </if>
+      <if test="day26 != null">
+        DAY_26,
+      </if>
+      <if test="day27 != null">
+        DAY_27,
+      </if>
+      <if test="day28 != null">
+        DAY_28,
+      </if>
+      <if test="day29 != null">
+        DAY_29,
+      </if>
+      <if test="day30 != null">
+        DAY_30,
+      </if>
+      <if test="day31 != null">
+        DAY_31,
+      </if>
+      <if test="updateuser != null">
+        UPDATEUSER,
+      </if>
+<!--       <if test="lastUpdateDate != null">
+        LAST_UPDATE_DATE,
+      </if> -->
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        #{factoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="productcategory != null">
+        #{productcategory,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="inOut != null">
+        #{inOut,jdbcType=VARCHAR},
+      </if>
+      <if test="day01 != null">
+        #{day01,jdbcType=DECIMAL},
+      </if>
+      <if test="day02 != null">
+        #{day02,jdbcType=DECIMAL},
+      </if>
+      <if test="day03 != null">
+        #{day03,jdbcType=DECIMAL},
+      </if>
+      <if test="day04 != null">
+        #{day04,jdbcType=DECIMAL},
+      </if>
+      <if test="day05 != null">
+        #{day05,jdbcType=DECIMAL},
+      </if>
+      <if test="day06 != null">
+        #{day06,jdbcType=DECIMAL},
+      </if>
+      <if test="day07 != null">
+        #{day07,jdbcType=DECIMAL},
+      </if>
+      <if test="day08 != null">
+        #{day08,jdbcType=DECIMAL},
+      </if>
+      <if test="day09 != null">
+        #{day09,jdbcType=DECIMAL},
+      </if>
+      <if test="day10 != null">
+        #{day10,jdbcType=DECIMAL},
+      </if>
+      <if test="day11 != null">
+        #{day11,jdbcType=DECIMAL},
+      </if>
+      <if test="day12 != null">
+        #{day12,jdbcType=DECIMAL},
+      </if>
+      <if test="day13 != null">
+        #{day13,jdbcType=DECIMAL},
+      </if>
+      <if test="day14 != null">
+        #{day14,jdbcType=DECIMAL},
+      </if>
+      <if test="day15 != null">
+        #{day15,jdbcType=DECIMAL},
+      </if>
+      <if test="day16 != null">
+        #{day16,jdbcType=DECIMAL},
+      </if>
+      <if test="day17 != null">
+        #{day17,jdbcType=DECIMAL},
+      </if>
+      <if test="day18 != null">
+        #{day18,jdbcType=DECIMAL},
+      </if>
+      <if test="day19 != null">
+        #{day19,jdbcType=DECIMAL},
+      </if>
+      <if test="day20 != null">
+        #{day20,jdbcType=DECIMAL},
+      </if>
+      <if test="day21 != null">
+        #{day21,jdbcType=DECIMAL},
+      </if>
+      <if test="day22 != null">
+        #{day22,jdbcType=DECIMAL},
+      </if>
+      <if test="day23 != null">
+        #{day23,jdbcType=DECIMAL},
+      </if>
+      <if test="day24 != null">
+        #{day24,jdbcType=DECIMAL},
+      </if>
+      <if test="day25 != null">
+        #{day25,jdbcType=DECIMAL},
+      </if>
+      <if test="day26 != null">
+        #{day26,jdbcType=DECIMAL},
+      </if>
+      <if test="day27 != null">
+        #{day27,jdbcType=DECIMAL},
+      </if>
+      <if test="day28 != null">
+        #{day28,jdbcType=DECIMAL},
+      </if>
+      <if test="day29 != null">
+        #{day29,jdbcType=DECIMAL},
+      </if>
+      <if test="day30 != null">
+        #{day30,jdbcType=DECIMAL},
+      </if>
+      <if test="day31 != null">
+        #{day31,jdbcType=DECIMAL},
+      </if>
+      <if test="updateuser != null">
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+<!--       <if test="lastUpdateDate != null">
+        #{lastUpdateDate,jdbcType=DATE},
+      </if> -->
+    </trim>
+  </insert>
+  
+  <select id="getCGPlanAll" resultType="java.util.HashMap">
+	SELECT *
+	  FROM WEBMGR.DAS_CGPLAN A
+	 WHERE 1=1 
+	 <if test="productCategory != '' and productCategory != null">
+	  AND A.PRODUCTCATEGORY = #{productCategory}
+	 </if>
+  </select>
+  
+  <delete id="deleteAllCGPlan">
+	DELETE WEBMGR.DAS_CGPLAN A
+	 WHERE A.FACTORYNAME = #{shopName}
+  </delete>
+  
+<!--   <insert id="setCGPlan">
+  	Insert into WEBMGR.DAS_CGPLAN
+   (FACTORYNAME, PRODUCTCATEGORY, CATEGORY, IN_OUT, DAY_01, 
+    DAY_02, DAY_03, DAY_04, DAY_05, DAY_06, 
+    DAY_07, DAY_08, DAY_09, DAY_10, DAY_11, 
+    DAY_12, DAY_13, DAY_14, DAY_15, DAY_16, 
+    DAY_17, DAY_18, DAY_19, DAY_20, DAY_21, 
+    DAY_22, DAY_23, DAY_24, DAY_25, DAY_26, 
+    DAY_27, DAY_28, DAY_29, DAY_30, DAY_31, 
+    UPDATEUSER)
+ Values
+   (#{factoryName},#{productCategory},#{category},
+   #{inout},#{_01h,jdbcType=BigDecimal},#{_02h,jdbcType=BigDecimal},#{_03h,jdbcType=BigDecimal},#{_04h,jdbcType=BigDecimal},#{_05h,jdbcType=BigDecimal},
+   #{_06h,jdbcType=BigDecimal},#{_07h,jdbcType=BigDecimal},#{_08h,jdbcType=BigDecimal},#{_09h,jdbcType=BigDecimal},#{_10h,jdbcType=BigDecimal},#{_11h,jdbcType=BigDecimal},
+   #{_12h,jdbcType=BigDecimal},#{_13h,jdbcType=BigDecimal},#{_14h,jdbcType=BigDecimal},#{_15h,jdbcType=BigDecimal},#{_16h,jdbcType=BigDecimal},#{_17h,jdbcType=BigDecimal},
+   #{_18h,jdbcType=BigDecimal},#{_19h,jdbcType=BigDecimal},#{_20h,jdbcType=BigDecimal},#{_21h,jdbcType=BigDecimal},#{_22h,jdbcType=BigDecimal},#{_23h,jdbcType=BigDecimal},
+   #{_24h,jdbcType=BigDecimal},#{_25h,jdbcType=BigDecimal},#{_26h,jdbcType=BigDecimal},#{_27h,jdbcType=BigDecimal},#{_28h,jdbcType=BigDecimal},#{_29h,jdbcType=BigDecimal},
+   #{_30h,jdbcType=BigDecimal},#{_31h,jdbcType=BigDecimal},#{userName}) 	
+  </insert> -->
+  
+</mapper>

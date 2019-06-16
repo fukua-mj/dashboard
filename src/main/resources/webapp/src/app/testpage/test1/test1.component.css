@@ -1,0 +1,22 @@
+#leftButton {
+    height: 26px;
+    width: 26px;
+    border-radius: 13px;
+    padding: -20px 0 0 0;
+    list-style: none;
+    position: fixed;
+    right: 10%;
+    top: 11%;
+}
+
+#rightButton {
+    height: 26px;
+    width: 26px;
+    border-radius: 13px;
+    margin: 0 0 0 90%;
+}
+#tabMove{
+    position: fixed;
+    right: 10%;
+    top: 10%
+}

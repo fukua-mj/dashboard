@@ -1,0 +1,92 @@
+<p-tabView (onChange)="onTabChange($event)">
+    <!--     <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+        <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+            <app-statesmonitormdl #Child_BpShop [deviceType]="deviceType" [currentUserName]="currentUserName"
+                [shopName]="item.shopName" [processType]="item.processType"></app-statesmonitormdl>
+        </p-tabPanel>
+    </ng-template>
+    <ng-template ngFor let-item [ngForOf]="items2" let-i="index">
+        <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+            <app-statesmonitor #Child_BpShop [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="item.shopName"
+                [processType]="item.processType"></app-statesmonitor>
+        </p-tabPanel>
+    </ng-template> -->
+
+    <p-tabPanel [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+        <app-statesmonitormdl #OLB [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[0].shopName"
+            [processType]="items[0].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[1].header" [selected]="items[1].selected" *ngIf="items[1].display">
+        <app-statesmonitormdl #BCH [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[1].shopName"
+            [processType]="items[1].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[2].header" [selected]="items[2].selected" *ngIf="items[2].display">
+        <app-statesmonitormdl #ALAMI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[2].shopName"
+            [processType]="items[2].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[3].header" [selected]="items[3].selected" *ngIf="items[3].display">
+        <app-statesmonitormdl #SCP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[3].shopName"
+            [processType]="items[3].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[4].header" [selected]="items[4].selected" *ngIf="items[4].display">
+        <app-statesmonitormdl #OCA [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[4].shopName"
+            [processType]="items[4].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[5].header" [selected]="items[5].selected" *ngIf="items[5].display">
+        <app-statesmonitormdl #ACU [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[5].shopName"
+            [processType]="items[5].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[6].header" [selected]="items[6].selected" *ngIf="items[6].display">
+        <app-statesmonitormdl #TGP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[6].shopName"
+            [processType]="items[6].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[7].header" [selected]="items[7].selected" *ngIf="items[7].display">
+        <app-statesmonitormdl #BRP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[7].shopName"
+            [processType]="items[7].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[8].header" [selected]="items[8].selected" *ngIf="items[8].display">
+        <app-statesmonitormdl #ATP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[8].shopName"
+            [processType]="items[8].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[9].header" [selected]="items[9].selected" *ngIf="items[9].display">
+        <app-statesmonitormdl #ASSY [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[9].shopName"
+            [processType]="items[9].processType"></app-statesmonitormdl>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[10].header" [selected]="items[10].selected" *ngIf="items[10].display">
+        <app-statesmonitor #UNPACKER [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[10].shopName"
+            [processType]="items[10].processType"></app-statesmonitor>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[11].header" [selected]="items[11].selected" *ngIf="items[11].display">
+        <app-statesmonitor #PCK [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[11].shopName"
+            [processType]="items[11].processType"></app-statesmonitor>
+    </p-tabPanel>
+    <p-tabPanel [header]="items[12].header" [selected]="items[12].selected" *ngIf="items[12].display">
+        <app-statesmonitor #TOTAL [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[12].shopName"
+            [processType]="items[12].processType"></app-statesmonitor>
+    </p-tabPanel>
+</p-tabView>
+<!-- <div class="xl-tabMove lg-tabMove">
+    <ul>
+        <i class="fa ui-icon-chevron-left" style="float: inherit;margin-top: 14px; margin-right: 3px; cursor: pointer;opacity: 0.6;font-size: large;"
+            (click)="leftClick();"></i>
+        <i class="fa ui-icon-chevron-right" aria-hidden="true" style="margin-top:14px; margin-left: 3px;cursor: pointer;opacity: 0.6;font-size: large;"
+            (click)="rightClick();"></i>
+    </ul>
+</div> -->
+<!-- <button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button>
+ -->
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12" *ngFor='let item of items'>
+            <div class="ui-g-6">
+                <label for="{{item.header}}"><strong>{{item.header}} :</strong></label>
+            </div>
+            <div class="ui-g-3">
+                <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+            </div>
+            <div class="ui-g-3">
+                <span> {{item.display ? 'TRUE' : 'FALSE'}}</span>
+            </div>
+        </div>
+    </div>
+</p-dialog>

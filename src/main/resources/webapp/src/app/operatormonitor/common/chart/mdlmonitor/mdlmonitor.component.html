@@ -1,0 +1,74 @@
+<div class="ui-g">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12">
+    <div echarts [options]="echartOption" class="ui-g-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+    <div class="ui-g-12 timeArea xl-timeArea md-timeArea lg-timeArea sm-timeArea">
+      <div class="lg-title xl-title"><strong>日期时间</strong></div>
+      <div class="ui-g-12">
+        <div class="ui-g-1"></div>
+        <div class="ui-g-4">
+          <span>开始时间：</span>
+          <p-calendar [styleClass]="['ui-g-12']" dateFormat="yy-mm-dd" [(ngModel)]="startDate" [showTime]="true"
+            [showIcon]="true" [readonlyInput]="true"></p-calendar>
+        </div>
+        <div class="ui-g-4">
+          <span>结束时间：</span>
+          <p-calendar [styleClass]="['ui-g-12']" dateFormat="yy-mm-dd" [(ngModel)]="endDate" [showTime]="true"
+            [showIcon]="true" [readonlyInput]="true"></p-calendar>
+        </div>
+        <div class="ui-g-3">
+          <button pButton label="Search" (click)="productionTypeClicked()"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="lg-title xl-title"><strong>产品阶段</strong></div>
+      <ul class="optionul">
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductionType+{{shopName}}+{{processType}}" value="Production" label="正式量产"
+            [(ngModel)]="selectedProductionType" inputId="EACMonitorProductionType+{{shopName}}+{{processType}}+1"
+            (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductionType+{{shopName}}+{{processType}}" value="TPCN" label="TPCN"
+            [(ngModel)]="selectedProductionType" inputId="EACMonitorProductionType+{{shopName}}+{{processType}}+2"
+            (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductionType+{{shopName}}+{{processType}}" value="Develop" label="客户送样"
+            [(ngModel)]="selectedProductionType" inputId="EACMonitorProductionType+{{shopName}}+{{processType}}+3"
+            (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductionType+{{shopName}}+{{processType}}" value="Engineer" label="工程验证"
+            [(ngModel)]="selectedProductionType" inputId="EACMonitorProductionType+{{shopName}}+{{processType}}+4"
+            (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductionType+{{shopName}}+{{processType}}" value="PV" label="PV" [(ngModel)]="selectedProductionType"
+            inputId="EACMonitorProductionType+{{shopName}}+{{processType}}+5" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="lg-title xl-title"><strong>产品类型</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="EACMonitorProductCategory+{{shopName}}+{{processType}}" value="{{item}}" label="{{item}}"
+            [(ngModel)]="selectedProductionCategory" inputId="EACMonitorProductCategory+{{shopName}}+{{processType}}+ {{item}}"
+            (click)="drawChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 xl-defectCodeArea lg-defectCodeArea">
+      <div class="lg-title xl-title"><strong>Defect Code</strong></div>
+      <br />
+      <p-dropdown [options]="DefectCodes" [(ngModel)]="selectedDefectCode" placeholder="Select a DefectCode"
+        optionLabel="value" [showClear]="true" (onChange)="defectCodeChanged($event)" [panelStyle]="{'width':'80%'}" [style]="{'width':'90%'}"></p-dropdown>
+    </div>
+    <div class="ui-g-12 xl-dataTypeArea lg-dataTypeArea">
+
+    </div>
+  </div>
+</div>

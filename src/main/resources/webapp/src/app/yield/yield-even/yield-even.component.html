@@ -1,0 +1,11 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index">
+  <p-tabPanel header="TFE AOI" leftIcon="pi pi-calendar" *ngIf="items[0].display">
+    <app-bpshop #TFE_AOI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[0].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[0].dataType"></app-bpshop>
+  </p-tabPanel>
+<!--   <p-tabPanel [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+    <app-mdlbyline #TFE_AOI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[0].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[0].dataType"></app-mdlbyline>
+  </p-tabPanel> -->
+</p-tabView>

@@ -1,0 +1,125 @@
+/* .tooltipa { font:Verdana, Geneva, sans-serif; font-size:12px; font-weight:bold; color:#666; position:relative; }
+body .ui-tabview .ui-tabview-nav > li.ui-state-active a:hover:after{
+ content:attr(id);
+ display:block;
+ padding:10px;
+ color:#FFF;
+ background:#333;
+ position:absolute; top:20px; left:50px;
+ white-space:nowrap;
+}
+body .ui-tabview .ui-tabview-nav > li.ui-state-active a:hover:before{
+ display:block;
+ content:"";
+ position:absolute; top:15px; left:50px;
+ border-right:10px solid transparent; 
+ border-bottom:10px solid #333; 
+ border-left:10px solid transparent;  
+} */
+/*
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+ .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+} */
+
+.ui-g-1, .ui-g-12 {
+    padding : 0px;
+}
+
+body #classretab .ui-tabview.ui-tabview-top > .ui-tabview-nav {
+    background-color: #E0E0E0;
+  }
+  
+  body #classretab .ui-tabview.ui-tabview-top > .ui-tabview-nav li {
+    background-color: #E0E0E0;
+    cursor: pointer;
+  }
+  
+  /* body #classretab .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-default:hover {
+    color: rgba(35, 138, 203, 0.2);
+  } */
+  
+  body #classretab .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active {
+    background-color: #E0E0E0;
+    border-bottom: 2px solid #238ACB;
+  }
+  
+  body #classretab .ui-tabview .ui-tabview-nav > li.ui-state-active a {
+    color: #3D4D66;
+  }
+  
+  body #classretab .ui-tabview .ui-tabview-nav > li:hover a {
+    color: #238ACB;
+    background-color: #E0E0E0;
+  }
+  
+  body #classretab .ui-tabview .ui-tabview-nav > li:hover .fa-close.fa {
+    display: block;
+  }
+
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-tabMove{
+        position: fixed;
+        right: 5%;
+        top: 12%
+    }
+
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+
+    .xl-tabMove{
+        position: fixed;
+        right: 2%;
+        top: 5%;
+    }
+
+}
+

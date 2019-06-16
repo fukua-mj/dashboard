@@ -1,0 +1,39 @@
+<div class="ui-g">
+  <div echarts [options]="echartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="xl-title lg-title"><strong>产品阶段</strong></div>
+      <ul class="optionul">
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductionType+{{shopName}}+{{processType}}" value="Production" label="正式量产" [(ngModel)]="selectedProductionType"
+            inputId="productionType1" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductionType+{{shopName}}+{{processType}}" value="TPCN" label="TPCN" [(ngModel)]="selectedProductionType"
+            inputId="productionType2" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductionType+{{shopName}}+{{processType}}" value="Develop" label="客户送样" [(ngModel)]="selectedProductionType"
+            inputId="productionType3" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductionType+{{shopName}}+{{processType}}" value="Engineer" label="工程验证" [(ngModel)]="selectedProductionType"
+            inputId="productionType4" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductionType+{{shopName}}+{{processType}}" value="PV" label="PV" [(ngModel)]="selectedProductionType"
+            inputId="productionType5" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title"><strong>产品类型</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="ProductCategory+{{shopName}}+{{processType}}" value="{{item}}" label="{{item}}" [(ngModel)]="selectedProductionCategory"
+            inputId="productCategory+{{shopName}}+{{processType}}+ {{item}}" (click)="drawChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

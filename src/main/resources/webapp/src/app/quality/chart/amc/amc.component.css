@@ -1,0 +1,13 @@
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-chart{
+        height: 197px;
+    }
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-chart{
+        height: 271px;
+    }
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.MenuLabelInfoMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.MenuLabelInfo">
+    <result column="MENUNAME" jdbcType="VARCHAR" property="menuname" />
+    <result column="ENGLISH" jdbcType="VARCHAR" property="english" />
+    <result column="CHINESE" jdbcType="VARCHAR" property="chinese" />
+    <result column="KOREAN" jdbcType="VARCHAR" property="korean" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.MenuInfo">
+    insert into NG_DAS_MENULABELINFO (MENUNAME, ENGLISH, CHINESE, 
+      KOREAN, DESCRIPTION)
+    values (#{menuname,jdbcType=VARCHAR}, #{english,jdbcType=VARCHAR}, #{chinese,jdbcType=VARCHAR}, 
+      #{korean,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.MenuLabelInfo">
+    insert into NG_DAS_MENULABELINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuname != null">
+        MENUNAME,
+      </if>
+      <if test="english != null">
+        ENGLISH,
+      </if>
+      <if test="chinese != null">
+        CHINESE,
+      </if>
+      <if test="korean != null">
+        KOREAN,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuname != null">
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="english != null">
+        #{english,jdbcType=VARCHAR},
+      </if>
+      <if test="chinese != null">
+        #{chinese,jdbcType=VARCHAR},
+      </if>
+      <if test="korean != null">
+        #{korean,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.boe.idm.project.model.system.MenuInfo">
+  			UPDATE NG_DAS_MENULABELINFO SET
+		ENGLISH = #{english},
+		CHINESE = #{chinese},
+		KOREAN = #{korean},
+		DESCRIPTION = #{description}
+		WHERE MENUNAME = #{menuname}
+  </update>
+  
+  <delete id="delete" parameterType="com.boe.idm.project.model.system.MenuInfo">
+		DELETE NG_DAS_MENULABELINFO WHERE
+		MENUNAME=#{menuname}
+  </delete>
+</mapper>

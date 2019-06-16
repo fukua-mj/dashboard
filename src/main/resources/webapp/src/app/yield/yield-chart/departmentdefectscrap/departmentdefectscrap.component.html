@@ -1,0 +1,20 @@
+<div class="ui-g">
+    <div class="ui-g-10 ui-lg-10 ui-xl-10">
+        <div echarts [options]="ChartOption1" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+        <div echarts [options]="ChartOption2" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+        <div echarts [options]="ChartOption3" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+        <div echarts [options]="ChartOption4" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+    </div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+            <div class="xl-title lg-title"><strong>产品类型</strong></div>
+            <ul class="optionul">
+                <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="DefetcProductCategory + {{shopName}} + {{dataType}}" value="{{item}}" label="{{item}}"
+                        [(ngModel)]="selectedProductionCategory" inputId="DefetcProductCategory+{{shopName}} + {{dataType}} + {{item}}"
+                        (click)="drawChart()"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

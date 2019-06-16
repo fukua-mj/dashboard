@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.EchartMapper">
+
+	<select id="getYield" resultType="java.util.HashMap">
+		SELECT A.DATETIME,
+       A.DATETYPE,
+       A.YIELDDATATYPE,
+       A.FACTORYNAME,
+       A.PRODUCTCATEGORY,
+       A.PRODUCTIONTYPE,
+       A.PROCESSOPERATIONNAME,
+       A.LINENAME,
+       A.IN_QTY,
+       TRUNC((A.OUT_QTY / A.IN_QTY)*100,2) AS YIELD
+  FROM MDWMGR.DSB_YIELDSUM_MWD A
+ WHERE    A.FACTORYNAME = #{shopName}   
+       AND A.PROCESSOPERATIONNAME = #{operationName}
+       AND A.PRODUCTIONTYPE = #{productionType}  
+       AND A.YIELDDATATYPE = 'MDLREWORK'
+       AND A.PRODUCTCATEGORY = #{productCategory}
+	</select>
+	
+	<select id="getDefect" resultType="java.util.HashMap">
+		  SELECT A.DATETIME,
+         A.DATETYPE,
+         A.DEFECTDATATYPE,
+         A.FACTORYNAME,
+         A.PRODUCTCATEGORY,
+         A.PRODUCTIONTYPE,
+         A.PROCESSOPERATIONNAME,
+         A.LINENAME,
+         A.DEFECTCODE,
+         A.DESCRIPTION,
+         A.DEFECTQTY,
+         A.TOTALQTY,
+         TRUNC ( (A.DEFECTQTY / A.TOTALQTY) * 100, 3) AS DEFECTRATIO
+  FROM MDWMGR.DSB_DEFECTSUM_MWD A
+ WHERE    A.FACTORYNAME = #{shopName}     
+       AND A.PROCESSOPERATIONNAME = #{operationName}
+       AND A.PRODUCTIONTYPE = #{productionType}  
+       AND A.DEFECTDATATYPE = 'MDLREWORK'
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.TOTALQTY IS NOT NULL
+	</select>
+	
+	<select id="getDefectListByLine" resultType="java.util.HashMap">
+		SELECT DISTINCT DESCRIPTION
+  FROM MDWMGR.DSB_DEFECTSUM_MWD A
+ WHERE    A.FACTORYNAME = #{shopName}     
+       AND A.PROCESSOPERATIONNAME = #{operationName}
+       AND A.PRODUCTIONTYPE = #{productionType}  
+       AND A.DEFECTDATATYPE = 'MDLREWORK'
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       ORDER BY DESCRIPTION
+	</select>
+	
+	<select id="getDateFactory" resultType="java.util.HashMap">
+		SELECT *
+  		  FROM DAS_CALENDAR_MWD
+ 		 WHERE DATATYPE = 'FACTORY_MWD'
+	</select>
+	
+	<select id="getProduction" resultType="java.util.HashMap">
+      SELECT B.PRODUCTCATEGORY,
+       B.FACTORYNAME,
+       ROUND (
+            B.MONTH_2_IN
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_2, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_2_IN,
+       ROUND (
+            B.MONTH_2_OUT
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_2, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_2_OUT,
+       ROUND (
+            B.MONTH_1_IN
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_1, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_1_IN,
+       ROUND (
+            B.MONTH_1_OUT
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_1, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_1_OUT,
+       ROUND (B.MONTH_0_IN, 0) AS MONTH_0_IN,
+       ROUND (B.MONTH_0_OUT, 0) AS MONTH_0_OUT,
+       ROUND (B.WEEK_3_IN / 7, 0) AS WEEK_3_IN,
+       ROUND (B.WEEK_3_OUT / 7, 0) AS WEEK_3_OUT,
+       ROUND (B.WEEK_2_IN / 7, 0) AS WEEK_2_IN,
+       ROUND (B.WEEK_2_OUT / 7, 0) AS WEEK_2_OUT,
+       ROUND (B.WEEK_1_IN / 7, 0) AS WEEK_1_IN,
+       ROUND (B.WEEK_1_OUT / 7, 0) AS WEEK_1_OUT,
+       ROUND (B.WEEK_0_IN / 7, 0) AS WEEK_0_IN,
+       ROUND (B.WEEK_0_OUT / 7, 0) AS WEEK_0_OUT,
+       B.DAY_6_IN,
+       B.DAY_6_OUT,
+       B.DAY_5_IN,
+       B.DAY_5_OUT,
+       B.DAY_4_IN,
+       B.DAY_4_OUT,
+       B.DAY_3_IN,
+       B.DAY_3_OUT,
+       B.DAY_2_IN,
+       B.DAY_2_OUT,
+       B.DAY_1_IN,
+       B.DAY_1_OUT,
+       B.DAY_0_IN,
+       B.DAY_0_OUT
+  FROM (SELECT *
+          FROM DAS_CALENDAR_MWD A
+         WHERE A.DATATYPE = 'FACTORY_MWD') A,
+       DAS_PRODUCTION_MWD B
+ WHERE FACTORYNAME = #{shopName}
+  </select>
+      
+ 	 <select id="getProductionDate" resultType="java.util.HashMap">
+      SELECT * FROM DAS_CALENDAR_MWD WHERE DATATYPE = 'DSB_MWD'
+  </select>
+  
+	  <select id="geteqpStateMonitor2days" resultType="java.util.HashMap">
+  SELECT MDWMGR.DAS_MMS_MONITOR_TD.MACHINENAME,
+         MDWMGR.DAS_MMS_MONITOR_TD.PROCESSTYPE,
+         MDWMGR.DAS_MMS_MONITOR_TD.LINENAME,
+         MDWMGR.DAS_MMS_MONITOR_TD.TIMEKEY,
+         MDWMGR.DAS_MMS_MONITOR_TD.EVENTTIME,
+                         CASE
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'HOLIDAY'
+            THEN
+               'Holiday'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'PROPER RUN RATIO'
+            THEN
+               '可稼动率'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'RUN RATIO'
+            THEN
+               '时间稼动率'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'JC'
+            THEN
+               'J/C'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'MC'
+            THEN
+               'M/C'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'E_DOWN'
+            THEN
+               '设备Down'  
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'P_DOWN'
+            THEN
+               '工艺Down'   
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'CM'
+            THEN
+               '设备CM'                               
+            ELSE
+               MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME
+         END
+            AS MACHINESTATENAME,
+         MDWMGR.DAS_MMS_MONITOR_TD.EVENTUSER,
+         MDWMGR.DAS_MMS_MONITOR_TD.EVENTCOMMENT,
+         MDWMGR.DAS_MMS_MONITOR_TD.REASONCODETYPE,
+         MDWMGR.DAS_MMS_MONITOR_TD.REASONCODE,
+         MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATECOMMENT
+    FROM MDWMGR.DAS_MMS_MONITOR_TD
+		WHERE PROCESSTYPE=#{processType} 
+		  	  <if test='lineName != "ALL"'>
+  				AND LINENAME = #{lineName} 
+  			  </if>
+  			  <if test='lineName == "ALL"'>
+  				AND MACHINENAME LIKE #{lineName1}
+  			  </if>
+		AND (EVENTCOMMENT !='MDLSubjectReport' OR EVENTCOMMENT is null) 
+		AND MACHINESTATENAME IS NOT NULL
+			  <if test='todayflag == "Today"'>
+				AND TIMEKEY &gt;= #{dateMin} 
+  			  </if>
+  			  <if test='todayflag == "Yesterday"'>
+				AND TIMEKEY &lt; #{dateMin} 
+  			  </if>
+		ORDER BY MACHINENAME,TIMEKEY desc
+   </select>
+   
+	   <select id="geteqpStateMonitorMachineList" resultType="java.util.HashMap">
+  SELECT DISTINCT MACHINENAME
+  FROM MDWMGR.DAS_MMS_MONITOR_TD WHERE PROCESSTYPE=#{processType} 
+  			  <if test='lineName != "ALL"'>
+  				AND LINENAME = #{lineName} 
+  			  </if>
+  			   <if test='lineName == "ALL"'>
+  				AND MACHINENAME LIKE #{lineName1}
+  			  </if>
+              <if test='processType == "OCA"'>  
+                AND MACHINENAME LIKE '7M%' 
+            </if>
+		AND (EVENTCOMMENT !='MDLSubjectReport' OR EVENTCOMMENT is null) 
+		AND MACHINESTATENAME IS NOT NULL
+  ORDER BY MACHINENAME
+  </select>
+  
+ 	 <select id="geteqpStateMonitorStateList2days" resultType="java.util.HashMap">
+SELECT DISTINCT 
+                CASE
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'HOLIDAY'
+            THEN
+               'Holiday'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'PROPER RUN RATIO'
+            THEN
+               '可稼动率'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'RUN RATIO'
+            THEN
+               '时间稼动率'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'JC'
+            THEN
+               'J/C'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'MC'
+            THEN
+               'M/C'
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'E_DOWN'
+            THEN
+               '设备Down'  
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'P_DOWN'
+            THEN
+               '工艺Down' 
+            WHEN MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME = 'CM'
+            THEN
+               '设备CM'                              
+            ELSE
+               MDWMGR.DAS_MMS_MONITOR_TD.MACHINESTATENAME
+         END
+            AS MACHINESTATENAME
+  FROM MDWMGR.DAS_MMS_MONITOR_TD WHERE PROCESSTYPE=#{processType} 
+  			  <if test='lineName != "ALL"'>
+  				AND LINENAME = #{lineName} 
+  			  </if>
+  			   <if test='lineName == "ALL"'>
+  				AND MACHINENAME LIKE #{lineName1}
+  			  </if>
+  			  <if test='todayflag == "Today"'>
+				AND TIMEKEY &gt;= #{dateMin} 
+  			  </if>
+  			  <if test='todayflag == "Yesterday"'>
+				AND TIMEKEY &lt; #{dateMin} 
+  			  </if>
+		AND (EVENTCOMMENT !='MDLSubjectReport' OR EVENTCOMMENT is null) 
+		AND MACHINESTATENAME IS NOT NULL
+  </select> 
+  
+ 	 <select id="geteqpStateMonitor7days" resultType="java.util.HashMap">
+  SELECT A.FACTORYDATE,
+         A.FACTORYNAME,
+         A.MACHINENAME,
+         A.PROCESSTYPE,
+         A.LINENAME,
+         A.TIMEKEY,
+         A.EVENTTIME,
+         CASE
+            WHEN A.MACHINESTATENAME = 'HOLIDAY' THEN 'Holiday'
+            WHEN A.MACHINESTATENAME = 'PROPER RUN RATIO' THEN '可稼动率'
+            WHEN A.MACHINESTATENAME = 'RUN RATIO' THEN '时间稼动率'
+            WHEN A.MACHINESTATENAME = 'JC' THEN 'J/C'
+            WHEN A.MACHINESTATENAME = 'MC' THEN 'M/C'
+            WHEN A.MACHINESTATENAME = 'E_DOWN' THEN '设备Down'
+            WHEN A.MACHINESTATENAME = 'P_DOWN' THEN '工艺Down'
+            WHEN A.MACHINESTATENAME = 'CM' THEN '设备CM'
+            ELSE A.MACHINESTATENAME
+         END
+            AS MACHINESTATENAME,
+         A.EVENTUSER,
+         A.EVENTCOMMENT,
+         A.REASONCODETYPE,
+         A.REASONCODE,
+         A.MACHINESTATECOMMENT
+    FROM MDWMGR.DAS_MMS_MONITOR_7D A
+   WHERE     A.PROCESSTYPE = #{processType}
+		  	  <if test='lineName != "ALL"'>
+  				AND A.LINENAME = #{lineName} 
+  			  </if>
+  			  <if test='lineName == "ALL"'>
+  				AND A.MACHINENAME LIKE #{lineName1}
+  			  </if>
+  					AND (A.EVENTCOMMENT !='MDLSubjectReport' OR A.EVENTCOMMENT is null) 
+		AND A.MACHINESTATENAME IS NOT NULL
+         AND A.TIMEKEY &lt; #{dateMax}
+         AND A.TIMEKEY &gt;= #{dateMin}
+		ORDER BY A.MACHINENAME,A.TIMEKEY DESC
+	</select>
+	
+		<select id="geteqpStateMonitorStateList7days" resultType="java.util.HashMap">
+	  SELECT DISTINCT
+         CASE
+            WHEN A.MACHINESTATENAME = 'HOLIDAY' THEN 'Holiday'
+            WHEN A.MACHINESTATENAME = 'PROPER RUN RATIO' THEN '可稼动率'
+            WHEN A.MACHINESTATENAME = 'RUN RATIO' THEN '时间稼动率'
+            WHEN A.MACHINESTATENAME = 'JC' THEN 'J/C'
+            WHEN A.MACHINESTATENAME = 'MC' THEN 'M/C'
+            WHEN A.MACHINESTATENAME = 'E_DOWN' THEN '设备Down'
+            WHEN A.MACHINESTATENAME = 'P_DOWN' THEN '工艺Down'
+            WHEN A.MACHINESTATENAME = 'CM' THEN '设备CM'
+            ELSE A.MACHINESTATENAME
+         END
+            AS MACHINESTATENAME
+    FROM MDWMGR.DAS_MMS_MONITOR_7D A
+   WHERE     A.PROCESSTYPE = #{processType}
+		  	  <if test='lineName != "ALL"'>
+  				AND A.LINENAME = #{lineName} 
+  			  </if>
+  			  <if test='lineName == "ALL"'>
+  				AND A.MACHINENAME LIKE #{lineName1}
+  			  </if>
+  			 		AND (A.EVENTCOMMENT !='MDLSubjectReport' OR A.EVENTCOMMENT is null) 
+		AND A.MACHINESTATENAME IS NOT NULL
+  		 AND A.TIMEKEY &lt; #{dateMax}
+         AND A.TIMEKEY &gt;= #{dateMin}
+	</select>
+	
+	<select id="geteqpStateMonitorRunRatio" resultType="java.util.HashMap">
+		 select * from MDWMGR.DAS_MMDSTATETIME_MONITOR_TD
+where 1=1 --AND factoryname='MODULE'
+and statename='RUN'
+and duration is not null AND MACHINENAME =#{machineName}
+    </select> 
+    
+    <select id="geteqpStateMonitorRunRatio7day" resultType="java.util.HashMap">
+		SELECT *
+  FROM MDWMGR.DAS_MMDSTATETIME_MONITOR_7D
+ WHERE     1 = 1
+       AND STATENAME = 'RUN'
+       AND DURATION IS NOT NULL
+       AND MACHINENAME = #{machineName}
+       AND FACTORYDATE = #{date}
+	</select>
+	
+	<select id="getThisMonthDayCount" resultType="java.util.HashMap">
+			SELECT COUNT (DISTINCT FACTORYDATE) AS COUNT
+  FROM MDWMGR.STD_CALENDAR A
+ WHERE A.FACTORYMONTH = (SELECT MONTH_0
+                           FROM MDWMGR.DAS_CALENDAR_MWD
+                          WHERE DATATYPE = 'FACTORY_MWD')
+	</select>
+	
+	<select id="getDefaultCategory" resultType="java.util.HashMap">
+		SELECT *
+  		FROM MDWMGR.DAS_DEFAULTCHOOSE A
+ 		WHERE A.FACTORYNAME = #{shopName}
+	</select>
+	
+	<select id="getYieldDefectSpec" resultType="java.util.HashMap">
+		SELECT *
+	  FROM MDWMGR.STD_DEFECTRATEPLAN
+	 WHERE     PRODUCTCATEGORY = #{productCategory}
+	       AND PRODUCTIONTYPE = #{productionType}
+	       AND FACTORYNAME = #{specFactoryName}
+	       AND DEFECTTYPE=#{specDefectType}
+	       AND DEPARTMENT=#{specDepartment}
+	       AND FACTORYYEAR=#{specFactoryYear}
+	</select>
+
+
+</mapper>

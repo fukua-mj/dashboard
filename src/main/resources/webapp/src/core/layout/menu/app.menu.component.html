@@ -1,0 +1,20 @@
+<div class="layout-sidebar" [ngClass]="{'layout-sidebar-active': app.sidebarActive, 'layout-sidebar-dark': app.darkMenu}"
+    (click)="app.onSidebarClick($event)" (mouseover)="app.sidebarActive=true" (mouseleave)="app.sidebarActive=false">
+    <div class="sidebar-logo">
+        <a routerLink="/">
+            <img alt="logo" src="assets/layout/images/company-logo.png" id="main-logo"/>
+<!--             <span class="app-name" style="font-size: 20px;">
+                bidmReport
+            </span> -->
+        </a>
+        <a href="#" class="sidebar-anchor" title="Toggle Menu" (click)="app.onToggleMenuClick($event)"></a>
+    </div>
+
+    <p-scrollPanel #scrollPanel [style]="{height: '100%'}">
+        <ul app-submenu [item]="menuList" root="true" class="layout-menu" visible="true" [reset]="reset"></ul>
+    </p-scrollPanel>
+<!--     <p-scrollPanel #scrollPanel styleClass="menuPanel">
+        <ul app-submenu [item]="menuList" root="true" class="layout-menu" visible="true" [reset]="reset"></ul>
+    </p-scrollPanel> -->
+
+</div>

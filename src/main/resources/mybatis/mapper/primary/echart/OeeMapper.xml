@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.OeeMapper">
+   
+    <select id="getMachineName" resultType="java.util.HashMap">
+		SELECT *
+  			FROM MDWMGR.OEE_MACHINESPEC A
+ 		WHERE A.USEFLAG = 'Y'  AND A.PROCESSTYPE = #{machineType} ORDER BY A.LINENAME ASC,A.MACHINENAME ASC
+    </select>  
+    
+    <select id="getoeedata" resultType="java.util.HashMap">
+		SELECT MDWMGR.DAS_MMDSTATETIME.FACTORYNAME,
+		       MDWMGR.DAS_MMDSTATETIME.PROCESSTYPE,
+		                CASE
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'HOLIDAY'
+		            THEN
+		               'Holiday'
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'PROPER RUN RATIO'
+		            THEN
+		               '可稼动率'
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'RUN RATIO'
+		            THEN
+		               '时间稼动率'
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'JC'
+		            THEN
+		               'J/C'
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'MC'
+		            THEN
+		               'M/C'
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'E_DOWN'
+		            THEN
+		               '设备Down'  
+		            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'P_DOWN'
+		            THEN
+		               '工艺Down'                             
+		            ELSE
+		               MDWMGR.DAS_MMDSTATETIME.STATENAME
+		         END
+		            AS STATENAME,
+		       MDWMGR.DAS_MMDSTATETIME.ORDER_BY_COL1,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_1,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_2,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_3,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_4,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_5,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_6,
+		       MDWMGR.DAS_MMDSTATETIME.DAY_7,
+		       MDWMGR.DAS_MMDSTATETIME.WEEK_1,
+		       MDWMGR.DAS_MMDSTATETIME.WEEK_2,
+		       MDWMGR.DAS_MMDSTATETIME.WEEK_3,
+		       MDWMGR.DAS_MMDSTATETIME.WEEK_4,
+		       MDWMGR.DAS_MMDSTATETIME.MONTH_1,
+		       MDWMGR.DAS_MMDSTATETIME.MONTH_2,
+		       MDWMGR.DAS_MMDSTATETIME.MONTH_3
+		  FROM MDWMGR.DAS_MMDSTATETIME
+		 WHERE     MDWMGR.DAS_MMDSTATETIME.FACTORYNAME = #{shopName}
+		       AND MDWMGR.DAS_MMDSTATETIME.PROCESSTYPE = #{processType}
+		       AND MDWMGR.DAS_MMDSTATETIME.MACHINENAME LIKE #{machinename}
+		       ORDER BY ORDER_BY_COL1	
+    </select>  
+    
+    <select id="getOeeRatio" resultType="java.util.HashMap">
+<!-- 		  SELECT A.FACTORYDATE,
+	         A.DATETYPE,
+	         A.FACTORYNAME,
+	         A.MACHINENAME,
+	         A.XINGNENGJIADONG * 100 AS XINGNENGJIADONG,
+	         A.OEE * 100 AS OEE
+	    		FROM MDWMGR.DAS_MACHINE_OEEDATA_MWD A
+	   	  WHERE A.FACTORYNAME = #{shopName} AND A.MACHINENAME = #{machinename}
+		  ORDER BY A.DATETYPE DESC, A.FACTORYDATE
+		  
+ -->		  
+			SELECT A.FACTORYDATE,
+	         A.DATETYPE,
+	         A.FACTORYNAME,
+	         A.MACHINENAME,
+	         A.SHIJIANJIADONG * 100 AS SHIJIANJIADONG,
+	         A.KEJIADONG * 100 AS KEJIADONG,
+	         A.XINGNENGJIADONG * 100 AS XINGNENGJIADONG,
+	         A.OEE * 100 AS OEE
+	    FROM MDWMGR.DSB_MACHINEOEEDATA_MWD A
+	   WHERE A.FACTORYNAME = #{shopName} AND A.MACHINENAME = #{machinename}
+	ORDER BY A.DATETYPE DESC, A.FACTORYDATE		 		  
+    </select>  
+    
+    <select id="getoeedata_ALL" resultType="java.util.HashMap">
+		select t1.FACTORYNAME,
+		         t1.PROCESSTYPE,
+		                           CASE
+		            WHEN t1.STATENAME = 'HOLIDAY'
+		            THEN
+		               'Holiday'
+		            WHEN t1.STATENAME = 'PROPER RUN RATIO'
+		            THEN
+		               '可稼动率'
+		            WHEN t1.STATENAME = 'RUN RATIO'
+		            THEN
+		               '时间稼动率'
+		            WHEN t1.STATENAME = 'JC'
+		            THEN
+		               'J/C'
+		            WHEN t1.STATENAME = 'E_DOWN'
+		            THEN
+		               '设备Down'
+		            WHEN t1.STATENAME = 'MC'
+		            THEN
+		               'M/C' 
+		            WHEN t1.STATENAME = 'P_DOWN'
+		            THEN
+		               '工艺Down'
+		            ELSE
+		               t1.STATENAME
+		         END
+		            AS STATENAME,
+		         ROUND (t1.day_1_fenzi/t2.eqp_num, 2)  day_1,
+		         ROUND (t1.day_2_fenzi/t2.eqp_num, 2)  day_2,
+		         ROUND (t1.day_3_fenzi/t2.eqp_num, 2)  day_3,
+		         ROUND (t1.day_4_fenzi/t2.eqp_num, 2)  day_4,
+		         ROUND (t1.day_5_fenzi/t2.eqp_num, 2)  day_5,
+		         ROUND (t1.day_6_fenzi/t2.eqp_num, 2)  day_6,
+		         ROUND (t1.day_7_fenzi/t2.eqp_num, 2)  day_7,
+		         ROUND (t1.week_1_fenzi/t2.eqp_num, 2)  week_1,
+		         ROUND (t1.week_2_fenzi/t2.eqp_num, 2)  week_2,
+		         ROUND (t1.week_3_fenzi/t2.eqp_num, 2)  week_3,
+		         ROUND (t1.week_4_fenzi/t2.eqp_num, 2)  week_4,
+		         ROUND (t1.month_1_fenzi/t2.eqp_num, 2)  month_1,
+		         ROUND (t1.month_2_fenzi/t2.eqp_num, 2)  month_2,
+		         ROUND (t1.month_3_fenzi/t2.eqp_num, 2)  month_3 from 
+		         (SELECT FACTORYNAME,
+		         PROCESSTYPE,
+		         STATENAME,
+		         sum (DAY_1) DAY_1_fenzi,
+		         sum (DAY_2) DAY_2_fenzi,
+		         sum (DAY_3) DAY_3_fenzi,
+		         sum (DAY_4) DAY_4_fenzi,
+		         sum (DAY_5) DAY_5_fenzi,
+		         sum (DAY_6) DAY_6_fenzi,
+		         sum (DAY_7) DAY_7_fenzi,
+		         sum (WEEK_1) WEEK_1_fenzi,
+		         sum (WEEK_2) WEEK_2_fenzi,
+		         sum (WEEK_3) WEEK_3_fenzi,
+		         sum (WEEK_4) WEEK_4_fenzi,
+		         sum (MONTH_1) MONTH_1_fenzi,
+		         sum (MONTH_2) MONTH_2_fenzi,
+		         sum (MONTH_3) MONTH_3_fenzi
+		    FROM MDWMGR.DAS_MMDSTATETIME
+		GROUP BY FACTORYNAME, PROCESSTYPE, STATENAME) t1,
+		(
+		select factoryname,processtype,count(*) eqp_num from MDWMGR.OEE_MACHINESPEC
+		where useflag='Y'
+		group by factoryname,processtype) t2
+		where t1.factoryname=t2.factoryname
+		and t1.processtype=t2.processtype
+		AND T1.PROCESSTYPE=#{processType}
+    </select>  
+    
+    <select id="getOeeRatio_ALL" resultType="java.util.HashMap">
+      SELECT T1.FACTORYDATE,
+         T1.DATETYPE,
+         T1.PROCESSTYPE,
+         T1.FACTORYNAME,
+         ROUND (T1.SUMSHIJIANJIADONG / T2.EQP_NUM, 4) * 100 AS SHIJIANJIADONG,
+         ROUND (T1.SUMKEJIADONG / T2.EQP_NUM, 4) * 100 AS KEJIADONG,
+         ROUND (T1.SUMXINGNENGJIADONG / T2.EQP_NUM, 4) * 100 AS XINGNENGJIADONG,
+         ROUND (T1.SUMOEE / T2.EQP_NUM, 4) * 100 AS OEE
+    FROM (  SELECT B.FACTORYDATE,
+                   B.DATETYPE,
+                   C.PROCESSTYPE,
+                   B.FACTORYNAME,
+                   SUM (B.XINGNENGJIADONG) AS SUMXINGNENGJIADONG,
+                   SUM (B.KEJIADONG) AS SUMKEJIADONG,
+                   SUM (B.SHIJIANJIADONG) AS SUMSHIJIANJIADONG,
+                   SUM (B.OEE) AS SUMOEE
+              FROM MDWMGR.DSB_MACHINEOEEDATA_MWD B, MDWMGR.OEE_MACHINESPEC C
+             WHERE     1 = 1
+                   AND B.FACTORYNAME = C.FACTORYNAME
+                   AND B.MACHINENAME = C.MACHINENAME
+                   AND C.USEFLAG = 'Y'
+          GROUP BY B.FACTORYDATE,
+                   B.DATETYPE,
+                   C.PROCESSTYPE,
+                   B.FACTORYNAME) T1,
+         (  SELECT A.FACTORYNAME, A.PROCESSTYPE, COUNT (*) AS EQP_NUM
+              FROM MDWMGR.OEE_MACHINESPEC A
+             WHERE 1 = 1 AND A.USEFLAG = 'Y'
+          GROUP BY A.FACTORYNAME, A.PROCESSTYPE) T2
+   WHERE     1 = 1
+         AND T1.FACTORYNAME = T2.FACTORYNAME
+         AND T1.PROCESSTYPE = T2.PROCESSTYPE
+	     AND T1.FACTORYNAME = #{shopName}
+	     AND T1.PROCESSTYPE = #{processType}
+ORDER BY T1.DATETYPE DESC, T1.FACTORYDATE
+    </select>  
+
+    <select id="getoeedataByLineDifference" resultType="java.util.HashMap">
+		  SELECT MDWMGR.DAS_MMDSTATETIME.FACTORYNAME,
+	         MDWMGR.DAS_MMDSTATETIME.MACHINENAME,
+	         MDWMGR.DAS_MMDSTATETIME.PROCESSTYPE,
+	         CASE
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'HOLIDAY'
+	            THEN
+	               'Holiday'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'PROPER RUN RATIO'
+	            THEN
+	               '可稼动率'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'RUN RATIO'
+	            THEN
+	               '时间稼动率'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'JC'
+	            THEN
+	               'J/C'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'MC'
+	            THEN
+	               'M/C'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'E_DOWN'
+	            THEN
+	               '设备Down'
+	            WHEN MDWMGR.DAS_MMDSTATETIME.STATENAME = 'P_DOWN'
+	            THEN
+	               '工艺Down'
+	            ELSE
+	               MDWMGR.DAS_MMDSTATETIME.STATENAME
+	         END
+	            AS STATENAME,
+	         MDWMGR.DAS_MMDSTATETIME.ORDER_BY_COL1,
+	         MDWMGR.DAS_MMDSTATETIME.DAY_1
+	    FROM MDWMGR.DAS_MMDSTATETIME
+	   WHERE     MDWMGR.DAS_MMDSTATETIME.FACTORYNAME = #{shopName}
+	         AND MDWMGR.DAS_MMDSTATETIME.PROCESSTYPE = #{processType}
+	ORDER BY MDWMGR.DAS_MMDSTATETIME.MACHINENAME, ORDER_BY_COL1
+    </select> 
+    
+    <select id="getOeeMachineName" resultType="java.util.HashMap">
+			SELECT DISTINCT MACHINENAME
+	  FROM MDWMGR.DAS_MMDSTATETIME
+	 WHERE FACTORYNAME = #{shopName} AND PROCESSTYPE = #{processType}
+    </select> 
+    
+    <select id="getOeeRatioByLineDifference" resultType="java.util.HashMap">
+      SELECT A.FACTORYDATE,
+         A.DATETYPE,
+         A.FACTORYNAME,
+         A.MACHINENAME,
+         A.KEJIADONG * 100 AS KEJIADONG,
+         A.SHIJIANJIADONG * 100 AS SHIJIANJIADONG,
+         A.XINGNENGJIADONG * 100 AS XINGNENGJIADONG,
+         A.OEE * 100 AS OEE
+    FROM MDWMGR.DSB_MACHINEOEEDATA_MWD A
+   WHERE     A.FACTORYNAME = #{shopName}
+	     AND A.MACHINENAME LIKE #{machineNameLikeValue}
+	     AND A.FACTORYDATE = #{yesterdayDate}
+         AND A.DATETYPE = 'DAY'
+ORDER BY A.MACHINENAME
+<!--     
+    
+    
+		  SELECT A.FACTORYDATE,
+	         A.DATETYPE,
+	         A.FACTORYNAME,
+	         A.MACHINENAME,
+	         A.XINGNENGJIADONG * 100 AS XINGNENGJIADONG,
+	         A.OEE * 100 AS OEE
+	    FROM MDWMGR.DAS_MACHINE_OEEDATA_MWD A
+	   WHERE     A.FACTORYNAME = #{shopName}
+	         AND A.MACHINENAME LIKE #{machineNameLikeValue}
+	         AND A.FACTORYDATE = #{yesterdayDate}
+	         AND A.DATETYPE = 'DAY'
+	ORDER BY A.MACHINENAME -->
+    </select> 
+    
+    <select id="getOpt_oeeMDLLineName" resultType="java.util.HashMap">
+		SELECT *
+  			FROM MDWMGR.OEE_MACHINESPEC A
+ 		WHERE A.USEFLAG = 'Y'  AND A.PROCESSTYPE = #{processType} ORDER BY A.LINENAME ASC,A.MACHINENAME ASC
+    </select>        
+    
+    <select id="getPrdMonitorHeatMap" resultType="java.util.HashMap">
+	      SELECT *
+	    FROM MDWMGR.DSB_OEE_HOTSPOTDATA_MWD A
+	   WHERE A.FACTORYNAME = #{shopName}
+	ORDER BY A.LINENAME, A.PROCESSTYPE
+     </select>   
+     
+     <select id="getPrdMonitorHeatMapLineName" resultType="java.lang.String">
+	       SELECT DISTINCT A.LINENAME
+	    FROM MDWMGR.DSB_OEE_HOTSPOTDATA_MWD A
+	   WHERE A.FACTORYNAME = #{shopName} 
+	ORDER BY A.LINENAME DESC
+     </select>  
+   
+</mapper>

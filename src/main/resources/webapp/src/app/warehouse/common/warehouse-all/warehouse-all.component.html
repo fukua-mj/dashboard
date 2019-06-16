@@ -1,0 +1,13 @@
+<div class="ui-g">
+  <div class="ui-g-7">
+    <div echarts [options]="echartOptionTotal" (chartClick)="chartClick($event)" class="ui-g-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+  </div>
+  <div class="ui-g-5">
+    <div class="ui-g-12">
+      <div echarts [options]="echartOptionGrade" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+    </div>
+    <div class="ui-g-12">
+      <div echarts [options]="echartOptionTime" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+    </div>
+  </div>
+</div>

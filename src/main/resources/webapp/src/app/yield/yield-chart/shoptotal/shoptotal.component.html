@@ -1,0 +1,18 @@
+<div class="ui-g">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10">
+    <div echarts [options]="TotalYieldChartOption" class="ui-g-12 ui-lg-12 ui-xl-12 xl-chartArea lg-chartArea"></div>
+    <div echarts [options]="DefectChartOption" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+    <div echarts [options]="ScrapChartOption" class="ui-g-6 ui-lg-6 ui-xl-6 xl-chartArea lg-chartArea"></div>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title"><strong>产品类型</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="TotalYieldProductCategory + {{shopName}}" value="{{item}}" label="{{item}}" [(ngModel)]="selectedProductionCategory"
+            inputId="TotalYieldProductCategory+{{shopName}} + {{item}}" (click)="drawChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

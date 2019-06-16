@@ -1,0 +1,47 @@
+<div class="ui-g">
+  <div id="productionLineDifferChart" echarts [options]="productionLineDifferChartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="lg-title xl-title"><strong>设备类型</strong></div>
+      <ul class="optionul">
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="COF%" label="COF" [(ngModel)]="selectedMachineType" inputId="MachineType1"
+            (click)="MahcineTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="OCA%" label="OCA" [(ngModel)]="selectedMachineType" inputId="MachineType2"
+            (click)="MahcineTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="DEM%" label="DEM" [(ngModel)]="selectedMachineType" inputId="MachineType3"
+            (click)="MahcineTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="AFI%" label="AFI" [(ngModel)]="selectedMachineType" inputId="MachineType4"
+            (click)="MahcineTypeClicked()" (selected)="true"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="2Ay%" label="2AY" [(ngModel)]="selectedMachineType" inputId="MachineType5"
+            (click)="MahcineTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="MFI%" label="MFI" [(ngModel)]="selectedMachineType" inputId="MachineType6"
+            (click)="MahcineTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="MachineType" value="FAP%" label="FAP" [(ngModel)]="selectedMachineType" inputId="MachineType7"
+            (click)="MahcineTypeClicked()" (selected)="true"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="lg-title xl-title"><strong>产品类型</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of LineDifferProductCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="LineDifferProductCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedLineDifferProductionCategory"
+            inputId="LineDifferProductCategory" (click)="drawproductionLineDifferenceChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

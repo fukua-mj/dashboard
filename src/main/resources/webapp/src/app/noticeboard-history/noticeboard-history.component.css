@@ -1,0 +1,30 @@
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-noticetimekey {
+        font-size: 1px;
+    }
+    .lg-subject {
+        font-size: 8px;
+    }
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-noticetimekey {
+        font-size: 12px;
+    }
+    .xl-subject {
+        font-size: 14px;
+    }
+}

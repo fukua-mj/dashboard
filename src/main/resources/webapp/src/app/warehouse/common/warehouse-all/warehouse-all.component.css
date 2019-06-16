@@ -1,0 +1,149 @@
+.chartArea-12{
+    height: 700px;
+    border-right: 0;
+    border-bottom: 0;
+}
+.chartArea{
+    height: 700px;
+}
+.productionTypeArea {
+    height: 300px;
+}
+.productionCategoryArea {
+    height: 400px;
+}
+ul {
+    list-style-type: none;
+}
+
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+    .sm-chartArea-12{
+        height: 401px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .sm-chartArea{
+        height: 300px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .sm-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .sm-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .sm-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+    .md-chartArea-12{
+        height: 829px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .md-chartArea{
+        height: 600px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .md-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .md-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .md-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-chartArea-12{
+        height: 577px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .lg-chartArea{
+        height: 620px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .lg-subchartArea{
+        height: 296px;
+        border-bottom: 0;
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .lg-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 240px;
+    }
+    .lg-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .lg-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 324px;
+    } 
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-chartArea-12{
+        height: 797px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .xl-chartArea{
+        height: 845px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .xl-subchartArea{
+        height: 406px;
+        border-bottom: 0;
+        background-color: white;
+    }   
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .xl-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 300px;
+    }
+    .xl-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .xl-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 484px;
+    }    
+}

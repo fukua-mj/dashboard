@@ -1,0 +1,222 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-panel>
+    <p-table #userinfoTable [columns]='cols' [loading]="loading" [value]="userInfoList" selectionMode="single"
+        [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [paginator]="true"
+        [rows]="15" [globalFilterFields]="['useraccount']">
+        <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix">
+                用户信息
+                <button type="button" pButton icon="fa fa-file-o" iconPos="left" label="Export" (click)="userinfoTable.exportCSV()"
+                    style="float: right;"></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col *ngFor="let col of columns">
+            </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of cols" pResizableColumn>{{col.header}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-userInfoList let-columns="columns">
+            <tr [pSelectableRow]="userInfoList">
+                <td *ngFor="let col of columns" class="ui-resizable-column">{{userInfoList[col.field]}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div style="text-align: left">
+                <input type="text" pInputText placeholder="用户账号" (input)="userinfoTable.filterGlobal($event.target.value, 'contains')"
+                    style="background-color: rgb(221, 236, 243)">
+                <p-button (click)="showAddUserDialog()" icon="fa fa-plus" label="新增"></p-button>
+                <p-button (click)="showUpdateUserDialog()" icon="fa fa-plus" label="修改"></p-button>
+                <p-button (click)="showDeleteUserDialog()" icon="fa fa-minus" label="删除"></p-button>
+                <p-button (click)="showUserRoleLinkDialog()" icon="fa fa-connectdevelop" label="用户关联角色"></p-button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-panel>
+
+<p-dialog header="注册用户" [(visible)]="display_add" [responsive]="true" showEffect="fade" [modal]="true" [width]="400">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="useraccount">用户账号</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="useraccount" [(ngModel)]="addedUser.useraccount" placeholder="英文字母" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="password">用户密码</label>
+            </div>
+            <div class="ui-g-7">
+                <input type="password" pPassword [(ngModel)]="addedUser.password" style="background-color: rgb(221, 236, 243)" />
+                <!-- <input pInputText id="password" [(ngModel)]="addedUser.password"> -->
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="sitename">部门</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="sitename" [(ngModel)]="addedUser.sitename" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="username">用户姓名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="username" [(ngModel)]="addedUser.username" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="email">邮箱</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="email" [(ngModel)]="addedUser.email" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="phone">电话</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="phone" [(ngModel)]="addedUser.phone" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="enabled">账号状态</label>
+            </div>
+            <div class="ui-g-7">
+                <p-dropdown [options]="accountState" [(ngModel)]="addedUserState" placeholder="账号状态" optionLabel="name" [style]="{'width':'100%'}"
+                    [showClear]="true"></p-dropdown>
+                <!-- <input pInputText id="enabled" [(ngModel)]="addedUser.enabled" style="background-color: rgb(221, 236, 243)"> -->
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description">账号描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description" [(ngModel)]="addedUser.description" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Save" (click)="addUser()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Modify用户" [(visible)]="display_modify" [responsive]="true" showEffect="fade" [modal]="true" [width]="350">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="useraccount_modify">用户账号</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="useraccount_modify" [(ngModel)]="selectedUser.useraccount" disabled="false" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <!--             <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="password_modify">用户密码</label>
+                </div>
+                <div class="ui-g-7">
+                    <input pInputText id="password_modify" [(ngModel)]="selectedUser.password">
+                </div>
+            </div> -->
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="sitename_modify">部门</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="sitename_modify" [(ngModel)]="selectedUser.sitename" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="username_modify">用户姓名</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="username_modify" [(ngModel)]="selectedUser.username" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="email_modify">邮箱</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="email_modify" [(ngModel)]="selectedUser.email" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="phone_modify">电话</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="phone_modify" [(ngModel)]="selectedUser.phone" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="enabled_modify">账号状态</label>
+            </div>
+            <div class="ui-g-7">
+                <p-dropdown [options]="accountState" [(ngModel)]="selectedUserState" placeholder="账号状态" optionLabel="name"
+                    [showClear]="true"></p-dropdown>
+                <!--
+                        <input pInputText id="enabled_modify" [(ngModel)]="selectedUser.enabled"> -->
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="description_modify">账号描述</label>
+            </div>
+            <div class="ui-g-7">
+                <input pInputText id="description_modify" [(ngModel)]="selectedUser.description" style="background-color: rgb(221, 236, 243)">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Update" (click)="updateUser()" *ngIf="display_update"></p-button>
+            <p-button label="Delete" (click)="deleteUser()" *ngIf="display_delete"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="用户关联角色" [(visible)]="display_UserRoleLink" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <p-pickList [source]="fromroles" [target]="toroles" sourceHeader="Available" targetHeader="Selected"
+                [showSourceControls]=false [showTargetControls]=false [responsive]="true" filterBy="rolename" dragdrop="true"
+                dragdropScope="users" sourceFilterPlaceholder="RoleName" targetFilterPlaceholder="RoleName"
+                [sourceStyle]="{'height':'200px'}" [targetStyle]="{'height':'200px'}" (onMoveToTarget)="onMoveToRoleTarget($event)">
+                <ng-template let-roleinfo pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <!-- <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
+                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{roleinfo.rolename}} -
+                            {{roleinfo.description}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+        </div>
+
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Commit" (click)="addUserRoleLink()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>

@@ -1,0 +1,17 @@
+<div class="ui-g">
+  <div id="eacproductionCutLineChart" echarts [options]="echartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 lineNameArea xl-lineNameArea md-lineNameArea lg-lineNameArea sm-lineNameArea">
+        <div class="xl-title lg-title"><strong>设备ID</strong></div>
+        <ul class="optionul">
+          <li *ngFor="let item of MachineName;index as i" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="OEEMachineName+{{shopName}} + {{processType}}" value="{{item}}" label="{{item}}"
+              [(ngModel)]="selectedMachineName" inputId="OEEMachineName+{{shopName}} + {{processType}}+{{item}}"
+              (click)="drawChart()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

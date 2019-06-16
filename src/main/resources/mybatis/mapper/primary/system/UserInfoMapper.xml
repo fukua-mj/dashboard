@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.UserInfo">
+    <result column="USERACCOUNT" jdbcType="VARCHAR" property="useraccount" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="SITENAME" jdbcType="VARCHAR" property="sitename" />
+    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="ENABLED" jdbcType="VARCHAR" property="enabled" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.UserInfo">
+    insert into NG_DAS_USERINFO (USERACCOUNT, PASSWORD, SITENAME, 
+      USERNAME, EMAIL, PHONE, 
+      ENABLED, DESCRIPTION)
+    values (#{useraccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{sitename,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{enabled,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.UserInfo">
+    insert into NG_DAS_USERINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="useraccount != null">
+        USERACCOUNT,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="sitename != null">
+        SITENAME,
+      </if>
+      <if test="username != null">
+        USERNAME,
+      </if>
+      <if test="email != null">
+        EMAIL,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="enabled != null">
+        ENABLED,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="useraccount != null">
+        #{useraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sitename != null">
+        #{sitename,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getAllUserInfoList" resultMap="BaseResultMap">
+  	  SELECT *
+    FROM NG_DAS_USERINFO A
+    WHERE 1=1
+ORDER BY A.USERACCOUNT
+  </select>
+  
+  <select id="getUserInfoByAccount" resultMap="BaseResultMap">
+  	  	  SELECT *
+    FROM NG_DAS_USERINFO A
+    WHERE 1=1 AND A.USERACCOUNT = #{userAccount}
+ORDER BY A.USERACCOUNT
+  </select>
+  
+  	<insert id="insertUserInfo" parameterType="com.boe.idm.project.model.system.UserInfo">
+		INSERT INTO NG_DAS_USERINFO(USERACCOUNT,PASSWORD,SITENAME,USERNAME,EMAIL,PHONE,ENABLED,DESCRIPTION)
+		VALUES(#{useraccount},#{password},#{sitename},#{username},#{email},#{phone},#{enabled},#{description})
+	</insert>
+	
+	<update id="updateUserInfo" parameterType="com.boe.idm.project.model.system.UserInfo">
+		UPDATE NG_DAS_USERINFO SET
+		PASSWORD = #{password},
+		SITENAME = #{sitename},
+		USERNAME = #{username},
+		EMAIL = #{email},
+		PHONE = #{phone},
+		ENABLED = #{enabled},
+		DESCRIPTION = #{description}
+		WHERE USERACCOUNT = #{useraccount}
+	</update>
+	
+	<delete id="deleteUserInfo" parameterType="com.boe.idm.project.model.system.UserInfo">
+		DELETE NG_DAS_USERINFO WHERE
+		USERACCOUNT=#{useraccount}
+	</delete>
+	
+	<select id="getUserInfoListWithOutExist" resultType="com.boe.idm.project.model.system.UserInfo">
+		  SELECT *
+    FROM NG_DAS_USERINFO U
+   WHERE U.USERACCOUNT NOT IN (SELECT UR.USERACCOUNT
+                                 FROM NG_DAS_USERROLELINK UR
+                                WHERE UR.ROLENAME = #{roleName})
+ORDER BY U.USERACCOUNT
+	</select>	
+	
+	<select id="getUserInfoListByRole" resultType="com.boe.idm.project.model.system.UserInfo">
+		  SELECT *
+    FROM NG_DAS_USERINFO U
+   WHERE U.USERACCOUNT IN (SELECT UR.USERACCOUNT
+                                 FROM NG_DAS_USERROLELINK UR
+                                WHERE UR.ROLENAME = #{roleName})
+ORDER BY U.USERACCOUNT
+	</select>
+	
+	<update id="updatePassword">
+			UPDATE WEBMGR.NG_DAS_USERINFO A
+	   SET A.PASSWORD = #{passWord}
+	 WHERE A.USERACCOUNT = #{userAccount}
+	</update>
+</mapper>

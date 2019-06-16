@@ -1,0 +1,101 @@
+<p-growl [(value)]="msgs"></p-growl>
+
+<div class="layout-topbar">
+
+    <a routerLink="/" *ngIf="app.isHorizontal() && !app.isMobile()" class="topbar-logo">
+        <img alt="logo" src="assets/layout/images/company-logo.png" />
+        <!-- <span class="app-name">bidmReport</span> -->
+    </a>
+
+    <img alt="logo" src="assets/layout/images/logo-white.png" class="mobile-logo" />
+
+    <a href="#" class="menu-btn" (click)="app.onMenuButtonClick($event)">
+        <i class="material-icons">&#xE5D2;</i>
+    </a>
+
+    <a href="#" class="topbar-menu-btn" (click)="app.onTopbarMobileMenuButtonClick($event)">
+        <i class="material-icons">&#xE853;</i>
+    </a>
+
+    <div class="layout-topbar-menu-wrapper ui-g">
+        <div class="ui-g-4"></div>
+        <div class="ui-g-4" style="text-align: center">
+            <!--             <label style="color: white; font-size: 22px;">{{currentDate}}</label> -->
+        </div>
+        <div class="ui-g-4" style="padding-top: 0">
+            <ul class="topbar-menu fadeInDown" [ngClass]="{'topbar-menu-active': app.topbarMenuActive}" (click)="app.onTopbarMenuClick($event,settings)">
+                <!--                 <li>
+                    <a style="cursor:pointer">
+                        <i class="topbar-icon material-icons">&#xE853;</i>
+                        <span class="topbar-item-name" style="color:white">{{currentUser}}</span>
+                    </a>
+                </li> -->
+                <li #settings [ngClass]="{'active-topmenuitem':app.activeTopbarItem === settings}" (click)="app.onTopbarRootItemClick($event, settings)">
+                    <a style="cursor:pointer">
+                        <i class="topbar-icon material-icons">settings</i>
+                        <span class="topbar-item-name">Settings</span>
+                    </a>
+                    <ul class="fadeInDown" style="padding-top: 0px;padding-bottom: 0px;border-top:0px;max-height: 700px;overflow-y: auto;">
+                        <li role="menuitem">
+                            <p-panelMenu [model]="items" (click)="app.headerSideMenuClick()"></p-panelMenu>
+                        </li>
+                        <li role="menuitem">
+                            <a href="#" (click)="logout()">
+                                <i class="material-icons">lock</i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                        <!--                         <li>
+                            <a href="" (click)="modifyPassword()">
+                                <i class="material-icons">lock</i>
+                                <span>修改密码</span>
+                            </a>
+                        </li> -->
+                    </ul>
+                </li>
+                <li #notifications [ngClass]="{'active-topmenuitem':app.activeTopbarItem === notifications}" (click)="app.onTopbarRootItemClick($event, notifications)">
+                    <a href="#">
+                        <i class="topbar-icon material-icons">notifications</i>
+                        <span class="topbar-badge animated rubberBand" *ngIf="unReadNotifyCount>0">{{unReadNotifyCount}}</span>
+                        <span class="topbar-item-name">Notifications</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="修改密码" [(visible)]="display_modify" [responsive]="true" showEffect="fade" [modal]="true" [width]="400">
+    <div class="ui-g">
+        <div class="ui-g-4">
+            <label for="username_modify">用户名</label>
+        </div>
+        <div class="ui-g-7">
+            <input pInputText id="username_modify" [(ngModel)]="currentUser" [disabled]="true">
+        </div>
+        <div class="ui-g-4">
+            <label for="oldpassword_modify">原密码</label>
+        </div>
+        <div class="ui-g-7">
+            <input pInputText id="oldpassword_modify" [(ngModel)]="oldPassword">
+        </div>
+        <div class="ui-g-4">
+            <label for="newpassword_modify">新密码</label>
+        </div>
+        <div class="ui-g-7">
+            <input  pPassword type="password" id="newpassword_modify" [(ngModel)]="newPassword">
+        </div>
+        <div class="ui-g-4">
+            <label for="newpassword_modify">确认密码</label>
+        </div>
+        <div class="ui-g-7">
+            <input  pPassword type="password" id="newpassword_modify" [(ngModel)]="confirmPassword">
+        </div>
+    </div>
+    <p-footer>
+        <div>
+            <p-button label="Update" (click)="confirmNewPassword()"></p-button>
+            <p-button label="Cancel" (click)="cancel()"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>

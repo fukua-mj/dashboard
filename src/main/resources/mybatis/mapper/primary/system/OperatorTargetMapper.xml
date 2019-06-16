@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.OperatorTargetMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.OperatorTarget">
+    <result column="FACTORYNAME" jdbcType="VARCHAR" property="factoryname" />
+    <result column="OPERATORID" jdbcType="VARCHAR" property="operatorid" />
+    <result column="TARGET_TOTAL" jdbcType="DECIMAL" property="targetTotal" />
+    <result column="TARGET_00H" jdbcType="DECIMAL" property="target00h" />
+    <result column="TARGET_01H" jdbcType="DECIMAL" property="target01h" />
+    <result column="TARGET_02H" jdbcType="DECIMAL" property="target02h" />
+    <result column="TARGET_03H" jdbcType="DECIMAL" property="target03h" />
+    <result column="TARGET_04H" jdbcType="DECIMAL" property="target04h" />
+    <result column="TARGET_05H" jdbcType="DECIMAL" property="target05h" />
+    <result column="TARGET_06H" jdbcType="DECIMAL" property="target06h" />
+    <result column="TARGET_07H" jdbcType="DECIMAL" property="target07h" />
+    <result column="TARGET_08H" jdbcType="DECIMAL" property="target08h" />
+    <result column="TARGET_09H" jdbcType="DECIMAL" property="target09h" />
+    <result column="TARGET_10H" jdbcType="DECIMAL" property="target10h" />
+    <result column="TARGET_11H" jdbcType="DECIMAL" property="target11h" />
+    <result column="TARGET_12H" jdbcType="DECIMAL" property="target12h" />
+    <result column="TARGET_13H" jdbcType="DECIMAL" property="target13h" />
+    <result column="TARGET_14H" jdbcType="DECIMAL" property="target14h" />
+    <result column="TARGET_15H" jdbcType="DECIMAL" property="target15h" />
+    <result column="TARGET_16H" jdbcType="DECIMAL" property="target16h" />
+    <result column="TARGET_17H" jdbcType="DECIMAL" property="target17h" />
+    <result column="TARGET_18H" jdbcType="DECIMAL" property="target18h" />
+    <result column="TARGET_19H" jdbcType="DECIMAL" property="target19h" />
+    <result column="TARGET_20H" jdbcType="DECIMAL" property="target20h" />
+    <result column="TARGET_21H" jdbcType="DECIMAL" property="target21h" />
+    <result column="TARGET_22H" jdbcType="DECIMAL" property="target22h" />
+    <result column="TARGET_23H" jdbcType="DECIMAL" property="target23h" />
+    <result column="RESERVED1" jdbcType="VARCHAR" property="reserved1" />
+    <result column="RESERVED2" jdbcType="VARCHAR" property="reserved2" />
+    <result column="RESERVED3" jdbcType="VARCHAR" property="reserved3" />
+    <result column="LASTUPDATETIME" jdbcType="DATE" property="lastupdatetime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.OperatorTarget">
+    insert into DAS_OPERATOR_TARGET (FACTORYNAME, OPERATORID, TARGET_TOTAL, 
+      TARGET_00H, TARGET_01H, TARGET_02H, 
+      TARGET_03H, TARGET_04H, TARGET_05H, 
+      TARGET_06H, TARGET_07H, TARGET_08H, 
+      TARGET_09H, TARGET_10H, TARGET_11H, 
+      TARGET_12H, TARGET_13H, TARGET_14H, 
+      TARGET_15H, TARGET_16H, TARGET_17H, 
+      TARGET_18H, TARGET_19H, TARGET_20H, 
+      TARGET_21H, TARGET_22H, TARGET_23H, 
+      RESERVED1, RESERVED2, RESERVED3, 
+      LASTUPDATETIME)
+    values (#{factoryname,jdbcType=VARCHAR}, #{operatorid,jdbcType=VARCHAR}, #{targetTotal,jdbcType=DECIMAL}, 
+      #{target00h,jdbcType=DECIMAL}, #{target01h,jdbcType=DECIMAL}, #{target02h,jdbcType=DECIMAL}, 
+      #{target03h,jdbcType=DECIMAL}, #{target04h,jdbcType=DECIMAL}, #{target05h,jdbcType=DECIMAL}, 
+      #{target06h,jdbcType=DECIMAL}, #{target07h,jdbcType=DECIMAL}, #{target08h,jdbcType=DECIMAL}, 
+      #{target09h,jdbcType=DECIMAL}, #{target10h,jdbcType=DECIMAL}, #{target11h,jdbcType=DECIMAL}, 
+      #{target12h,jdbcType=DECIMAL}, #{target13h,jdbcType=DECIMAL}, #{target14h,jdbcType=DECIMAL}, 
+      #{target15h,jdbcType=DECIMAL}, #{target16h,jdbcType=DECIMAL}, #{target17h,jdbcType=DECIMAL}, 
+      #{target18h,jdbcType=DECIMAL}, #{target19h,jdbcType=DECIMAL}, #{target20h,jdbcType=DECIMAL}, 
+      #{target21h,jdbcType=DECIMAL}, #{target22h,jdbcType=DECIMAL}, #{target23h,jdbcType=DECIMAL}, 
+      #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=VARCHAR}, #{reserved3,jdbcType=VARCHAR}, 
+      #{lastupdatetime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.OperatorTarget">
+    insert into DAS_OPERATOR_TARGET
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        FACTORYNAME,
+      </if>
+      <if test="operatorid != null">
+        OPERATORID,
+      </if>
+      <if test="targetTotal != null">
+        TARGET_TOTAL,
+      </if>
+      <if test="target00h != null">
+        TARGET_00H,
+      </if>
+      <if test="target01h != null">
+        TARGET_01H,
+      </if>
+      <if test="target02h != null">
+        TARGET_02H,
+      </if>
+      <if test="target03h != null">
+        TARGET_03H,
+      </if>
+      <if test="target04h != null">
+        TARGET_04H,
+      </if>
+      <if test="target05h != null">
+        TARGET_05H,
+      </if>
+      <if test="target06h != null">
+        TARGET_06H,
+      </if>
+      <if test="target07h != null">
+        TARGET_07H,
+      </if>
+      <if test="target08h != null">
+        TARGET_08H,
+      </if>
+      <if test="target09h != null">
+        TARGET_09H,
+      </if>
+      <if test="target10h != null">
+        TARGET_10H,
+      </if>
+      <if test="target11h != null">
+        TARGET_11H,
+      </if>
+      <if test="target12h != null">
+        TARGET_12H,
+      </if>
+      <if test="target13h != null">
+        TARGET_13H,
+      </if>
+      <if test="target14h != null">
+        TARGET_14H,
+      </if>
+      <if test="target15h != null">
+        TARGET_15H,
+      </if>
+      <if test="target16h != null">
+        TARGET_16H,
+      </if>
+      <if test="target17h != null">
+        TARGET_17H,
+      </if>
+      <if test="target18h != null">
+        TARGET_18H,
+      </if>
+      <if test="target19h != null">
+        TARGET_19H,
+      </if>
+      <if test="target20h != null">
+        TARGET_20H,
+      </if>
+      <if test="target21h != null">
+        TARGET_21H,
+      </if>
+      <if test="target22h != null">
+        TARGET_22H,
+      </if>
+      <if test="target23h != null">
+        TARGET_23H,
+      </if>
+      <if test="reserved1 != null">
+        RESERVED1,
+      </if>
+      <if test="reserved2 != null">
+        RESERVED2,
+      </if>
+      <if test="reserved3 != null">
+        RESERVED3,
+      </if>
+      <if test="lastupdatetime != null">
+        LASTUPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        #{factoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorid != null">
+        #{operatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetTotal != null">
+        #{targetTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="target00h != null">
+        #{target00h,jdbcType=DECIMAL},
+      </if>
+      <if test="target01h != null">
+        #{target01h,jdbcType=DECIMAL},
+      </if>
+      <if test="target02h != null">
+        #{target02h,jdbcType=DECIMAL},
+      </if>
+      <if test="target03h != null">
+        #{target03h,jdbcType=DECIMAL},
+      </if>
+      <if test="target04h != null">
+        #{target04h,jdbcType=DECIMAL},
+      </if>
+      <if test="target05h != null">
+        #{target05h,jdbcType=DECIMAL},
+      </if>
+      <if test="target06h != null">
+        #{target06h,jdbcType=DECIMAL},
+      </if>
+      <if test="target07h != null">
+        #{target07h,jdbcType=DECIMAL},
+      </if>
+      <if test="target08h != null">
+        #{target08h,jdbcType=DECIMAL},
+      </if>
+      <if test="target09h != null">
+        #{target09h,jdbcType=DECIMAL},
+      </if>
+      <if test="target10h != null">
+        #{target10h,jdbcType=DECIMAL},
+      </if>
+      <if test="target11h != null">
+        #{target11h,jdbcType=DECIMAL},
+      </if>
+      <if test="target12h != null">
+        #{target12h,jdbcType=DECIMAL},
+      </if>
+      <if test="target13h != null">
+        #{target13h,jdbcType=DECIMAL},
+      </if>
+      <if test="target14h != null">
+        #{target14h,jdbcType=DECIMAL},
+      </if>
+      <if test="target15h != null">
+        #{target15h,jdbcType=DECIMAL},
+      </if>
+      <if test="target16h != null">
+        #{target16h,jdbcType=DECIMAL},
+      </if>
+      <if test="target17h != null">
+        #{target17h,jdbcType=DECIMAL},
+      </if>
+      <if test="target18h != null">
+        #{target18h,jdbcType=DECIMAL},
+      </if>
+      <if test="target19h != null">
+        #{target19h,jdbcType=DECIMAL},
+      </if>
+      <if test="target20h != null">
+        #{target20h,jdbcType=DECIMAL},
+      </if>
+      <if test="target21h != null">
+        #{target21h,jdbcType=DECIMAL},
+      </if>
+      <if test="target22h != null">
+        #{target22h,jdbcType=DECIMAL},
+      </if>
+      <if test="target23h != null">
+        #{target23h,jdbcType=DECIMAL},
+      </if>
+      <if test="reserved1 != null">
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null">
+        #{reserved2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved3 != null">
+        #{reserved3,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdatetime != null">
+        #{lastupdatetime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getOperatorTargetAll" resultType="java.util.HashMap">
+  	  SELECT *
+    FROM DAS_OPERATOR_TARGET A
+    WHERE 1=1
+    <if test='shopName != "" and shopName != null'>
+    	AND A.FACTORYNAME = #{shopName}
+    </if>
+    <if test='operatorId != "" and operatorId != null'>
+    	AND A.OPERATORID = #{operatorId}
+    </if>
+ORDER BY A.FACTORYNAME, A.OPERATORID
+  </select>
+  
+  <select  id="getStandardTarget" resultType="java.util.HashMap">
+  	SELECT *
+  FROM WEBMGR.DAS_OPERATOR_TARGET A
+ WHERE A.OPERATORID = 'STANDARD'
+  </select>
+  
+  <select id="getTargetByOperatorId" resultType="java.util.HashMap">
+  	  	SELECT *
+  FROM WEBMGR.DAS_OPERATOR_TARGET A
+ WHERE A.OPERATORID = #{operatorId}
+  </select>
+  
+  <delete id="deleteAllOperatorTarget" parameterType="String">
+  	DELETE FROM WEBMGR.DAS_OPERATOR_TARGET
+      WHERE FACTORYNAME = #{shopName}
+  </delete>
+  
+  <insert id="setOperatorTarget" parameterType="String">
+INSERT INTO WEBMGR.DAS_OPERATOR_TARGET (FACTORYNAME,
+                                        OPERATORID,
+                                        TARGET_TOTAL,
+                                        TARGET_00H,
+                                        TARGET_01H,
+                                        TARGET_02H,
+                                        TARGET_03H,
+                                        TARGET_04H,
+                                        TARGET_05H,
+                                        TARGET_06H,
+                                        TARGET_07H,
+                                        TARGET_08H,
+                                        TARGET_09H,
+                                        TARGET_10H,
+                                        TARGET_11H,
+                                        TARGET_12H,
+                                        TARGET_13H,
+                                        TARGET_14H,
+                                        TARGET_15H,
+                                        TARGET_16H,
+                                        TARGET_17H,
+                                        TARGET_18H,
+                                        TARGET_19H,
+                                        TARGET_20H,
+                                        TARGET_21H,
+                                        TARGET_22H,
+                                        TARGET_23H)
+     VALUES (#{factoryName},
+             #{operatorId},
+             #{_total},
+             #{_00h},
+             #{_01h},
+             #{_02h},
+             #{_03h},
+             #{_04h},
+             #{_05h},
+             #{_06h},
+             #{_07h},
+             #{_08h},
+             #{_09h},
+             #{_10h},
+             #{_11h},
+             #{_12h},
+             #{_13h},
+             #{_14h},
+             #{_15h},
+             #{_16h},
+             #{_17h},
+             #{_18h},
+             #{_19h},
+             #{_20h},
+             #{_21h},
+             #{_22h},
+             #{_23h})
+  </insert> 
+  
+</mapper>

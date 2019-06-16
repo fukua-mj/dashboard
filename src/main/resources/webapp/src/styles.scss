@@ -1,0 +1,70 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    font-family: Microsoft YaHei;
+}
+
+body #classretab .ui-tabview-panels  .ui-tabview-panel.ui-tabview-panel {
+    padding: 0em 1em; 
+}
+body #classretab .ui-widget-content {
+    background-color: #ffffff;
+    border: 0px solid #d8d8d8;
+}
+/* tab view panel style */
+.layout-wrapper .layout-main retab {
+    width: calc(100% - 40px);;
+    transition: width 0.3s;
+}
+
+.layout-wrapper .layout-main retab .ui-g-12.ng-star-inserted .ui-g-12 {
+    position: relative;
+    float: left;
+    padding-right: 90px;
+}
+.layout-wrapper-static .layout-main retab {
+    width: calc(100% - 240px);
+    transition: width 0.3s;
+}
+
+.layout-wrapper .layout-main retab .ui-g-12.ng-star-inserted .ui-g-1  {
+    position: relative;
+    float: right;
+    margin-top: -40px;
+}
+
+.layout-wrapper-static .layout-main retab .ui-g-12.ng-star-inserted .ui-g-1  {
+    position: relative;
+    float: right;
+    margin-top: -40px;
+}
+
+.layout-main retab .ui-g-12.ng-star-inserted .ui-g-1 button{
+    position: relative;
+    float: right;
+}
+
+body #classretab .ui-tabview .ui-tabview-nav > li.ui-state-default a{ font-size:12px;; position:relative; }
+body #classretab .ui-tabview .ui-tabview-nav > li.ui-state-default a:hover:after{
+    content:attr(data-tooltip);
+    display:block;
+    padding:0px;
+    color:#FFF;
+    background:rgb(99, 7, 7);
+    position:absolute; top:30px; left:50px;
+    white-space:nowrap;
+    z-index: 9999;
+    }
+body #classretab .ui-tabview .ui-tabview-nav > li.ui-state-default a:hover:before{
+    display:block;
+    content:"";
+    position:absolute; top:25px; left:50px;
+    border-right:10px solid transparent; 
+    border-bottom:10px solid #333; 
+    border-left:10px solid transparent;  
+    }
+
+/* set tab close icon position */    
+body #classretab .ui-tabview .ui-tabview-nav > li > .fa-close{
+    margin-top: 0px;
+    padding-top: 5px;
+}

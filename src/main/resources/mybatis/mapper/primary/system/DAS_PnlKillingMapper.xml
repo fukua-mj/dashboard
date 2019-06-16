@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.DAS_PnlKillingMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.DAS_PnlKilling">
+    <result column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="FACTORYYEAR" jdbcType="VARCHAR" property="factoryyear" />
+    <result column="FACTORYMONTH" jdbcType="VARCHAR" property="factorymonth" />
+    <result column="FACTORYNAME" jdbcType="VARCHAR" property="factoryname" />
+    <result column="PRODUCTCATEGORY" jdbcType="VARCHAR" property="productcategory" />
+    <result column="PRODUCTIONTYPE" jdbcType="VARCHAR" property="productiontype" />
+    <result column="DEFECTCODE" jdbcType="VARCHAR" property="defectcode" />
+    <result column="PNL_KILLING" jdbcType="VARCHAR" property="pnlKilling" />
+    <result column="UPDATETIME" jdbcType="VARCHAR" property="updatetime" />
+    <result column="UPDATEUSER" jdbcType="VARCHAR" property="updateuser" />
+    <result column="RESERVED1" jdbcType="VARCHAR" property="reserved1" />
+    <result column="RESERVED2" jdbcType="VARCHAR" property="reserved2" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.DAS_PnlKilling">
+    insert into DAS_PNLKILLING (ID, FACTORYYEAR, FACTORYMONTH, 
+      FACTORYNAME, PRODUCTCATEGORY, PRODUCTIONTYPE, 
+      DEFECTCODE, PNL_KILLING, UPDATETIME, 
+      UPDATEUSER, RESERVED1, RESERVED2
+      )
+    values (#{id,jdbcType=DECIMAL}, #{factoryyear,jdbcType=VARCHAR}, #{factorymonth,jdbcType=VARCHAR}, 
+      #{factoryname,jdbcType=VARCHAR}, #{productcategory,jdbcType=VARCHAR}, #{productiontype,jdbcType=VARCHAR}, 
+      #{defectcode,jdbcType=VARCHAR}, #{pnlKilling,jdbcType=VARCHAR}, #{updatetime,jdbcType=VARCHAR}, 
+      #{updateuser,jdbcType=VARCHAR}, #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.DAS_PnlKilling">
+    insert into DAS_PNLKILLING
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="factoryyear != null">
+        FACTORYYEAR,
+      </if>
+      <if test="factorymonth != null">
+        FACTORYMONTH,
+      </if>
+      <if test="factoryname != null">
+        FACTORYNAME,
+      </if>
+      <if test="productcategory != null">
+        PRODUCTCATEGORY,
+      </if>
+      <if test="productiontype != null">
+        PRODUCTIONTYPE,
+      </if>
+      <if test="defectcode != null">
+        DEFECTCODE,
+      </if>
+      <if test="pnlKilling != null">
+        PNL_KILLING,
+      </if>
+      <if test="updatetime != null">
+        UPDATETIME,
+      </if>
+      <if test="updateuser != null">
+        UPDATEUSER,
+      </if>
+      <if test="reserved1 != null">
+        RESERVED1,
+      </if>
+      <if test="reserved2 != null">
+        RESERVED2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="factoryyear != null">
+        #{factoryyear,jdbcType=VARCHAR},
+      </if>
+      <if test="factorymonth != null">
+        #{factorymonth,jdbcType=VARCHAR},
+      </if>
+      <if test="factoryname != null">
+        #{factoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="productcategory != null">
+        #{productcategory,jdbcType=VARCHAR},
+      </if>
+      <if test="productiontype != null">
+        #{productiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="defectcode != null">
+        #{defectcode,jdbcType=VARCHAR},
+      </if>
+      <if test="pnlKilling != null">
+        #{pnlKilling,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null">
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null">
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null">
+        #{reserved2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  	<select id="selectPaging" parameterType="Map" resultMap="BaseResultMap">
+		
+		SELECT USERACCOUNT,USERNAME,PASSWORD,SITENAME,ENABLED, DESCRIPTION, PHONE,EMAIL from USERINFO  U
+		<where>
+			<if test="siteList != null">
+				U.SITENAME in
+				  <foreach item="siteName" index="index" collection="siteList"
+				      open="(" separator="," close=")">
+				        #{siteName}
+				  </foreach>
+			</if>
+			<if test="userAccount != null">
+				<bind name="pattern" value="'%' + _parameter['userAccount'] + '%'" />
+        		AND U.USERACCOUNT LIKE #{pattern,jdbcType=VARCHAR}
+    		</if>
+		</where>
+	</select>
+	
+   <select id="getKillingListAll" resultType="java.util.HashMap">
+  SELECT *
+    FROM DAS_PNLKILLING A
+    WHERE 1=1 
+    <if test='killingName != "" and killingName != null'>
+    AND A.DEFECTCODE = #{killingName,jdbcType=VARCHAR}
+    </if>
+    <if test='killingShopname != "" and killingShopname != null'>
+    AND A.FACTORYNAME = #{killingShopname}
+    </if>
+    <if test='killingFactoryyeat != "" and killingFactoryyeat != null'>
+    AND A.FACTORYYEAR = #{killingFactoryyeat}
+    </if>
+    <if test='killingFactorymonth != "" and killingFactorymonth != null'>
+    AND A.FACTORYMONTH = #{killingFactorymonth}
+    </if>
+    <if test='killingProductcategory != "" and killingProductcategory != null'>
+    AND A.PRODUCTCATEGORY = #{killingProductcategory}
+    </if>
+ORDER BY A.ID,A.FACTORYNAME,
+         FACTORYYEAR,
+         FACTORYMONTH,
+         PRODUCTCATEGORY
+   </select>
+   
+   	<update id="updateKillingDefect" parameterType="String" >
+	UPDATE DAS_PNLKILLING
+   SET DAS_PNLKILLING.PNL_KILLING = #{value},
+       DAS_PNLKILLING.UPDATEUSER = #{updateUser},
+       DAS_PNLKILLING.UPDATETIME = #{timeKey}
+ WHERE     DAS_PNLKILLING.FACTORYYEAR = #{factoryYear}
+       AND DAS_PNLKILLING.FACTORYMONTH = #{factoryMonth}
+       AND DAS_PNLKILLING.FACTORYNAME = #{factoryName}
+       AND DAS_PNLKILLING.PRODUCTCATEGORY = #{productCategory}
+       AND DAS_PNLKILLING.DEFECTCODE = #{defectCode}	
+    </update>
+    
+    <delete id="deleteKillingDefect" parameterType="String">
+DELETE FROM DAS_PNLKILLING
+      WHERE     DAS_PNLKILLING.FACTORYYEAR = #{factoryYear}
+            AND DAS_PNLKILLING.FACTORYMONTH = #{factoryMonth}
+            AND DAS_PNLKILLING.FACTORYNAME = #{factoryName}
+            AND DAS_PNLKILLING.PRODUCTCATEGORY = #{productCategory}
+            AND DAS_PNLKILLING.DEFECTCODE = #{defectCode}
+    </delete>
+   
+   <select id="getOneKilingDefect" resultType="java.util.HashMap">
+SELECT *
+  FROM DAS_PNLKILLING A
+ WHERE     A.FACTORYYEAR = #{killingFactoryYear}
+       AND A.FACTORYMONTH = #{killingFactoryMonth}
+       AND A.FACTORYNAME = #{killingFactoryName}
+       AND A.PRODUCTCATEGORY = #{killingProductCategory}
+       AND A.DEFECTCODE = #{killingDefectCode}
+   </select> 
+       
+    <insert id="setKillingWithoutId" parameterType="String">
+    	INSERT INTO DAS_PNLKILLING
+   (ID, FACTORYYEAR, FACTORYMONTH, FACTORYNAME, PRODUCTCATEGORY, 
+    PRODUCTIONTYPE, DEFECTCODE, PNL_KILLING, UPDATETIME, UPDATEUSER)
+ VALUES
+   (KILLING_ID.NEXTVAL, #{factoryYear}, #{factoryMonth}, #{factoryName}, #{productCategory}, 
+    #{productionType}, #{defectCode}, #{pnlKilling}, #{updateTime}, #{updateUser})
+    </insert>
+</mapper>

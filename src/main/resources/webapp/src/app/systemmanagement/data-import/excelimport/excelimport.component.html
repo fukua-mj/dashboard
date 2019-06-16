@@ -1,0 +1,36 @@
+<p-table #table [columns]='cols' [value]="gridList" selectionMode="single" [(selection)]="selectedMenu" (onRowSelect)="onRowSelect($event)"
+  [resizableColumns]="true" [style]="{width:'100%;height:800px'}" scrollHeight="200px" [resizableColumns]="true"
+  [paginator]="true" [rows]="13" [globalFilterFields]="['productcategory']">
+  <ng-template pTemplate="caption">
+    {{tableName}}
+  </ng-template>
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of columns" style="width:130px">
+    </colgroup>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of cols" pResizableColumn>{{col.header}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-gridList let-columns="columns">
+    <tr [pSelectableRow]="gridList">
+      <td *ngFor="let col of columns" class="ui-resizable-column">{{gridList[col.field]}}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div style="text-align: left">
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <input type="text" pInputText [placeholder]="tableName" (input)="table.filterGlobal($event.target.value, 'contains')"
+            style="background-color: rgb(221, 236, 243)">
+        </div>
+        <div class="ui-g-10">
+          <p-fileUpload mode="basic" name="file[]" [url]="uploadUrl" (onUpload)="onUpload($event)" maxFileSize="1000000">
+          </p-fileUpload>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-table>

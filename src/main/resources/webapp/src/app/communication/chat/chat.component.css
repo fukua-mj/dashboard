@@ -1,0 +1,86 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 500px;
+    width: 660px;
+    border: solid 1px rgb(219, 219, 219);;
+}
+
+.searcharea{
+    height: 50px;
+    width: 30%;
+    background-color: #EEEAE9;
+}
+.searchbox{
+/*     background-image: url(../resources/search.png); */
+    background-color: #DAD8D8;
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    padding: 15px 19.8px 15px 19.8px;
+    background-clip: content-box;
+    width: 80%;
+    height: 40%;
+    border: none; 
+}
+
+.userlistarea{
+    height: 450px;
+    width: 198px;
+    background-color: #EEEAE9;
+}
+.userlistarea li{
+    height: 60px;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0 0 0 -40px;
+}
+.userlistarea li .icon{
+/*     background-image: url(../resources/icon/1.jpg); */
+    background-size: 44px;
+    background-repeat: no-repeat;
+    height: 44px;
+    width: 44px;
+    margin: 3px 3px 3px 6px;
+    border: none;
+}
+.userlistarea li .username{   
+    font-size: 14px; 
+    height: 22px;
+    margin: 3px 0 0 3px;
+    width: 140px;
+    border: none;
+}
+.userlistarea li .chatsub{
+    font-size: 10px; 
+    height: 22px;
+    margin: 3px 0 0 3px;
+    width: 140px;
+    border: none;
+    color: rgb(150, 150, 150);
+}
+
+.headerarea{
+    height: 49px;
+    width: 70%;
+    background-color: #F5F5F5;
+    border-bottom: 1px solid rgb(219, 219, 219);
+    font-size: 20px;
+}
+.headerarea div{
+    height: 30px;
+    widows: 300px;
+    padding: 13px 0 0 27px; 
+}
+.contentarea{
+    height: 325px;
+    width: 70%;
+    background-color: #F5F5F5
+}
+.editarea{
+    height: 125px;
+    width: 70%;
+    background-color: #FFFFFF
+}

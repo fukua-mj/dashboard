@@ -1,0 +1,10 @@
+{
+    "login": "登录",
+    "login.title": "登录到系统",
+    "login.username": "用户名",
+    "login.password": "密码",
+    "require field": "此字段为必填项",
+    "language select": "请选择语言",
+    "Menu": "菜单",
+    "search bar": "搜索栏示例"
+}

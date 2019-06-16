@@ -1,0 +1,83 @@
+<div class="ui-g xl-tablearea lg-tablearea">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12">
+    <p-table [value]="values" #dailyReportTable [loading]="loading" selectionMode="single" [(selection)]="selectedItem"
+      (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [paginator]="false" [rows]="15"
+      [globalFilterFields]="['']" [resizableColumns]="true">
+      <ng-template pTemplate="caption">
+        BP 小时别产能监控
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr *ngFor="let header of data.header.items">
+          <td *ngFor="let item of header" [attr.rowspan]="item.rowspan" [attr.colspan]="item.colspan" [ngStyle]="{'background-color': data.header.backgroundColor,
+          'color':data.header.fontColor,
+          'line-height':data.header.lineheight,
+          'font-size':data.header.fontsize,
+          'width':item.width}">
+            <strong>{{item.header}}</strong>
+          </td>
+        </tr>
+        <tr *ngFor="let value of data.values.items" [pSelectableRow]="values">
+          <td *ngFor="let item of value" class="ui-resizable-column" [attr.rowspan]="item.rowspan" [attr.colspan]="item.colspan"
+            [ngStyle]="{'color': item.color,'width':item.width,'font-size':item.fontsize}" pEditableColumn>
+            <label *ngIf="!item.editable">{{item.value}}</label>
+            <p-cellEditor *ngIf="item.editable">
+              <ng-template pTemplate="input">
+                <textarea pInputTextArea [rows]="item.editrows" [cols]="item.editcols" autoResize="autoResize"
+                  [(ngModel)]="item.value" (focus)="focus(this)" (blur)="blur()"></textarea>
+              </ng-template>
+              <ng-template pTemplate="output">
+                <label>{{item.value}}</label>
+              </ng-template>
+            </p-cellEditor>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="selectCondition">
+
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title ui-g-12"><strong>ProcessType</strong></div>
+        <ul class="optionul">
+          <li *ngFor="let item of lineType" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="LineType" value="{{item}}" label="{{item}}" [(ngModel)]="selectedLineType" inputId="lineType+{{item}}"
+              (click)="getGridValue()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title ui-g-12"><strong>Date</strong></div>
+        <ul class="optionul">
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="Date" value="Today" label="Today" [(ngModel)]="selectedDate" inputId="Date1" (click)="getGridValue()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="Date" value="Yesterday" label="Yesterday" [(ngModel)]="selectedDate" inputId="Date2"
+              (click)="getGridValue()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="Date" value="DayBeforeYesterday" label="Day Before Yesterday" [(ngModel)]="selectedDate"
+              inputId="Date3" (click)="getGridValue()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title ui-g-12"><strong>Type</strong></div>
+        <ul class="optionul">
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="DataType" value="OPERPROD HOUR" label="Operator" [(ngModel)]="selectedDataType"
+              inputId="DataType1" (click)="dataTypeCilcked()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="DataType" value="MMDPROD HOUR" label="Equipment" [(ngModel)]="selectedDataType"
+              inputId="DataType2" (click)="dataTypeCilcked()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

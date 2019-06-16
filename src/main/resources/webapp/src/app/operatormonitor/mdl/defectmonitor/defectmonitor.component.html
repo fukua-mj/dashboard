@@ -1,0 +1,54 @@
+<p-tabView (onChange)="onTabChange($event)">
+  <!--     <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+      <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+        <app-mdlmonitor [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+          [processType]="item.processType" [pageType]="pageType"></app-mdlmonitor>
+      </p-tabPanel>
+    </ng-template> -->
+
+  <p-tabPanel [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+    <app-mdlmonitor #Rt_AFI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[0].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[1].header" [selected]="items[1].selected" *ngIf="items[1].display">
+    <app-mdlmonitor #MFI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[1].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[2].header" [selected]="items[2].selected" *ngIf="items[2].display">
+    <app-mdlmonitor #Rt_MFI [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[2].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[3].header" [selected]="items[3].selected" *ngIf="items[3].display">
+    <app-mdlmonitor #FAPP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[3].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[4].header" [selected]="items[4].selected" *ngIf="items[4].display">
+    <app-mdlmonitor #Rt_FAPP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[4].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[5].header" [selected]="items[5].selected" *ngIf="items[5].display">
+    <app-mdlmonitor #OQAET [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[5].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[6].header" [selected]="items[6].selected" *ngIf="items[6].display">
+    <app-mdlmonitor #OQAAPP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="items[6].processType"
+      [pageType]="pageType"></app-mdlmonitor>
+  </p-tabPanel>
+</p-tabView>
+<button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button>
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}} :</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display ? 'TRUE' : 'FALSE'}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

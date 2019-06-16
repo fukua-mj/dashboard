@@ -1,0 +1,91 @@
+<!-- <div class="ui-g">
+    <div id="EACQualityChart" echarts [options]="qualityOption" (chartClick)="People($event)" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+        <div class="xl-title lg-title">
+            <Strong>产品类型</Strong></div>
+        <ul class="optionul">
+            <li *ngFor="let item of ProductionTypes" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                <p-radioButton value="{{item.value}}" label="{{item.label}}" (click)="getCategory()" [(ngModel)]="SelectProductionType"
+                    inputId="{{item.value}}"></p-radioButton>
+            </li>
+        </ul>
+    </div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title"><strong>产品型号</strong></div>
+        <ul class="optionul">
+            <li *ngFor="let item of productionCategorys" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                <p-radioButton value="{{item}}" label="{{item}}" (click)="DrawChart()" [(ngModel)]="SelectProductionCategory"
+                    inputId="{{item}}"></p-radioButton>
+            </li>
+        </ul>
+    </div>
+
+    <div id="EACQualityChart" echarts [options]="qualityPeopleOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea-12 md-chartArea-12 lg-chartArea-12 sm-chartArea-12"></div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionClasses sm-productionCategoryArea">
+        <div class="xl-title lg-title"><strong>班次</strong></div>
+        <ul class="optionul">
+            <li *ngFor="let item of Days" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                <p-radioButton value="{{item.value}}" label="{{item.label}}" (click)="getCategory()" [(ngModel)]="SelectDayOrNight"
+                    inputId="{{item.value}}"></p-radioButton>
+            </li>
+        </ul>
+    </div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title"><strong>DefectCode</strong></div>
+        <br />
+        <ul class="optionul" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-dropdown [options]="DefectCodes" [(ngModel)]="SelectDefectCode" optionLabel="label" [style]="{'width':'155px','font-size':'14px'}"
+                (onChange)="DrawPeopleChart()"></p-dropdown>
+        </ul>
+    </div>
+
+</div> -->
+
+
+
+<div class="ui-g">
+    <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12">
+        <div id="EACQualityChart" echarts [options]="qualityOption" (chartClick)="People($event)" class="ui-g-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+        <div id="EACQualityChart" echarts [options]="qualityPeopleOption" class="ui-g-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+    </div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+            <div class="lg-title xl-title"><strong>产品阶段</strong></div>
+            <ul class="optionul">
+                <li *ngFor="let item of ProductionTypes" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton value="{{item.value}}" label="{{item.label}}" (click)="getCategory()" [(ngModel)]="SelectProductionType"
+                        inputId="{{item.value}}"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+            <div class="lg-title xl-title"><strong>产品类型</strong></div>
+            <ul class="optionul">
+                <li *ngFor="let item of productionCategorys" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton value="{{item}}" label="{{item}}" (click)="DrawChart()" [(ngModel)]="SelectProductionCategory"
+                        inputId="{{item}}"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+        <div class="ui-g-12 xl-defectCodeArea lg-defectCodeArea">
+            <div class="lg-title xl-title"><strong>Defect Code</strong></div>
+            <br />
+            <!--             <p-dropdown [options]="DefectCodes" [(ngModel)]="selectedDefectCode" placeholder="Select a DefectCode"
+                optionLabel="value" [showClear]="true" (onChange)="defectCodeChanged($event)" [style]="{'width':'90%'}"></p-dropdown> -->
+
+            <ul class="optionul" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                <p-dropdown [options]="DefectCodes" [(ngModel)]="SelectDefectCode" optionLabel="label" [style]="{'width':'100%','font-size':'14px'}"
+                    (onChange)="DrawPeopleChart()"></p-dropdown>
+            </ul>
+        </div>
+        <div class="ui-g-12 xl-dataTypeArea lg-dataTypeArea">
+            <div class="lg-title xl-title"><strong>Type</strong></div>
+            <ul class="optionul">
+                <li *ngFor="let item of Days" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton value="{{item.value}}" label="{{item.label}}" (click)="getCategory()" [(ngModel)]="SelectDayOrNight"
+                        inputId="{{item.value}}"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+{
+    "login": "Login",
+    "login.title": "Login to system",
+    "login.username": "Username",
+    "login.password": "Password",
+    "require field": "The field is required",
+    "language select": "Please select language",
+    "Menu": "Menu",
+    "search bar": "Search Bar Example"
+}

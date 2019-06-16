@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.UserRoleLinkMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.UserRoleLink">
+    <result column="USERACCOUNT" jdbcType="VARCHAR" property="useraccount" />
+    <result column="ROLENAME" jdbcType="VARCHAR" property="rolename" />
+    <result column="EVENTTIME" jdbcType="TIMESTAMP" property="eventtime" />
+    <result column="EVENTUSER" jdbcType="VARCHAR" property="eventuser" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.UserRoleLink">
+    insert into NG_DAS_USERROLELINK (USERACCOUNT, ROLENAME, EVENTTIME, 
+      EVENTUSER)
+    values (#{useraccount,jdbcType=VARCHAR}, #{rolename,jdbcType=VARCHAR}, #{eventtime,jdbcType=TIMESTAMP}, 
+      #{eventuser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.UserRoleLink">
+    insert into NG_DAS_USERROLELINK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="useraccount != null">
+        USERACCOUNT,
+      </if>
+      <if test="rolename != null">
+        ROLENAME,
+      </if>
+      <if test="eventtime != null">
+        EVENTTIME,
+      </if>
+      <if test="eventuser != null">
+        EVENTUSER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="useraccount != null">
+        #{useraccount,jdbcType=VARCHAR},
+      </if>
+      <if test="rolename != null">
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="eventtime != null">
+        #{eventtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eventuser != null">
+        #{eventuser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="delete" parameterType="com.boe.idm.project.model.system.UserRoleLink">
+  		DELETE NG_DAS_USERROLELINK WHERE
+		USERACCOUNT=#{useraccount}
+  </delete>
+</mapper>

@@ -1,0 +1,2688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.YieldMapper">
+
+	<select id="getYield" resultType="java.util.HashMap">
+	  SELECT DRV_DAS_YLDSUM.PRODUCTCATEGORY,
+         CASE
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Develop'
+            THEN
+               '客户送样'
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Production'
+            THEN
+               '正式量产'
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Engineer'
+            THEN
+               '工程验证'
+            ELSE
+               DRV_DAS_YLDSUM.PRODUCTIONTYPE
+         END
+            AS PRODUCTIONTYPE,
+         DRV_DAS_YLDSUM.DESCRIPTION,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.MONTH_2_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_2_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_2_DNMTR
+                END)
+         END MONTH_2,
+         DRV_DAS_YLDSUM.MONTH_2_NMRTR,
+         DRV_DAS_YLDSUM.MONTH_2_DNMTR,          
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.MONTH_1_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_1_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_1_DNMTR
+                END)
+         END MONTH_1,
+         DRV_DAS_YLDSUM.MONTH_1_NMRTR,
+         DRV_DAS_YLDSUM.MONTH_1_DNMTR,          
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.MONTH_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.MONTH_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_0_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_0_DNMTR
+                END)
+         END MONTH_0,
+         DRV_DAS_YLDSUM.MONTH_0_NMRTR,
+         DRV_DAS_YLDSUM.MONTH_0_DNMTR,           
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_3_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_3_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_3_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_3_NMRTR / DRV_DAS_YLDSUM.WEEK_3_DNMTR
+                END)
+         END WEEK_3,
+         DRV_DAS_YLDSUM.WEEK_3_NMRTR,
+         DRV_DAS_YLDSUM.WEEK_3_DNMTR,           
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_2_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_2_NMRTR / DRV_DAS_YLDSUM.WEEK_2_DNMTR
+                END)
+         END WEEK_2,
+         DRV_DAS_YLDSUM.WEEK_2_NMRTR,
+         DRV_DAS_YLDSUM.WEEK_2_DNMTR,           
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_1_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_1_NMRTR / DRV_DAS_YLDSUM.WEEK_1_DNMTR
+                END)
+         END WEEK_1,
+         DRV_DAS_YLDSUM.WEEK_1_NMRTR,
+         DRV_DAS_YLDSUM.WEEK_1_DNMTR,           
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.WEEK_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.WEEK_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_0_NMRTR / DRV_DAS_YLDSUM.WEEK_0_DNMTR
+                END)
+         END WEEK_0,
+         DRV_DAS_YLDSUM.WEEK_0_NMRTR,
+         DRV_DAS_YLDSUM.WEEK_0_DNMTR,         
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_6_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_6_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_6_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_6_NMRTR / DRV_DAS_YLDSUM.DAY_6_DNMTR
+                END)
+         END DAY_6,
+         DRV_DAS_YLDSUM.DAY_6_NMRTR,
+         DRV_DAS_YLDSUM.DAY_6_DNMTR,         
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_5_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_5_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_5_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_5_NMRTR / DRV_DAS_YLDSUM.DAY_5_DNMTR
+                END)
+         END DAY_5,
+         DRV_DAS_YLDSUM.DAY_5_NMRTR,
+         DRV_DAS_YLDSUM.DAY_5_DNMTR,         
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_4_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_4_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_4_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_4_NMRTR / DRV_DAS_YLDSUM.DAY_4_DNMTR
+                END)
+         END DAY_4,
+         DRV_DAS_YLDSUM.DAY_4_NMRTR,
+         DRV_DAS_YLDSUM.DAY_4_DNMTR,         
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_3_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_3_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_3_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_3_NMRTR / DRV_DAS_YLDSUM.DAY_3_DNMTR
+                END)
+         END DAY_3,
+         DRV_DAS_YLDSUM.DAY_3_NMRTR,
+         DRV_DAS_YLDSUM.DAY_3_DNMTR,         
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_2_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_2_NMRTR / DRV_DAS_YLDSUM.DAY_2_DNMTR
+                END)
+         END DAY_2,
+         DRV_DAS_YLDSUM.DAY_2_NMRTR,
+         DRV_DAS_YLDSUM.DAY_2_DNMTR,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_1_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_1_NMRTR / DRV_DAS_YLDSUM.DAY_1_DNMTR
+                END)
+         END DAY_1,
+         DRV_DAS_YLDSUM.DAY_1_NMRTR,
+         DRV_DAS_YLDSUM.DAY_1_DNMTR,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.DAY_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.DAY_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                      DRV_DAS_YLDSUM.DAY_0_NMRTR / DRV_DAS_YLDSUM.DAY_0_DNMTR
+                END)
+         END DAY_0,
+         DRV_DAS_YLDSUM.DAY_0_NMRTR,
+         DRV_DAS_YLDSUM.DAY_0_DNMTR,
+         DAS_DEFECT_COLOR.COLOR
+    FROM (SELECT PRODUCTCATEGORY,
+                 FACTORYNAME,
+                 PROCESSOPERATIONNAME,
+                 OPER_DESC,
+                 PRODUCTIONTYPE,
+                 DEFECTCODE,
+                 DESCRIPTION,
+                 MONTH_6_NMRTR,
+                 MONTH_5_NMRTR,
+                 MONTH_4_NMRTR,
+                 MONTH_3_NMRTR,
+                 MONTH_2_NMRTR,
+                 MONTH_1_NMRTR,
+                 MONTH_0_NMRTR,
+                 WEEK_6_NMRTR,
+                 WEEK_5_NMRTR,
+                 WEEK_4_NMRTR,
+                 WEEK_3_NMRTR,
+                 WEEK_2_NMRTR,
+                 WEEK_1_NMRTR,
+                 WEEK_0_NMRTR,
+                 DAY_6_NMRTR,
+                 DAY_5_NMRTR,
+                 DAY_4_NMRTR,
+                 DAY_3_NMRTR,
+                 DAY_2_NMRTR,
+                 DAY_1_NMRTR,
+                 DAY_0_NMRTR,
+                 MONTH_6_DNMTR,
+                 MONTH_5_DNMTR,
+                 MONTH_4_DNMTR,
+                 MONTH_3_DNMTR,
+                 MONTH_2_DNMTR,
+                 MONTH_1_DNMTR,
+                 MONTH_0_DNMTR,
+                 WEEK_6_DNMTR,
+                 WEEK_5_DNMTR,
+                 WEEK_4_DNMTR,
+                 WEEK_3_DNMTR,
+                 WEEK_2_DNMTR,
+                 WEEK_1_DNMTR,
+                 WEEK_0_DNMTR,
+                 DAY_6_DNMTR,
+                 DAY_5_DNMTR,
+                 DAY_4_DNMTR,
+                 DAY_3_DNMTR,
+                 DAY_2_DNMTR,
+                 DAY_1_DNMTR,
+                 DAY_0_DNMTR,
+                 ORDER_BY_COL1,
+                 ORDER_BY_COL2,
+                 ORDER_BY_COL3,
+                 ORDER_BY_COL4
+            FROM DAS_DEFECTSUM_MWD
+          UNION ALL
+          SELECT PRODUCTCATEGORY,
+                 FACTORYNAME,
+                 PROCESSOPERATIONNAME,
+                 OPER_DESC,
+                 PRODUCTIONTYPE,
+                 '-',
+                 YIELD_TYPE,
+                 MONTH_6_OUT,
+                 MONTH_5_OUT,
+                 MONTH_4_OUT,
+                 MONTH_3_OUT,
+                 MONTH_2_OUT,
+                 MONTH_1_OUT,
+                 MONTH_0_OUT,
+                 WEEK_6_OUT,
+                 WEEK_5_OUT,
+                 WEEK_4_OUT,
+                 WEEK_3_OUT,
+                 WEEK_2_OUT,
+                 WEEK_1_OUT,
+                 WEEK_0_OUT,
+                 DAY_6_OUT,
+                 DAY_5_OUT,
+                 DAY_4_OUT,
+                 DAY_3_OUT,
+                 DAY_2_OUT,
+                 DAY_1_OUT,
+                 DAY_0_OUT,
+                 MONTH_6_IN,
+                 MONTH_5_IN,
+                 MONTH_4_IN,
+                 MONTH_3_IN,
+                 MONTH_2_IN,
+                 MONTH_1_IN,
+                 MONTH_0_IN,
+                 WEEK_6_IN,
+                 WEEK_5_IN,
+                 WEEK_4_IN,
+                 WEEK_3_IN,
+                 WEEK_2_IN,
+                 WEEK_1_IN,
+                 WEEK_0_IN,
+                 DAY_6_IN,
+                 DAY_5_IN,
+                 DAY_4_IN,
+                 DAY_3_IN,
+                 DAY_2_IN,
+                 DAY_1_IN,
+                 DAY_0_IN,
+                 ORDER_BY_COL1,
+                 ORDER_BY_COL2,
+                 ORDER_BY_COL3,
+                 ORDER_BY_COL4
+            FROM DAS_YLDSUM_MWD
+          UNION ALL
+            SELECT DAS_YLDSUM_MWD.PRODUCTCATEGORY,
+                   DAS_YLDSUM_MWD.FACTORYNAME,
+                   DAS_YLDSUM_MWD.PROCESSOPERATIONNAME,
+                   MAX (DAS_YLDSUM_MWD.OPER_DESC),
+                   DAS_YLDSUM_MWD.PRODUCTIONTYPE,
+                   '-',
+                   'DNMTR_QTY' AS YIELD_TYPE,
+                   0 AS MONTH_6_OUT,
+                   0 AS MONTH_5_OUT,
+                   0 AS MONTH_4_OUT,
+                   0 AS MONTH_3_OUT,
+                   0 AS MONTH_2_OUT,
+                   0 AS MONTH_1_OUT,
+                   0 AS MONTH_0_OUT,
+                   0 AS WEEK_6_OUT,
+                   0 AS WEEK_5_OUT,
+                   0 AS WEEK_4_OUT,
+                   0 AS WEEK_3_OUT,
+                   0 AS WEEK_2_OUT,
+                   0 AS WEEK_1_OUT,
+                   0 AS WEEK_0_OUT,
+                   0 AS DAY_6_OUT,
+                   0 AS DAY_5_OUT,
+                   0 AS DAY_4_OUT,
+                   0 AS DAY_3_OUT,
+                   0 AS DAY_2_OUT,
+                   0 AS DAY_1_OUT,
+                   0 AS DAY_0_OUT,
+                   MAX (MONTH_6_IN) AS MONTH_6_IN,
+                   MAX (MONTH_5_IN) AS MONTH_5_IN,
+                   MAX (MONTH_4_IN) AS MONTH_4_IN,
+                   MAX (MONTH_3_IN) AS MONTH_3_IN,
+                   MAX (MONTH_2_IN) AS MONTH_2_IN,
+                   MAX (MONTH_1_IN) AS MONTH_1_IN,
+                   MAX (MONTH_0_IN) AS MONTH_0_IN,
+                   MAX (WEEK_6_IN) AS WEEK_6_IN,
+                   MAX (WEEK_5_IN) AS WEEK_5_IN,
+                   MAX (WEEK_4_IN) AS WEEK_4_IN,
+                   MAX (WEEK_3_IN) AS WEEK_3_IN,
+                   MAX (WEEK_2_IN) AS WEEK_2_IN,
+                   MAX (WEEK_1_IN) AS WEEK_1_IN,
+                   MAX (WEEK_0_IN) AS WEEK_0_IN,
+                   MAX (DAY_6_IN) AS DAY_6_IN,
+                   MAX (DAY_5_IN) AS DAY_5_IN,
+                   MAX (DAY_4_IN) AS DAY_4_IN,
+                   MAX (DAY_3_IN) AS DAY_3_IN,
+                   MAX (DAY_2_IN) AS DAY_2_IN,
+                   MAX (DAY_1_IN) AS DAY_1_IN,
+                   MAX (DAY_0_IN) AS DAY_0_IN,
+                   '2.5' AS ORDER_BY_COL1,
+                   MAX (ORDER_BY_COL2) AS ORDER_BY_COL2,
+                   MAX (ORDER_BY_COL3) AS ORDER_BY_COL3,
+                   MAX (ORDER_BY_COL4) AS ORDER_BY_COL4
+              FROM DAS_YLDSUM_MWD
+             WHERE 1 = 1
+          GROUP BY DAS_YLDSUM_MWD.PRODUCTCATEGORY,
+                   DAS_YLDSUM_MWD.FACTORYNAME,
+                   DAS_YLDSUM_MWD.PROCESSOPERATIONNAME,
+                   DAS_YLDSUM_MWD.PRODUCTIONTYPE) DRV_DAS_YLDSUM,
+         (  SELECT A.FACTORYNAME,
+                   A.PRODUCTCATEGORY,
+                   MAX (A.TOGLASSQUANTITY) AS TOGLASSQUANTITY,
+                   MAX (A.TOHALFGLASSQUANTITY) AS TOHALFGLASSQUANTITY,
+                   MAX (A.TOPANELQUANTITY) AS TOPANELQUANTITY
+              FROM STD_PRODUCTSPEC A
+          GROUP BY A.FACTORYNAME, A.PRODUCTCATEGORY) Table__1,
+         DAS_DEFECT_COLOR
+   WHERE     (    DRV_DAS_YLDSUM.FACTORYNAME = DAS_DEFECT_COLOR.FACTORYNAME
+              AND DRV_DAS_YLDSUM.DEFECTCODE = DAS_DEFECT_COLOR.DEFECT_CODE)
+         AND (    Table__1.FACTORYNAME = DRV_DAS_YLDSUM.FACTORYNAME
+              AND Table__1.PRODUCTCATEGORY = DRV_DAS_YLDSUM.PRODUCTCATEGORY)
+         AND (DRV_DAS_YLDSUM.PRODUCTIONTYPE IN ('Production',
+                                                'Engineer',
+                                                'Develop',
+                                                'TPCN',
+                                                'PV'))
+         AND DRV_DAS_YLDSUM.FACTORYNAME LIKE #{shopName}                                       
+         AND DRV_DAS_YLDSUM.PROCESSOPERATIONNAME = #{operationName}
+         AND DRV_DAS_YLDSUM.PRODUCTIONTYPE = #{productionType}
+         AND DRV_DAS_YLDSUM.PRODUCTCATEGORY = #{productCategory}
+ORDER BY DRV_DAS_YLDSUM.ORDER_BY_COL1,
+         DRV_DAS_YLDSUM.ORDER_BY_COL2,
+         DRV_DAS_YLDSUM.ORDER_BY_COL3,
+         DRV_DAS_YLDSUM.ORDER_BY_COL4  
+	</select>
+	
+	<select id="getDefect" resultType="java.util.HashMap">
+		  SELECT A.DATETIME,
+         A.DATETYPE,
+         A.DEFECTDATATYPE,
+         A.FACTORYNAME,
+         A.PRODUCTCATEGORY,
+         A.PRODUCTIONTYPE,
+         A.PROCESSOPERATIONNAME,
+         A.LINENAME,
+         A.DEFECTCODE,
+         A.DESCRIPTION,
+         A.DEFECTQTY,
+         A.TOTALQTY,
+         TRUNC ( (A.DEFECTQTY / A.TOTALQTY) * 100, 3) AS DEFECTRATIO
+  FROM MDWMGR.DSB_DEFECTSUM_MWD A
+ WHERE    A.FACTORYNAME = #{shopName}     
+       AND A.PROCESSOPERATIONNAME = #{operationName}
+       AND A.PRODUCTIONTYPE = #{productionType}  
+       AND A.DEFECTDATATYPE = 'MDLREWORK'
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.TOTALQTY IS NOT NULL
+	</select>
+	
+
+	<select id="getyieldCategory" resultType="java.util.HashMap">
+  		SELECT DISTINCT PRODUCTCATEGORY FROM DAS_YLDSUM_MWD WHERE FACTORYNAME=#{shopName} AND PROCESSOPERATIONNAME=#{processType} AND PRODUCTIONTYPE=#{productionType}
+  		ORDER BY PRODUCTCATEGORY
+    </select> 
+   
+    <select id="getyieldBP4LAYER" resultType="java.util.HashMap">
+    			SELECT *
+  		FROM MDWMGR.DAS_BP_LAYER_YIELD
+ 		WHERE     LAYER = #{layer}
+ 		    AND PRODUCTIONTYPE = #{productionType}
+       		AND PRODUCTCATEGORY = #{productCategory}
+    </select>
+    
+    <select id="getdefectBP4LAYER" resultType="java.util.HashMap">
+		SELECT *
+  		FROM MDWMGR.DAS_BP_LAYER_DFT_RATIO
+ 		WHERE     LAYER = #{layer}
+ 		    AND PRODUCTIONTYPE = #{productionType}
+       		AND PRODUCTCATEGORY = #{productCategory}
+    </select>   
+    
+    <select id="getBP4LAYERDefectList" resultType="java.util.HashMap">
+		SELECT DISTINCT DEFECT_GROUP FROM MDWMGR.DAS_BP_LAYER_DFT_RATIO
+ 		WHERE     LAYER = #{layer}
+ 		    AND PRODUCTIONTYPE = #{productionType}
+       		AND PRODUCTCATEGORY = #{productCategory}
+    </select> 
+    
+    <select id="getdefectBP4LAYERWithKilling" resultType="java.util.HashMap">
+		SELECT *
+  		FROM MDWMGR.DAS_BP_LAYER_KDFT_RATIO
+ 		WHERE     LAYER = #{layer}
+ 		    AND PRODUCTIONTYPE = #{productionType}
+       		AND PRODUCTCATEGORY = #{productCategory}
+    </select>      
+    
+    <select id="getBP4LAYERDefectListWithKilling" resultType="java.util.HashMap">
+		SELECT DISTINCT DEFECT_GROUP FROM MDWMGR.DAS_BP_LAYER_KDFT_RATIO
+ 		WHERE     LAYER = #{layer}
+ 		    AND PRODUCTIONTYPE = #{productionType}
+       		AND PRODUCTCATEGORY = #{productCategory}
+    </select>  
+    
+    <select id="getyieldBP4LAYERCategory" resultType="java.util.HashMap">
+		SELECT DISTINCT PRODUCTCATEGORY
+  		FROM MDWMGR.DAS_BP_LAYER_YIELD WHERE FACTORYNAME=#{shopName} AND LAYER=#{layer} AND PRODUCTIONTYPE=#{productionType}
+      	ORDER BY PRODUCTCATEGORY
+    </select>             
+      
+    <select id="getyieldBP4LAYERWithKillingCategory" resultType="java.util.HashMap">
+		SELECT DISTINCT PRODUCTCATEGORY
+  		FROM MDWMGR.DAS_BP_LAYER_KDFT_RATIO WHERE FACTORYNAME=#{shopName} AND LAYER=#{layer} AND PRODUCTIONTYPE=#{productionType}
+      	ORDER BY PRODUCTCATEGORY
+    </select> 
+    
+    <select id="getyieldEVEN_category" resultType="java.util.HashMap">
+	SELECT DISTINCT PRODUCTCATEGORY
+	  FROM DAS_DEFECTSUM_MWD
+	 WHERE     FACTORYNAME = #{shopName}
+	       AND OPER_DESC = '-'
+	       AND PROCESSOPERATIONNAME = #{processType}
+	       AND PRODUCTIONTYPE = #{productionType}
+	       ORDER BY PRODUCTCATEGORY
+    </select> 
+    
+    <select id="yieldEVENNew" resultType="java.util.HashMap">
+SELECT PRODUCTCATEGORY,
+       FACTORYNAME,
+       PROCESSOPERATIONNAME,
+       PRODUCTIONTYPE,
+       DEFECTCODE,
+       TO_CHAR (
+          DECODE (DAY_0_NMRTR,
+                  0, 0,
+                  ROUND (DAY_0_NMRTR / DAY_0_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_0,
+       TO_CHAR (
+          DECODE (DAY_1_NMRTR,
+                  0, 0,
+                  ROUND (DAY_1_NMRTR / DAY_1_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_1,
+       TO_CHAR (
+          DECODE (DAY_2_NMRTR,
+                  0, 0,
+                  ROUND (DAY_2_NMRTR / DAY_2_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_2,
+       TO_CHAR (
+          DECODE (DAY_3_NMRTR,
+                  0, 0,
+                  ROUND (DAY_3_NMRTR / DAY_3_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_3,
+       TO_CHAR (
+          DECODE (DAY_4_NMRTR,
+                  0, 0,
+                  ROUND (DAY_4_NMRTR / DAY_4_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_4,
+       TO_CHAR (
+          DECODE (DAY_5_NMRTR,
+                  0, 0,
+                  ROUND (DAY_5_NMRTR / DAY_5_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_5,
+       TO_CHAR (
+          DECODE (DAY_6_NMRTR,
+                  0, 0,
+                  ROUND (DAY_6_NMRTR / DAY_6_DNMTR * 100, 2)),
+          'fm9990.0099')
+          DAY_6,
+       TO_CHAR (
+          DECODE (WEEK_0_NMRTR,
+                  0, 0,
+                  ROUND (WEEK_0_NMRTR / WEEK_0_DNMTR * 100, 2)),
+          'fm9990.0099')
+          WEEK_0,
+       TO_CHAR (
+          DECODE (WEEK_1_NMRTR,
+                  0, 0,
+                  ROUND (WEEK_1_NMRTR / WEEK_1_DNMTR * 100, 2)),
+          'fm9990.0099')
+          WEEK_1,
+       TO_CHAR (
+          DECODE (WEEK_2_NMRTR,
+                  0, 0,
+                  ROUND (WEEK_2_NMRTR / WEEK_2_DNMTR * 100, 2)),
+          'fm9990.0099')
+          WEEK_2,
+       TO_CHAR (
+          DECODE (WEEK_3_NMRTR,
+                  0, 0,
+                  ROUND (WEEK_3_NMRTR / WEEK_3_DNMTR * 100, 2)),
+          'fm9990.0099')
+          WEEK_3,
+       TO_CHAR (
+          DECODE (MONTH_0_NMRTR,
+                  0, 0,
+                  ROUND (MONTH_0_NMRTR / MONTH_0_DNMTR * 100, 2)),
+          'fm9990.0099')
+          MONTH_0,
+       TO_CHAR (
+          DECODE (MONTH_1_NMRTR,
+                  0, 0,
+                  ROUND (MONTH_1_NMRTR / MONTH_1_DNMTR * 100, 2)),
+          'fm9990.0099')
+          MONTH_1,
+       TO_CHAR (
+          DECODE (MONTH_2_NMRTR,
+                  0, 0,
+                  ROUND (MONTH_2_NMRTR / MONTH_2_DNMTR * 100, 2)),
+          'fm9990.0099')
+          MONTH_2
+  FROM DAS_DEFECTSUM_MWD
+ WHERE     FACTORYNAME LIKE #{shopName}
+       AND OPER_DESC = '-'
+       AND PROCESSOPERATIONNAME = #{processType}
+       AND PRODUCTCATEGORY = #{productCategory}
+       AND PRODUCTIONTYPE = #{productionType}
+    </select>
+    
+    <select id="getyieldEVEN" resultType="java.util.HashMap">
+  SELECT DRV_DAS_YLDSUM.PRODUCTCATEGORY,
+         CASE
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Develop'
+            THEN
+               '客户送样'
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Production'
+            THEN
+               '正式量产'
+            WHEN DRV_DAS_YLDSUM.PRODUCTIONTYPE = 'Engineer'
+            THEN
+               '工程验证'
+            ELSE
+               DRV_DAS_YLDSUM.PRODUCTIONTYPE
+         END
+            AS PRODUCTIONTYPE,
+            OPER_DESC,
+         DRV_DAS_YLDSUM.DESCRIPTION,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.MONTH_2_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_2_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_2_DNMTR
+                END)
+         END MONTH_2,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.MONTH_1_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_1_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_1_DNMTR
+                END)
+         END MONTH_1,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.MONTH_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.MONTH_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.MONTH_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                        DRV_DAS_YLDSUM.MONTH_0_NMRTR
+                      / DRV_DAS_YLDSUM.MONTH_0_DNMTR
+                END)
+         END MONTH_0,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_3_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_3_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_3_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_3_NMRTR / DRV_DAS_YLDSUM.WEEK_3_DNMTR
+                END)
+         END WEEK_3,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_2_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_2_NMRTR / DRV_DAS_YLDSUM.WEEK_2_DNMTR
+                END)
+         END WEEK_2,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.WEEK_1_DNMTR = 0
+                   THEN
+                      NULL
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_1_NMRTR / DRV_DAS_YLDSUM.WEEK_1_DNMTR
+                END)
+         END WEEK_1,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.WEEK_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.WEEK_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.WEEK_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                      DRV_DAS_YLDSUM.WEEK_0_NMRTR / DRV_DAS_YLDSUM.WEEK_0_DNMTR
+                END)
+         END WEEK_0,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_6_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_6_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_6_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_6_NMRTR / DRV_DAS_YLDSUM.DAY_6_DNMTR
+                END)
+         END DAY_6,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_5_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_5_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_5_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_5_NMRTR / DRV_DAS_YLDSUM.DAY_5_DNMTR
+                END)
+         END DAY_5,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_4_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_4_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_4_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_4_NMRTR / DRV_DAS_YLDSUM.DAY_4_DNMTR
+                END)
+         END DAY_4,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_3_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_3_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_3_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_3_NMRTR / DRV_DAS_YLDSUM.DAY_3_DNMTR
+                END)
+         END DAY_3,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_2_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_2_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_2_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_2_NMRTR / DRV_DAS_YLDSUM.DAY_2_DNMTR
+                END)
+         END DAY_2,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_1_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_1_DNMTR
+            ELSE
+               (CASE
+                   WHEN DRV_DAS_YLDSUM.DAY_1_DNMTR = 0 THEN NULL
+                   ELSE DRV_DAS_YLDSUM.DAY_1_NMRTR / DRV_DAS_YLDSUM.DAY_1_DNMTR
+                END)
+         END DAY_1,
+         CASE
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('BP')
+            THEN
+               DRV_DAS_YLDSUM.DAY_0_DNMTR / Table__1.TOPANELQUANTITY
+            WHEN     DRV_DAS_YLDSUM.DESCRIPTION = 'DNMTR_QTY'
+                 AND DRV_DAS_YLDSUM.FACTORYNAME IN ('EVEN',
+                                                    'EAC1',
+                                                    'EAC2',
+                                                    'MODULE')
+            THEN
+               DRV_DAS_YLDSUM.DAY_0_DNMTR
+            ELSE
+               (CASE
+                   WHEN    DRV_DAS_YLDSUM.DAY_0_NMRTR = 0
+                        OR DRV_DAS_YLDSUM.DAY_0_DNMTR = 0
+                   THEN
+                      0
+                   ELSE
+                      DRV_DAS_YLDSUM.DAY_0_NMRTR / DRV_DAS_YLDSUM.DAY_0_DNMTR
+                END)
+         END DAY_0
+    FROM (SELECT PRODUCTCATEGORY,
+                 FACTORYNAME,
+                 PROCESSOPERATIONNAME,
+                 OPER_DESC,
+                 PRODUCTIONTYPE,
+                 DEFECTCODE,
+                 DESCRIPTION,
+                 MONTH_6_NMRTR,
+                 MONTH_5_NMRTR,
+                 MONTH_4_NMRTR,
+                 MONTH_3_NMRTR,
+                 MONTH_2_NMRTR,
+                 MONTH_1_NMRTR,
+                 MONTH_0_NMRTR,
+                 WEEK_6_NMRTR,
+                 WEEK_5_NMRTR,
+                 WEEK_4_NMRTR,
+                 WEEK_3_NMRTR,
+                 WEEK_2_NMRTR,
+                 WEEK_1_NMRTR,
+                 WEEK_0_NMRTR,
+                 DAY_6_NMRTR,
+                 DAY_5_NMRTR,
+                 DAY_4_NMRTR,
+                 DAY_3_NMRTR,
+                 DAY_2_NMRTR,
+                 DAY_1_NMRTR,
+                 DAY_0_NMRTR,
+                 MONTH_6_DNMTR,
+                 MONTH_5_DNMTR,
+                 MONTH_4_DNMTR,
+                 MONTH_3_DNMTR,
+                 MONTH_2_DNMTR,
+                 MONTH_1_DNMTR,
+                 MONTH_0_DNMTR,
+                 WEEK_6_DNMTR,
+                 WEEK_5_DNMTR,
+                 WEEK_4_DNMTR,
+                 WEEK_3_DNMTR,
+                 WEEK_2_DNMTR,
+                 WEEK_1_DNMTR,
+                 WEEK_0_DNMTR,
+                 DAY_6_DNMTR,
+                 DAY_5_DNMTR,
+                 DAY_4_DNMTR,
+                 DAY_3_DNMTR,
+                 DAY_2_DNMTR,
+                 DAY_1_DNMTR,
+                 DAY_0_DNMTR,
+                 ORDER_BY_COL1,
+                 ORDER_BY_COL2,
+                 ORDER_BY_COL3,
+                 ORDER_BY_COL4
+            FROM DAS_DEFECTSUM_MWD
+          UNION ALL
+          SELECT PRODUCTCATEGORY,
+                 FACTORYNAME,
+                 PROCESSOPERATIONNAME,
+                 OPER_DESC,
+                 PRODUCTIONTYPE,
+                 '-',
+                 YIELD_TYPE,
+                 MONTH_6_OUT,
+                 MONTH_5_OUT,
+                 MONTH_4_OUT,
+                 MONTH_3_OUT,
+                 MONTH_2_OUT,
+                 MONTH_1_OUT,
+                 MONTH_0_OUT,
+                 WEEK_6_OUT,
+                 WEEK_5_OUT,
+                 WEEK_4_OUT,
+                 WEEK_3_OUT,
+                 WEEK_2_OUT,
+                 WEEK_1_OUT,
+                 WEEK_0_OUT,
+                 DAY_6_OUT,
+                 DAY_5_OUT,
+                 DAY_4_OUT,
+                 DAY_3_OUT,
+                 DAY_2_OUT,
+                 DAY_1_OUT,
+                 DAY_0_OUT,
+                 MONTH_6_IN,
+                 MONTH_5_IN,
+                 MONTH_4_IN,
+                 MONTH_3_IN,
+                 MONTH_2_IN,
+                 MONTH_1_IN,
+                 MONTH_0_IN,
+                 WEEK_6_IN,
+                 WEEK_5_IN,
+                 WEEK_4_IN,
+                 WEEK_3_IN,
+                 WEEK_2_IN,
+                 WEEK_1_IN,
+                 WEEK_0_IN,
+                 DAY_6_IN,
+                 DAY_5_IN,
+                 DAY_4_IN,
+                 DAY_3_IN,
+                 DAY_2_IN,
+                 DAY_1_IN,
+                 DAY_0_IN,
+                 ORDER_BY_COL1,
+                 ORDER_BY_COL2,
+                 ORDER_BY_COL3,
+                 ORDER_BY_COL4
+            FROM DAS_YLDSUM_MWD
+          UNION ALL
+            SELECT DAS_YLDSUM_MWD.PRODUCTCATEGORY,
+                   DAS_YLDSUM_MWD.FACTORYNAME,
+                   DAS_YLDSUM_MWD.PROCESSOPERATIONNAME,
+                   MAX (DAS_YLDSUM_MWD.OPER_DESC),
+                   DAS_YLDSUM_MWD.PRODUCTIONTYPE,
+                   '-',
+                   'DNMTR_QTY' AS YIELD_TYPE,
+                   0 AS MONTH_6_OUT,
+                   0 AS MONTH_5_OUT,
+                   0 AS MONTH_4_OUT,
+                   0 AS MONTH_3_OUT,
+                   0 AS MONTH_2_OUT,
+                   0 AS MONTH_1_OUT,
+                   0 AS MONTH_0_OUT,
+                   0 AS WEEK_6_OUT,
+                   0 AS WEEK_5_OUT,
+                   0 AS WEEK_4_OUT,
+                   0 AS WEEK_3_OUT,
+                   0 AS WEEK_2_OUT,
+                   0 AS WEEK_1_OUT,
+                   0 AS WEEK_0_OUT,
+                   0 AS DAY_6_OUT,
+                   0 AS DAY_5_OUT,
+                   0 AS DAY_4_OUT,
+                   0 AS DAY_3_OUT,
+                   0 AS DAY_2_OUT,
+                   0 AS DAY_1_OUT,
+                   0 AS DAY_0_OUT,
+                   MAX (MONTH_6_IN) AS MONTH_6_IN,
+                   MAX (MONTH_5_IN) AS MONTH_5_IN,
+                   MAX (MONTH_4_IN) AS MONTH_4_IN,
+                   MAX (MONTH_3_IN) AS MONTH_3_IN,
+                   MAX (MONTH_2_IN) AS MONTH_2_IN,
+                   MAX (MONTH_1_IN) AS MONTH_1_IN,
+                   MAX (MONTH_0_IN) AS MONTH_0_IN,
+                   MAX (WEEK_6_IN) AS WEEK_6_IN,
+                   MAX (WEEK_5_IN) AS WEEK_5_IN,
+                   MAX (WEEK_4_IN) AS WEEK_4_IN,
+                   MAX (WEEK_3_IN) AS WEEK_3_IN,
+                   MAX (WEEK_2_IN) AS WEEK_2_IN,
+                   MAX (WEEK_1_IN) AS WEEK_1_IN,
+                   MAX (WEEK_0_IN) AS WEEK_0_IN,
+                   MAX (DAY_6_IN) AS DAY_6_IN,
+                   MAX (DAY_5_IN) AS DAY_5_IN,
+                   MAX (DAY_4_IN) AS DAY_4_IN,
+                   MAX (DAY_3_IN) AS DAY_3_IN,
+                   MAX (DAY_2_IN) AS DAY_2_IN,
+                   MAX (DAY_1_IN) AS DAY_1_IN,
+                   MAX (DAY_0_IN) AS DAY_0_IN,
+                   '2.5' AS ORDER_BY_COL1,
+                   MAX (ORDER_BY_COL2) AS ORDER_BY_COL2,
+                   MAX (ORDER_BY_COL3) AS ORDER_BY_COL3,
+                   MAX (ORDER_BY_COL4) AS ORDER_BY_COL4
+              FROM DAS_YLDSUM_MWD
+             WHERE 1 = 1
+          GROUP BY DAS_YLDSUM_MWD.PRODUCTCATEGORY,
+                   DAS_YLDSUM_MWD.FACTORYNAME,
+                   DAS_YLDSUM_MWD.PROCESSOPERATIONNAME,
+                   DAS_YLDSUM_MWD.PRODUCTIONTYPE) DRV_DAS_YLDSUM,
+         (  SELECT A.FACTORYNAME,
+                   A.PRODUCTCATEGORY,
+                   MAX (A.TOGLASSQUANTITY) AS TOGLASSQUANTITY,
+                   MAX (A.TOHALFGLASSQUANTITY) AS TOHALFGLASSQUANTITY,
+                   MAX (A.TOPANELQUANTITY) AS TOPANELQUANTITY
+              FROM STD_PRODUCTSPEC A
+          GROUP BY A.FACTORYNAME, A.PRODUCTCATEGORY) Table__1
+   WHERE     (    Table__1.FACTORYNAME = DRV_DAS_YLDSUM.FACTORYNAME
+              AND Table__1.PRODUCTCATEGORY = DRV_DAS_YLDSUM.PRODUCTCATEGORY)
+         AND (DRV_DAS_YLDSUM.PRODUCTIONTYPE IN ('Production',
+                                                'Engineer',
+                                                'Develop',
+                                                'TPCN'))
+         AND (    DRV_DAS_YLDSUM.FACTORYNAME = 'EVEN'
+              AND DRV_DAS_YLDSUM.OPER_DESC IN ('H_CUT AOI',
+                                               'IJP AOI',
+                                               'LIGHTON',
+                                               'TFE AOI',
+                                               'CRACK AOI')
+              AND DRV_DAS_YLDSUM.DESCRIPTION != '-')
+              AND OPER_DESC=#{operationName}
+              AND PRODUCTIONTYPE=#{productionType}             
+              AND DRV_DAS_YLDSUM.PRODUCTCATEGORY=#{productCategory}
+ORDER BY DRV_DAS_YLDSUM.ORDER_BY_COL1,
+         DRV_DAS_YLDSUM.ORDER_BY_COL2,
+         DRV_DAS_YLDSUM.ORDER_BY_COL3,
+         DRV_DAS_YLDSUM.ORDER_BY_COL4   
+    </select>
+    
+    <select id="getyieldEACMDLCategory" resultType="java.util.HashMap">
+      SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM MDWMGR.DSB_YIELDSUM_MWD A
+   WHERE     1 = 1
+         AND A.YIELDDATATYPE = #{defectdataType}
+         AND A.FACTORYNAME LIKE #{shopName}
+         AND A.PRODUCTIONTYPE = #{productionType}
+         AND A.PROCESSOPERATIONNAME = #{processType}
+         AND A.LINENAME = #{lineName}
+ORDER BY A.PRODUCTCATEGORY ASC
+    </select>
+    
+    <select id="getyieldByLine" resultType="java.util.HashMap">
+SELECT A.DATETIME,
+       A.DATETYPE,
+       A.YIELDDATATYPE,
+       A.FACTORYNAME,
+       A.PRODUCTCATEGORY,
+       A.PRODUCTIONTYPE,
+       A.PROCESSOPERATIONNAME,
+       A.LINENAME,
+       A.IN_QTY,
+       CASE
+          WHEN A.IN_QTY != 0 THEN TRUNC ( (A.OUT_QTY / A.IN_QTY) * 100, 2)
+          ELSE 0
+       END
+          YIELD
+  FROM MDWMGR.DSB_YIELDSUM_MWD A
+ WHERE    A.FACTORYNAME LIKE #{shopName}    
+       AND A.PROCESSOPERATIONNAME = #{processType}
+       AND A.PRODUCTIONTYPE = #{productionType}   
+       AND A.YIELDDATATYPE = #{defectdataType}
+       AND A.LINENAME = #{lineName}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+	</select>
+    
+    <select id="getdefectByLine" resultType="java.util.HashMap">
+  SELECT A.DATETIME,
+         A.DATETYPE,
+         A.DEFECTDATATYPE,
+         A.FACTORYNAME,
+         A.PRODUCTCATEGORY,
+         A.PRODUCTIONTYPE,
+         A.PROCESSOPERATIONNAME,
+         A.LINENAME,
+         A.DEFECTCODE,
+         A.DESCRIPTION,
+         A.DEFECTQTY,
+         A.TOTALQTY,
+         CASE
+         	WHEN A.TOTALQTY != 0 THEN TRUNC ( (A.DEFECTQTY / A.TOTALQTY) * 100, 3)
+         	ELSE 0
+         END DEFECTRATIO       
+  FROM MDWMGR.DSB_DEFECTSUM_MWD A
+ WHERE    A.FACTORYNAME LIKE #{shopName}    
+       AND A.PROCESSOPERATIONNAME = #{yieldtype}
+       AND A.PRODUCTIONTYPE = #{productionType}   
+       AND A.DEFECTDATATYPE = #{defectdataType}
+       AND A.LINENAME = #{lineName}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.TOTALQTY IS NOT NULL
+       AND A.DEFECTQTY &gt;= 0
+    </select>
+    
+    <select id="getDefectListByLine" resultType="java.util.HashMap">
+	    SELECT DISTINCT DESCRIPTION
+  FROM MDWMGR.DSB_DEFECTSUM_MWD A
+ WHERE    A.FACTORYNAME LIKE #{shopName}    
+       AND A.PROCESSOPERATIONNAME = #{yieldtype}
+       AND A.PRODUCTIONTYPE = #{productionType}   
+       AND A.DEFECTDATATYPE = #{defectdataType}
+       AND A.LINENAME = #{lineName}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       ORDER BY DESCRIPTION
+    </select>
+    
+    <select id="getdefectDetailByLine" resultType="java.util.HashMap">
+	SELECT *
+	  FROM DSB_DEFECTSUM_MWD A
+	 WHERE    A.FACTORYNAME LIKE #{shopName}    
+	       AND A.PROCESSOPERATIONNAME = #{yieldtype}
+	       AND A.PRODUCTIONTYPE = #{productionType}   
+	       AND A.DEFECTDATATYPE = #{defectdataType}
+	       AND A.LINENAME = #{lineName}
+	       AND A.PRODUCTCATEGORY = #{productCategory}
+    </select>   
+    
+    <select id="getyieldCategoryMDLCUM" resultType="java.util.HashMap">
+    SELECT DISTINCT PRODUCTCATEGORY 
+  FROM MDWMGR.DSB_YIELDCUM_MWD A
+ WHERE     A.YIELDDATATYPE = #{dataType}
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTIONTYPE = #{productionType}
+       AND A.PROCESSOPERATIONNAME = #{processType}  
+       AND A.LINENAME = #{lineName}
+       ORDER BY A.PRODUCTCATEGORY
+    </select>
+    
+    <select id="getdefectMDLCUM" resultType="java.util.HashMap">
+       SELECT *
+  FROM MDWMGR.DSB_DEFECTCUM_MWD A
+ WHERE     A.DEFECTDATATYPE = #{dataType}
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTIONTYPE = #{productionType}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.LINENAME = #{lineName}
+       AND A.PROCESSOPERATIONNAME = #{processType}
+    </select>
+    
+    <select id="getdefectMDLCUMCategory" resultType="java.util.HashMap">
+	SELECT DISTINCT DEFECTCODE
+	  FROM MDWMGR.DSB_DEFECTCUM_MWD A
+WHERE     A.DEFECTDATATYPE = #{dataType}
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTIONTYPE = #{productionType}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.LINENAME = #{lineName}
+       AND A.PROCESSOPERATIONNAME = #{processType}
+	       ORDER BY A.DEFECTCODE 
+    </select>
+    
+    <select id="getReworkYieldMDLCUM" resultType="java.util.HashMap">
+	      SELECT A.DATETIME AS FACTORYDATE,
+       A.DATETYPE,
+       A.YIELDDATATYPE,
+       A.FACTORYNAME,
+       A.PRODUCTCATEGORY,
+       A.PRODUCTIONTYPE,
+       A.PROCESSOPERATIONNAME,
+       A.OPER_DESC,
+       A.FPY_YIELD AS FPY
+  FROM MDWMGR.DSB_YIELDCUM_MWD A
+ WHERE     A.YIELDDATATYPE = 'MDLMAINREWORKCUM'
+       AND A.FACTORYNAME = #{shopName} 
+       AND A.PRODUCTIONTYPE = #{productionType}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+    </select>
+    
+    <select id="getyieldMDLCUM" resultType="java.util.HashMap">
+      SELECT A.DATETIME AS FACTORYDATE,
+       A.DATETYPE,
+       A.YIELDDATATYPE,
+       A.FACTORYNAME,
+       A.PRODUCTCATEGORY,
+       A.PRODUCTIONTYPE,
+       A.PROCESSOPERATIONNAME,
+       A.OPER_DESC,
+       A.FPY_YIELD AS FPY
+  FROM MDWMGR.DSB_YIELDCUM_MWD A
+  WHERE     A.YIELDDATATYPE = #{dataType}
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTIONTYPE = #{productionType}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.LINENAME = #{lineName}
+       AND A.PROCESSOPERATIONNAME = #{processType}
+    </select>  
+    
+    <select id="getyieldStockInCum" resultType="java.util.HashMap">
+	SELECT A.DATETIME,
+       A.DATETYPE,
+       A.YIELDDATATYPE,
+       A.FACTORYNAME,
+       A.PRODUCTCATEGORY,
+       A.PRODUCTIONTYPE,
+       TRUNC (A.FPY_YIELD * 100, 2) AS YIELD
+  FROM MDWMGR.DSB_YIELDCUM_MWD A
+ WHERE A.PRODUCTCATEGORY = #{productCategory}
+        AND A.YIELDDATATYPE = 'SHOPYIELDCUM'
+       AND A.FACTORYNAME = 'CUMYIELD'
+       AND A.PRODUCTIONTYPE = 'ALL TYPE'
+    </select>
+    
+    <select id="yieldStockInCUMCategory" resultType="java.util.HashMap">
+		  SELECT DISTINCT PRODUCTCATEGORY
+    FROM MDWMGR.DSB_YIELDCUM_MWD A WHERE A.YIELDDATATYPE = 'SHOPYIELDCUM'
+    </select>
+    
+    <select id="getTotalYieldCategory" resultType="java.util.HashMap">
+	SELECT DISTINCT PRODUCTCATEGORY FROM DAS_YLDSUM_MWD WHERE 
+		FACTORYNAME = #{shopName} 
+		AND PROCESSOPERATIONNAME = #{yieldType}
+  		AND PRODUCTIONTYPE IN ('Production','TPCN')
+  	ORDER BY PRODUCTCATEGORY
+    </select>   
+    
+    <select id="getEVENYiledOneyear" resultType="java.util.HashMap">
+  SELECT *
+    FROM (SELECT T2.FACTORYMONTH,
+       T2.FACTORYNAME,
+       T2.PRODUCTCATEGORY,
+       'EVEN_DEPT_SCRAP' AS PROCESSOPERATIONNAME,
+       '-' AS OPER_DESC,
+       NVL (T1.SCRAPQTY, 0) AS QTYNMRTR,
+       NVL (T2.TOTALQTY, 0) AS QTYDNMTR,
+       SYSDATE AS UPDATETIME
+  FROM (  SELECT A.FACTORYMONTH,
+                 A.FACTORYNAME,
+                 B.PRODUCTCATEGORY,
+                 SUM (A.MAINQTY) AS SCRAPQTY
+            FROM FPS_PRDSCRAP_MONTH A, FAB_PRODUCTSPEC B
+           WHERE     1 = 1
+                 AND A.FACTORYNAME = 'EVEN'
+                 AND A.FACTORYNAME = B.FACTORYNAME
+                 AND A.PRODUCTSPECNAME = B.PRODUCTSPECNAME
+                 AND A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                           AND A.CAUSEDEPARTMENT IN ('PI_YE',
+                                                     'PI_Pi',
+                                                     'PI_NP',
+                                                     'INS_Test2',
+                                                     'INS_Test1',
+                                                     'INS_Ins',
+                                                     'Mask_Aligner',
+                                                     'EV_设备',
+                                                     'EV_前处理',
+                                                     'EV_工艺',
+                                                     'EV_OC',
+                                                     'EV_MC',
+                                                     'EN_IJP',
+                                                     'EN_CVD')                 
+                 AND NOT EXISTS
+                            (SELECT 1
+                               FROM STD_LOOKUP_VALUES SLV
+                              WHERE     SLV.LOOKUP_TYPE = 'PRODUCTCATEGORY'
+                                    AND SLV.LOOKUP_CODE = B.PRODUCTCATEGORY)
+        GROUP BY A.FACTORYMONTH, A.FACTORYNAME, B.PRODUCTCATEGORY) T1,
+       (  SELECT A.FACTORYMONTH,
+                 A.FACTORYNAME,
+                 B.PRODUCTCATEGORY,
+                 SUM (A.CLOSEMAINQTY - A.UNCLOSEMAINQTY) AS TOTALQTY
+            FROM FPS_PRDPROD_MONTH A, FAB_PRODUCTSPEC B
+           WHERE     1 = 1
+                 AND A.FACTORYNAME = B.FACTORYNAME
+                 AND A.PRODUCTSPECNAME = B.PRODUCTSPECNAME
+                 AND A.FACTORYNAME = 'EVEN'
+                 AND A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+        GROUP BY A.FACTORYMONTH, A.FACTORYNAME, B.PRODUCTCATEGORY) T2
+ WHERE     T2.FACTORYMONTH = T1.FACTORYMONTH(+)
+       AND T2.PRODUCTCATEGORY = T1.PRODUCTCATEGORY(+)
+       AND T2.FACTORYNAME = T1.FACTORYNAME(+)
+UNION ALL
+SELECT NVL (T1.FACTORYMONTH, T2.FACTORYMONTH) AS FACTORYMONTH,
+       NVL (T1.FACTORYNAME, T2.FACTORYNAME) AS FACTORYNAME,
+       NVL (T1.PRODUCTCATEGORY, T2.PRODUCTCATEGORY) AS PRODUCTCATEGORY,
+       NVL (T1.PROCESSOPERATIONNAME, T2.PROCESSOPERATIONNAME)
+          AS PROCESSOPERATIONNAME,
+       NVL (T1.OPER_DESC, '-') AS OPER_DESC,
+       NVL (T1.DEFECTQTY, 0) AS QTYNMRTR,
+       NVL (T2.TOTALQTY, 0) AS QTYDNMTR,
+       SYSDATE AS UPDATETIME
+  FROM (  SELECT A.FACTORYMONTH,
+                 A.FACTORYNAME,
+                 A.PRODUCTCATEGORY,
+                 A.PROCESSOPERATIONNAME,
+                 A.OPER_DESC,
+                 SUM (A.DEFECTQTY) AS DEFECTQTY
+            FROM (SELECT A.FACTORYMONTH,
+                         A.FACTORYNAME,
+                         B.PRODUCTCATEGORY,
+                         'PART_DEF' AS PROCESSOPERATIONNAME,
+                         C.SUPERREASONCODEGROUP AS OPER_DESC,
+                         A.DEFECTQTY
+                    FROM FPS_PRDBSDEFECT_MONTH A,
+                         MOD_PRODUCTSPEC B,
+                         MOD_REASONCODE C
+                   WHERE     A.FACTORYNAME = C.FACTORYNAME
+                         AND A.DEFECTCODE = C.REASONCODE
+                         AND A.FACTORYNAME = B.FACTORYNAME
+                         AND A.PRODUCTSPECNAME = B.PRODUCTSPECNAME
+                         AND A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                         AND C.SUPERREASONCODEGROUP IN (SELECT A.LOOKUP_CODE
+                                                          FROM STD_LOOKUP_VALUES A
+                                                         WHERE     A.LOOKUP_TYPE =
+                                                                      'SUPERREASONCODEGROUP'
+                                                               AND A.ENABLED_FLAG =
+                                                                      'Y')
+                         AND A.PROCESSOPERATIONNAME IN ('C52000N', 'C54000N')) A
+        GROUP BY A.FACTORYMONTH,
+                 A.PRODUCTCATEGORY,
+                 A.FACTORYNAME,
+                 A.OPER_DESC,
+                 A.PROCESSOPERATIONNAME) T1,
+       (  SELECT A.FACTORYMONTH,
+                 B.PRODUCTCATEGORY,
+                 A.FACTORYNAME,
+                 'PART_DEF' AS PROCESSOPERATIONNAME,
+                 SUM (A.MAINQTY) AS TOTALQTY
+            FROM FPS_PRDGRADE_MONTH A, MOD_PRODUCTSPEC B
+           WHERE     1 = 1
+                 AND A.FACTORYNAME = B.FACTORYNAME
+                 AND A.PRODUCTSPECNAME = B.PRODUCTSPECNAME
+                 AND A.LOTDETAILGRADE IN ('S',
+                                          'A',
+                                          'T',
+                                          'F')
+                 AND A.PROCESSOPERATIONNAME IN ('C52000N', 'C54000N')
+                 AND A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+        GROUP BY A.FACTORYMONTH, B.PRODUCTCATEGORY, A.FACTORYNAME) T2
+ WHERE     T2.FACTORYMONTH = T1.FACTORYMONTH(+)
+       AND T2.PRODUCTCATEGORY = T1.PRODUCTCATEGORY(+)
+       AND T2.FACTORYNAME = T1.FACTORYNAME(+)) TT
+   WHERE TT.PRODUCTCATEGORY = #{productCategory} AND TT.FACTORYMONTH LIKE #{year}
+            <if test='defectOrscrap == "defect"'>  
+                AND TT.PROCESSOPERATIONNAME='PART_DEF'
+            </if>
+            <if test='defectOrscrap == "scrap"'>  
+                AND TT.PROCESSOPERATIONNAME='EVEN_DEPT_SCRAP'
+            </if>
+ORDER BY TT.FACTORYMONTH
+    </select>
+    
+    <select id="getEVENYieldByDepartment" resultType="java.util.HashMap">
+    	  SELECT PRODUCTCATEGORY,
+         FACTORYNAME,
+         PROCESSOPERATIONNAME,
+         OPER_DESC,
+         CASE
+            WHEN PRODUCTIONTYPE = 'Production' THEN 'Production'
+            WHEN PRODUCTIONTYPE = 'TPCN' THEN 'Production'
+         END
+            AS PRODUCTIONTYPE,
+         DEFECTCODE,
+         DESCRIPTION,
+         SUM (MONTH_6_NMRTR) AS MONTH_6_NMRTR,
+         SUM (MONTH_5_NMRTR) AS MONTH_5_NMRTR,
+         SUM (MONTH_4_NMRTR) AS MONTH_4_NMRTR,
+         SUM (MONTH_3_NMRTR) AS MONTH_3_NMRTR,
+         SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+         SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+         SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+         SUM (WEEK_6_NMRTR) AS WEEK_6_NMRTR,
+         SUM (WEEK_5_NMRTR) AS WEEK_5_NMRTR,
+         SUM (WEEK_4_NMRTR) AS WEEK_4_NMRTR,
+         SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+         SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+         SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+         SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+         SUM (DAY_6_NMRTR) AS DAY_6_NMRTR,
+         SUM (DAY_5_NMRTR) AS DAY_5_NMRTR,
+         SUM (DAY_4_NMRTR) AS DAY_4_NMRTR,
+         SUM (DAY_3_NMRTR) AS DAY_3_NMRTR,
+         SUM (DAY_2_NMRTR) AS DAY_2_NMRTR,
+         SUM (DAY_1_NMRTR) AS DAY_1_NMRTR,
+         SUM (DAY_0_NMRTR) AS DAY_0_NMRTR,
+         SUM (MONTH_6_DNMTR) AS MONTH_6_DNMTR,
+         SUM (MONTH_5_DNMTR) AS MONTH_5_DNMTR,
+         SUM (MONTH_4_DNMTR) AS MONTH_4_DNMTR,
+         SUM (MONTH_3_DNMTR) AS MONTH_3_DNMTR,
+         SUM (MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+         SUM (MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+         SUM (MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+         SUM (WEEK_6_DNMTR) AS WEEK_6_DNMTR,
+         SUM (WEEK_5_DNMTR) AS WEEK_5_DNMTR,
+         SUM (WEEK_4_DNMTR) AS WEEK_4_DNMTR,
+         SUM (WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+         SUM (WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+         SUM (WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+         SUM (WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+         SUM (DAY_6_DNMTR) AS DAY_6_DNMTR,
+         SUM (DAY_5_DNMTR) AS DAY_5_DNMTR,
+         SUM (DAY_4_DNMTR) AS DAY_4_DNMTR,
+         SUM (DAY_3_DNMTR) AS DAY_3_DNMTR,
+         SUM (DAY_2_DNMTR) AS DAY_2_DNMTR,
+         SUM (DAY_1_DNMTR) AS DAY_1_DNMTR,
+         SUM (DAY_0_DNMTR) AS DAY_0_DNMTR
+    FROM DAS_DEFECTSUM_MWD A
+   WHERE     A.PROCESSOPERATIONNAME = 'PART_DEF'
+   		AND A.OPER_DESC = #{shopName}     
+   		AND A.PRODUCTCATEGORY = #{productCategory}
+   		AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+GROUP BY PRODUCTCATEGORY,
+         FACTORYNAME,
+         PROCESSOPERATIONNAME,
+         OPER_DESC,
+         (CASE
+             WHEN PRODUCTIONTYPE = 'Production' THEN 'Production'
+             WHEN PRODUCTIONTYPE = 'TPCN' THEN 'Production'
+          END),
+         DEFECTCODE,
+         DESCRIPTION
+    </select>
+    
+    <select id="getScrapEVENAllbyDepartment" resultType="java.util.HashMap">
+      SELECT NMR.FACTORYNAME,
+         NMR.DEFECTCODE,
+         CASE
+            WHEN DNM.MONTH_2_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.MONTH_2_NMRTR
+                   * 100
+                   / (DNM.MONTH_2_DNMTR + DNM1.MONTH_2_NMRTR_ALL)),
+                  2)
+         END
+            AS MONTH_2,
+         CASE
+            WHEN DNM.MONTH_1_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.MONTH_1_NMRTR
+                   * 100
+                   / (DNM.MONTH_1_DNMTR + DNM1.MONTH_1_NMRTR_ALL)),
+                  2)
+         END
+            AS MONTH_1,
+         CASE
+            WHEN DNM.MONTH_0_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.MONTH_0_NMRTR
+                   * 100
+                   / (DNM.MONTH_0_DNMTR + DNM1.MONTH_0_NMRTR_ALL)),
+                  2)
+         END
+            AS MONTH_0,
+         CASE
+            WHEN DNM.WEEK_3_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.WEEK_3_NMRTR
+                   * 100
+                   / (DNM.WEEK_3_DNMTR + DNM1.WEEK_3_NMRTR_ALL)),
+                  2)
+         END
+            AS WEEK_3,
+         CASE
+            WHEN DNM.WEEK_2_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.WEEK_2_NMRTR
+                   * 100
+                   / (DNM.WEEK_2_DNMTR + DNM1.WEEK_2_NMRTR_ALL)),
+                  2)
+         END
+            AS WEEK_2,
+         CASE
+            WHEN DNM.WEEK_1_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.WEEK_1_NMRTR
+                   * 100
+                   / (DNM.WEEK_1_DNMTR + DNM1.WEEK_1_NMRTR_ALL)),
+                  2)
+         END
+            AS WEEK_1,
+         CASE
+            WHEN DNM.WEEK_0_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.WEEK_0_NMRTR
+                   * 100
+                   / (DNM.WEEK_0_DNMTR + DNM1.WEEK_0_NMRTR_ALL)),
+                  2)
+         END
+            AS WEEK_0,
+         CASE
+            WHEN DNM.DAY_6_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_6_NMRTR
+                   * 100
+                   / (DNM.DAY_6_DNMTR + DNM1.DAY_6_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_6,
+         CASE
+            WHEN DNM.DAY_5_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_5_NMRTR
+                   * 100
+                   / (DNM.DAY_5_DNMTR + DNM1.DAY_5_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_5,
+         CASE
+            WHEN DNM.DAY_4_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_4_NMRTR
+                   * 100
+                   / (DNM.DAY_4_DNMTR + DNM1.DAY_4_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_4,
+         CASE
+            WHEN DNM.DAY_3_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_3_NMRTR
+                   * 100
+                   / (DNM.DAY_3_DNMTR + DNM1.DAY_3_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_3,
+         CASE
+            WHEN DNM.DAY_2_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_2_NMRTR
+                   * 100
+                   / (DNM.DAY_2_DNMTR + DNM1.DAY_2_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_2,
+         CASE
+            WHEN DNM.DAY_1_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_1_NMRTR
+                   * 100
+                   / (DNM.DAY_1_DNMTR + DNM1.DAY_1_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_1,
+         CASE
+            WHEN DNM.DAY_0_DNMTR = 0
+            THEN
+               0
+            ELSE
+               TRUNC (
+                  (  NMR.DAY_0_NMRTR
+                   * 100
+                   / (DNM.DAY_0_DNMTR + DNM1.DAY_0_NMRTR_ALL)),
+                  2)
+         END
+            AS DAY_0
+    FROM (  SELECT D.FACTORYNAME,
+                   (CASE
+                       WHEN D.DEFECTCODE IN ('PI_YE',
+                                             'PI_Pi',
+                                             'PI_NP',
+                                             'INS_Test2',
+                                             'INS_Test1',
+                                             'INS_Ins')
+                       THEN
+                          'PI'
+                       WHEN D.DEFECTCODE IN ('Mask_Aligner')
+                       THEN
+                          'Mask'
+                       WHEN D.DEFECTCODE IN ('EV_设备',
+                                             'EV_前处理',
+                                             'EV_工艺',
+                                             'EV_OC',
+                                             'EV_MC')
+                       THEN
+                          'EV'
+                       WHEN D.DEFECTCODE IN ('EN_IJP', 'EN_CVD')
+                       THEN
+                          'EN'
+                       ELSE
+                          '-'
+                    END)
+                      AS DEFECTCODE,
+                   SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY (CASE
+                       WHEN D.DEFECTCODE IN ('PI_YE',
+                                             'PI_Pi',
+                                             'PI_NP',
+                                             'INS_Test2',
+                                             'INS_Test1',
+                                             'INS_Ins')
+                       THEN
+                          'PI'
+                       WHEN D.DEFECTCODE IN ('Mask_Aligner')
+                       THEN
+                          'Mask'
+                       WHEN D.DEFECTCODE IN ('EV_设备',
+                                             'EV_前处理',
+                                             'EV_工艺',
+                                             'EV_OC',
+                                             'EV_MC')
+                       THEN
+                          'EV'
+                       WHEN D.DEFECTCODE IN ('EN_IJP', 'EN_CVD')
+                       THEN
+                          'EN'
+                       ELSE
+                          '-'
+                    END),
+                   D.FACTORYNAME) NMR,
+         (  /*DNM  Formatted on 2018/4/21 12:50:33 (QP5 v5.252.13127.32847) */
+          SELECT SUM (B.MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+                 SUM (B.MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+                 SUM (B.MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+                 SUM (B.WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+                 SUM (B.WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+                 SUM (B.WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+                 SUM (B.WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+                 SUM (B.DAY_6_DNMTR) AS DAY_6_DNMTR,
+                 SUM (B.DAY_5_DNMTR) AS DAY_5_DNMTR,
+                 SUM (B.DAY_4_DNMTR) AS DAY_4_DNMTR,
+                 SUM (B.DAY_3_DNMTR) AS DAY_3_DNMTR,
+                 SUM (B.DAY_2_DNMTR) AS DAY_2_DNMTR,
+                 SUM (B.DAY_1_DNMTR) AS DAY_1_DNMTR,
+                 SUM (B.DAY_0_DNMTR) AS DAY_0_DNMTR
+            FROM (  SELECT A.PRODUCTIONTYPE,
+                           A.PRODUCTCATEGORY,
+                           SUM (A.MONTH_2_DNMTR) / COUNT (1) AS MONTH_2_DNMTR,
+                           SUM (A.MONTH_1_DNMTR) / COUNT (1) AS MONTH_1_DNMTR,
+                           SUM (A.MONTH_0_DNMTR) / COUNT (1) AS MONTH_0_DNMTR,
+                           SUM (A.WEEK_3_DNMTR) / COUNT (1) AS WEEK_3_DNMTR,
+                           SUM (A.WEEK_2_DNMTR) / COUNT (1) AS WEEK_2_DNMTR,
+                           SUM (A.WEEK_1_DNMTR) / COUNT (1) AS WEEK_1_DNMTR,
+                           SUM (A.WEEK_0_DNMTR) / COUNT (1) AS WEEK_0_DNMTR,
+                           SUM (A.DAY_6_DNMTR) / COUNT (1) AS DAY_6_DNMTR,
+                           SUM (A.DAY_5_DNMTR) / COUNT (1) AS DAY_5_DNMTR,
+                           SUM (A.DAY_4_DNMTR) / COUNT (1) AS DAY_4_DNMTR,
+                           SUM (A.DAY_3_DNMTR) / COUNT (1) AS DAY_3_DNMTR,
+                           SUM (A.DAY_2_DNMTR) / COUNT (1) AS DAY_2_DNMTR,
+                           SUM (A.DAY_1_DNMTR) / COUNT (1) AS DAY_1_DNMTR,
+                           SUM (A.DAY_0_DNMTR) / COUNT (1) AS DAY_0_DNMTR
+                      FROM DAS_DEFECTSUM_MWD A
+                     WHERE     A.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND A.FACTORYNAME = #{shopName}
+                           AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+                  GROUP BY A.PRODUCTIONTYPE, A.PRODUCTCATEGORY) B) DNM,
+         (  SELECT SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR_ALL,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR_ALL,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR_ALL,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR_ALL,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR_ALL,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR_ALL,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR_ALL,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR_ALL,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR_ALL,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR_ALL,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR_ALL,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR_ALL,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR_ALL,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR_ALL
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY D.FACTORYNAME) DNM1
+   WHERE NMR.DEFECTCODE != '-'
+ORDER BY NMR.DEFECTCODE
+    </select>
+    
+    <select id="getScrapEVENAllbyDepartmentQty" resultType="java.util.HashMap">
+	      SELECT *
+	    FROM (  SELECT D.FACTORYNAME,
+	                   (CASE
+	                       WHEN D.DEFECTCODE IN ('PI_YE',
+	                                             'PI_Pi',
+	                                             'PI_NP',
+	                                             'INS_Test2',
+	                                             'INS_Test1',
+	                                             'INS_Ins')
+	                       THEN
+	                          'PI'
+	                       WHEN D.DEFECTCODE IN ('Mask_Aligner')
+	                       THEN
+	                          'Mask'
+	                       WHEN D.DEFECTCODE IN ('EV_设备',
+	                                             'EV_前处理',
+	                                             'EV_工艺',
+	                                             'EV_OC',
+	                                             'EV_MC')
+	                       THEN
+	                          'EV'
+	                       WHEN D.DEFECTCODE IN ('EN_IJP', 'EN_CVD')
+	                       THEN
+	                          'EN'
+	                       ELSE
+	                          '-'
+	                    END)
+	                      AS DEFECTCODE,
+	                   SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+	                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+	                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+	                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+	                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+	                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+	                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+	                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR,
+	                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR,
+	                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR,
+	                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR,
+	                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR,
+	                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR,
+	                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR
+	              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+	                              AS PRODUCTCATEGORY,
+	                           C.FACTORYNAME,
+	                           CASE
+	                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+	                              THEN
+	                                 '正式量产'
+	                           END
+	                              AS PRODUCTIONTYPE,
+	                           C.DEFECTCODE,
+	                           C.MONTH_2_NMRTR,
+	                           C.MONTH_1_NMRTR,
+	                           C.MONTH_0_NMRTR,
+	                           C.WEEK_3_NMRTR,
+	                           C.WEEK_2_NMRTR,
+	                           C.WEEK_1_NMRTR,
+	                           C.WEEK_0_NMRTR,
+	                           C.DAY_6_NMRTR,
+	                           C.DAY_5_NMRTR,
+	                           C.DAY_4_NMRTR,
+	                           C.DAY_3_NMRTR,
+	                           C.DAY_2_NMRTR,
+	                           C.DAY_1_NMRTR,
+	                           C.DAY_0_NMRTR
+	                      FROM DAS_DEFECTSUM_MWD C
+	                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+	                           AND C.FACTORYNAME = #{shopName}
+	                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+	          GROUP BY (CASE
+	                       WHEN D.DEFECTCODE IN ('PI_YE',
+	                                             'PI_Pi',
+	                                             'PI_NP',
+	                                             'INS_Test2',
+	                                             'INS_Test1',
+	                                             'INS_Ins')
+	                       THEN
+	                          'PI'
+	                       WHEN D.DEFECTCODE IN ('Mask_Aligner')
+	                       THEN
+	                          'Mask'
+	                       WHEN D.DEFECTCODE IN ('EV_设备',
+	                                             'EV_前处理',
+	                                             'EV_工艺',
+	                                             'EV_OC',
+	                                             'EV_MC')
+	                       THEN
+	                          'EV'
+	                       WHEN D.DEFECTCODE IN ('EN_IJP', 'EN_CVD')
+	                       THEN
+	                          'EN'
+	                       ELSE
+	                          '-'
+	                    END),
+	                   D.FACTORYNAME) NMR,
+	          (SELECT SUM (B.MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+	                 SUM (B.MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+	                 SUM (B.MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+	                 SUM (B.WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+	                 SUM (B.WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+	                 SUM (B.WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+	                 SUM (B.WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+	                 SUM (B.DAY_6_DNMTR) AS DAY_6_DNMTR,
+	                 SUM (B.DAY_5_DNMTR) AS DAY_5_DNMTR,
+	                 SUM (B.DAY_4_DNMTR) AS DAY_4_DNMTR,
+	                 SUM (B.DAY_3_DNMTR) AS DAY_3_DNMTR,
+	                 SUM (B.DAY_2_DNMTR) AS DAY_2_DNMTR,
+	                 SUM (B.DAY_1_DNMTR) AS DAY_1_DNMTR,
+	                 SUM (B.DAY_0_DNMTR) AS DAY_0_DNMTR
+	            FROM (  SELECT A.PRODUCTIONTYPE,
+	                           A.PRODUCTCATEGORY,
+	                           SUM (A.MONTH_2_DNMTR) / COUNT (1) AS MONTH_2_DNMTR,
+	                           SUM (A.MONTH_1_DNMTR) / COUNT (1) AS MONTH_1_DNMTR,
+	                           SUM (A.MONTH_0_DNMTR) / COUNT (1) AS MONTH_0_DNMTR,
+	                           SUM (A.WEEK_3_DNMTR) / COUNT (1) AS WEEK_3_DNMTR,
+	                           SUM (A.WEEK_2_DNMTR) / COUNT (1) AS WEEK_2_DNMTR,
+	                           SUM (A.WEEK_1_DNMTR) / COUNT (1) AS WEEK_1_DNMTR,
+	                           SUM (A.WEEK_0_DNMTR) / COUNT (1) AS WEEK_0_DNMTR,
+	                           SUM (A.DAY_6_DNMTR) / COUNT (1) AS DAY_6_DNMTR,
+	                           SUM (A.DAY_5_DNMTR) / COUNT (1) AS DAY_5_DNMTR,
+	                           SUM (A.DAY_4_DNMTR) / COUNT (1) AS DAY_4_DNMTR,
+	                           SUM (A.DAY_3_DNMTR) / COUNT (1) AS DAY_3_DNMTR,
+	                           SUM (A.DAY_2_DNMTR) / COUNT (1) AS DAY_2_DNMTR,
+	                           SUM (A.DAY_1_DNMTR) / COUNT (1) AS DAY_1_DNMTR,
+	                           SUM (A.DAY_0_DNMTR) / COUNT (1) AS DAY_0_DNMTR
+	                      FROM DAS_DEFECTSUM_MWD A
+	                     WHERE     A.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+	                           AND A.FACTORYNAME = #{shopName}
+	                           AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+	                  GROUP BY A.PRODUCTIONTYPE, A.PRODUCTCATEGORY) B) DNM,
+	         (  SELECT SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR_ALL,
+	                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR_ALL,
+	                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR_ALL,
+	                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR_ALL,
+	                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR_ALL,
+	                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR_ALL,
+	                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR_ALL,
+	                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR_ALL,
+	                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR_ALL,
+	                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR_ALL,
+	                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR_ALL,
+	                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR_ALL,
+	                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR_ALL,
+	                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR_ALL
+	              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+	                              AS PRODUCTCATEGORY,
+	                           C.FACTORYNAME,
+	                           CASE
+	                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+	                              THEN
+	                                 '正式量产'
+	                           END
+	                              AS PRODUCTIONTYPE,
+	                           C.DEFECTCODE,
+	                           C.MONTH_2_NMRTR,
+	                           C.MONTH_1_NMRTR,
+	                           C.MONTH_0_NMRTR,
+	                           C.WEEK_3_NMRTR,
+	                           C.WEEK_2_NMRTR,
+	                           C.WEEK_1_NMRTR,
+	                           C.WEEK_0_NMRTR,
+	                           C.DAY_6_NMRTR,
+	                           C.DAY_5_NMRTR,
+	                           C.DAY_4_NMRTR,
+	                           C.DAY_3_NMRTR,
+	                           C.DAY_2_NMRTR,
+	                           C.DAY_1_NMRTR,
+	                           C.DAY_0_NMRTR
+	                      FROM DAS_DEFECTSUM_MWD C
+	                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+	                           AND C.FACTORYNAME = #{shopName}
+	                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+	          GROUP BY D.FACTORYNAME) DNM1
+	   WHERE NMR.DEFECTCODE != '-'
+	ORDER BY NMR.DEFECTCODE 	
+    </select>
+    
+    <select id="getdefectEVENbyDepartment" resultType="java.util.HashMap">
+    	SELECT A.PRODUCTCATEGORY,
+       A.FACTORYNAME,
+       A.PROCESSOPERATIONNAME,
+       CASE
+          WHEN A.PRODUCTIONTYPE = 'Production' THEN 'Production'
+          WHEN A.PRODUCTIONTYPE = 'TPCN' THEN 'Production'
+       END
+          AS PRODUCTIONTYPE,
+       A.SUPERREASONCODE,
+       A.DEFECTCODE,
+       A.DESCRIPTION,
+       CASE
+          WHEN A.MONTH_2_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.MONTH_2_NMRTR / A.MONTH_2_DNMTR), 4)
+       END
+          AS MONTH_2,
+       CASE
+          WHEN A.MONTH_1_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.MONTH_1_NMRTR / A.MONTH_1_DNMTR), 4)
+       END
+          AS MONTH_1,
+       CASE
+          WHEN A.MONTH_0_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.MONTH_0_NMRTR / A.MONTH_0_DNMTR), 4)
+       END
+          AS MONTH_0,
+       CASE
+          WHEN A.WEEK_3_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.WEEK_3_NMRTR / A.WEEK_3_DNMTR), 4)
+       END
+          AS WEEK_3,
+       CASE
+          WHEN A.WEEK_2_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.WEEK_2_NMRTR / A.WEEK_2_DNMTR), 4)
+       END
+          AS WEEK_2,
+       CASE
+          WHEN A.WEEK_1_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.WEEK_1_NMRTR / A.WEEK_1_DNMTR), 4)
+       END
+          AS WEEK_1,
+       CASE
+          WHEN A.WEEK_0_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.WEEK_0_NMRTR / A.WEEK_0_DNMTR), 4)
+       END
+          AS WEEK_0,
+       CASE
+          WHEN A.DAY_6_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_6_NMRTR / A.DAY_6_DNMTR), 4)
+       END
+          AS DAY_6,
+       CASE
+          WHEN A.DAY_5_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_5_NMRTR / A.DAY_5_DNMTR), 4)
+       END
+          AS DAY_5,
+       CASE
+          WHEN A.DAY_4_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_4_NMRTR / A.DAY_4_DNMTR), 4)
+       END
+          AS DAY_4,
+       CASE
+          WHEN A.DAY_3_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_3_NMRTR / A.DAY_3_DNMTR), 4)
+       END
+          AS DAY_3,
+       CASE
+          WHEN A.DAY_2_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_2_NMRTR / A.DAY_2_DNMTR), 4)
+       END
+          AS DAY_2,
+       CASE
+          WHEN A.DAY_1_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_1_NMRTR / A.DAY_1_DNMTR), 4)
+       END
+          AS DAY_1,
+       CASE
+          WHEN A.DAY_0_DNMTR = 0 THEN 0
+          ELSE TRUNC ( (A.DAY_0_NMRTR / A.DAY_0_DNMTR), 4)
+       END
+          AS DAY_0
+  FROM (  SELECT A.PRODUCTCATEGORY,
+                 A.FACTORYNAME,
+                 A.PROCESSOPERATIONNAME,
+                 CASE
+                    WHEN A.PRODUCTIONTYPE = 'Production' THEN 'Production'
+                    WHEN A.PRODUCTIONTYPE = 'TPCN' THEN 'Production'
+                 END
+                    AS PRODUCTIONTYPE,
+                 B.SUPERREASONCODE,
+                 A.DEFECTCODE,
+                 B.DESCRIPTION,
+                 SUM (A.MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+                 SUM (A.MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+                 SUM (A.MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+                 SUM (A.WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+                 SUM (A.WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+                 SUM (A.WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+                 SUM (A.WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+                 SUM (A.DAY_6_NMRTR) AS DAY_6_NMRTR,
+                 SUM (A.DAY_5_NMRTR) AS DAY_5_NMRTR,
+                 SUM (A.DAY_4_NMRTR) AS DAY_4_NMRTR,
+                 SUM (A.DAY_3_NMRTR) AS DAY_3_NMRTR,
+                 SUM (A.DAY_2_NMRTR) AS DAY_2_NMRTR,
+                 SUM (A.DAY_1_NMRTR) AS DAY_1_NMRTR,
+                 SUM (A.DAY_0_NMRTR) AS DAY_0_NMRTR,
+                 SUM (A.MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+                 SUM (A.MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+                 SUM (A.MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+                 SUM (A.WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+                 SUM (A.WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+                 SUM (A.WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+                 SUM (A.WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+                 SUM (A.DAY_6_DNMTR) AS DAY_6_DNMTR,
+                 SUM (A.DAY_5_DNMTR) AS DAY_5_DNMTR,
+                 SUM (A.DAY_4_DNMTR) AS DAY_4_DNMTR,
+                 SUM (A.DAY_3_DNMTR) AS DAY_3_DNMTR,
+                 SUM (A.DAY_2_DNMTR) AS DAY_2_DNMTR,
+                 SUM (A.DAY_1_DNMTR) AS DAY_1_DNMTR,
+                 SUM (A.DAY_0_DNMTR) AS DAY_0_DNMTR
+            FROM DAS_DEFECTSUM_MWD A, MOD_REASONCODE B
+           WHERE     1 = 1
+                 AND A.FACTORYNAME = B.FACTORYNAME
+                 AND A.DEFECTCODE = B.REASONCODE
+           		 AND A.PROCESSOPERATIONNAME = #{shopName}
+                 AND A.PRODUCTCATEGORY=#{productCategory}
+                 AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+                 AND SUPERREASONCODE=#{departmentName}
+        GROUP BY A.PRODUCTCATEGORY,
+                 A.FACTORYNAME,
+                 A.PROCESSOPERATIONNAME,
+                 (CASE
+                     WHEN A.PRODUCTIONTYPE = 'Production' THEN 'Production'
+                     WHEN A.PRODUCTIONTYPE = 'TPCN' THEN 'Production'
+                  END),
+                 B.SUPERREASONCODE,
+                 A.DEFECTCODE,
+                 B.DESCRIPTION) A
+    </select>
+    
+    <select id="getScrapEVENbyDepartment" resultType="java.util.HashMap">
+      SELECT 
+         NMR.DEFECTCODE,
+             CASE
+                WHEN DNM.MONTH_2_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.MONTH_2_NMRTR
+                       * 100
+                       / (DNM.MONTH_2_DNMTR + DNM1.MONTH_2_NMRTR_ALL)),
+                      2)
+             END
+                AS MONTH_2,
+             CASE
+                WHEN DNM.MONTH_1_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.MONTH_1_NMRTR
+                       * 100
+                       / (DNM.MONTH_1_DNMTR + DNM1.MONTH_1_NMRTR_ALL)),
+                      2)
+             END
+                AS MONTH_1,
+             CASE
+                WHEN DNM.MONTH_0_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.MONTH_0_NMRTR
+                       * 100
+                       / (DNM.MONTH_0_DNMTR + DNM1.MONTH_0_NMRTR_ALL)),
+                      2)
+             END
+                AS MONTH_0,
+             CASE
+                WHEN DNM.WEEK_3_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.WEEK_3_NMRTR
+                       * 100
+                       / (DNM.WEEK_3_DNMTR + DNM1.WEEK_3_NMRTR_ALL)),
+                      2)
+             END
+                AS WEEK_3,
+             CASE
+                WHEN DNM.WEEK_2_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.WEEK_2_NMRTR
+                       * 100
+                       / (DNM.WEEK_2_DNMTR + DNM1.WEEK_2_NMRTR_ALL)),
+                      2)
+             END
+                AS WEEK_2,
+             CASE
+                WHEN DNM.WEEK_1_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.WEEK_1_NMRTR
+                       * 100
+                       / (DNM.WEEK_1_DNMTR + DNM1.WEEK_1_NMRTR_ALL)),
+                      2)
+             END
+                AS WEEK_1,
+             CASE
+                WHEN DNM.WEEK_0_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (  NMR.WEEK_0_NMRTR
+                       * 100
+                       / (DNM.WEEK_0_DNMTR + DNM1.WEEK_0_NMRTR_ALL)),
+                      2)
+             END
+                AS WEEK_0,
+             CASE
+                WHEN DNM.DAY_6_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_6_NMRTR * 100 / (DNM.DAY_6_DNMTR + DNM1.DAY_6_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_6,
+             CASE
+                WHEN DNM.DAY_5_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_5_NMRTR * 100 / (DNM.DAY_5_DNMTR + DNM1.DAY_5_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_5,
+             CASE
+                WHEN DNM.DAY_4_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_4_NMRTR * 100 / (DNM.DAY_4_DNMTR + DNM1.DAY_4_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_4,
+             CASE
+                WHEN DNM.DAY_3_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_3_NMRTR * 100 / (DNM.DAY_3_DNMTR + DNM1.DAY_3_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_3,
+             CASE
+                WHEN DNM.DAY_2_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_2_NMRTR * 100 / (DNM.DAY_2_DNMTR + DNM1.DAY_2_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_2,
+             CASE
+                WHEN DNM.DAY_1_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_1_NMRTR * 100 / (DNM.DAY_1_DNMTR + DNM1.DAY_1_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_1,
+             CASE
+                WHEN DNM.DAY_0_DNMTR = 0
+                THEN
+                   0
+                ELSE
+                   TRUNC (
+                      (NMR.DAY_0_NMRTR * 100 / (DNM.DAY_0_DNMTR + DNM1.DAY_0_NMRTR_ALL)),
+                      2)
+             END
+                AS DAY_0
+    FROM (  SELECT D.FACTORYNAME,
+                   D.DEFECTCODE,
+                   SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY D.DEFECTCODE, D.FACTORYNAME) NMR,
+         (SELECT SUM (B.MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+                 SUM (B.MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+                 SUM (B.MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+                 SUM (B.WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+                 SUM (B.WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+                 SUM (B.WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+                 SUM (B.WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+                 SUM (B.DAY_6_DNMTR) AS DAY_6_DNMTR,
+                 SUM (B.DAY_5_DNMTR) AS DAY_5_DNMTR,
+                 SUM (B.DAY_4_DNMTR) AS DAY_4_DNMTR,
+                 SUM (B.DAY_3_DNMTR) AS DAY_3_DNMTR,
+                 SUM (B.DAY_2_DNMTR) AS DAY_2_DNMTR,
+                 SUM (B.DAY_1_DNMTR) AS DAY_1_DNMTR,
+                 SUM (B.DAY_0_DNMTR) AS DAY_0_DNMTR
+            FROM (  SELECT A.PRODUCTIONTYPE,
+                           A.PRODUCTCATEGORY,
+                           SUM (A.MONTH_2_DNMTR) / COUNT (1) AS MONTH_2_DNMTR,
+                           SUM (A.MONTH_1_DNMTR) / COUNT (1) AS MONTH_1_DNMTR,
+                           SUM (A.MONTH_0_DNMTR) / COUNT (1) AS MONTH_0_DNMTR,
+                           SUM (A.WEEK_3_DNMTR) / COUNT (1) AS WEEK_3_DNMTR,
+                           SUM (A.WEEK_2_DNMTR) / COUNT (1) AS WEEK_2_DNMTR,
+                           SUM (A.WEEK_1_DNMTR) / COUNT (1) AS WEEK_1_DNMTR,
+                           SUM (A.WEEK_0_DNMTR) / COUNT (1) AS WEEK_0_DNMTR,
+                           SUM (A.DAY_6_DNMTR) / COUNT (1) AS DAY_6_DNMTR,
+                           SUM (A.DAY_5_DNMTR) / COUNT (1) AS DAY_5_DNMTR,
+                           SUM (A.DAY_4_DNMTR) / COUNT (1) AS DAY_4_DNMTR,
+                           SUM (A.DAY_3_DNMTR) / COUNT (1) AS DAY_3_DNMTR,
+                           SUM (A.DAY_2_DNMTR) / COUNT (1) AS DAY_2_DNMTR,
+                           SUM (A.DAY_1_DNMTR) / COUNT (1) AS DAY_1_DNMTR,
+                           SUM (A.DAY_0_DNMTR) / COUNT (1) AS DAY_0_DNMTR
+                      FROM DAS_DEFECTSUM_MWD A
+                     WHERE     A.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND A.FACTORYNAME = #{shopName}
+                           AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+                  GROUP BY A.PRODUCTIONTYPE, A.PRODUCTCATEGORY) B) DNM,
+         (  SELECT SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR_ALL,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR_ALL,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR_ALL,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR_ALL,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR_ALL,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR_ALL,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR_ALL,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR_ALL,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR_ALL,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR_ALL,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR_ALL,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR_ALL,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR_ALL,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR_ALL
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY D.FACTORYNAME) DNM1
+   WHERE (NMR.DEFECTCODE LIKE #{departmentName} 
+            <if test='departmentName == "PI%"'>  
+                OR NMR.DEFECTCODE LIKE 'INS%'
+            </if>
+             	   AND 1=1)
+ORDER BY NMR.DEFECTCODE DESC
+    </select>
+    
+    <select id="getScrapEVENbyDepartmentQty" resultType="java.util.HashMap">
+      SELECT *
+    FROM (  SELECT D.FACTORYNAME,
+                   D.DEFECTCODE,
+                   SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY D.DEFECTCODE, D.FACTORYNAME) NMR,
+         (SELECT SUM (B.MONTH_2_DNMTR) AS MONTH_2_DNMTR,
+                 SUM (B.MONTH_1_DNMTR) AS MONTH_1_DNMTR,
+                 SUM (B.MONTH_0_DNMTR) AS MONTH_0_DNMTR,
+                 SUM (B.WEEK_3_DNMTR) AS WEEK_3_DNMTR,
+                 SUM (B.WEEK_2_DNMTR) AS WEEK_2_DNMTR,
+                 SUM (B.WEEK_1_DNMTR) AS WEEK_1_DNMTR,
+                 SUM (B.WEEK_0_DNMTR) AS WEEK_0_DNMTR,
+                 SUM (B.DAY_6_DNMTR) AS DAY_6_DNMTR,
+                 SUM (B.DAY_5_DNMTR) AS DAY_5_DNMTR,
+                 SUM (B.DAY_4_DNMTR) AS DAY_4_DNMTR,
+                 SUM (B.DAY_3_DNMTR) AS DAY_3_DNMTR,
+                 SUM (B.DAY_2_DNMTR) AS DAY_2_DNMTR,
+                 SUM (B.DAY_1_DNMTR) AS DAY_1_DNMTR,
+                 SUM (B.DAY_0_DNMTR) AS DAY_0_DNMTR
+            FROM (  SELECT A.PRODUCTIONTYPE,
+                           A.PRODUCTCATEGORY,
+                           SUM (A.MONTH_2_DNMTR) / COUNT (1) AS MONTH_2_DNMTR,
+                           SUM (A.MONTH_1_DNMTR) / COUNT (1) AS MONTH_1_DNMTR,
+                           SUM (A.MONTH_0_DNMTR) / COUNT (1) AS MONTH_0_DNMTR,
+                           SUM (A.WEEK_3_DNMTR) / COUNT (1) AS WEEK_3_DNMTR,
+                           SUM (A.WEEK_2_DNMTR) / COUNT (1) AS WEEK_2_DNMTR,
+                           SUM (A.WEEK_1_DNMTR) / COUNT (1) AS WEEK_1_DNMTR,
+                           SUM (A.WEEK_0_DNMTR) / COUNT (1) AS WEEK_0_DNMTR,
+                           SUM (A.DAY_6_DNMTR) / COUNT (1) AS DAY_6_DNMTR,
+                           SUM (A.DAY_5_DNMTR) / COUNT (1) AS DAY_5_DNMTR,
+                           SUM (A.DAY_4_DNMTR) / COUNT (1) AS DAY_4_DNMTR,
+                           SUM (A.DAY_3_DNMTR) / COUNT (1) AS DAY_3_DNMTR,
+                           SUM (A.DAY_2_DNMTR) / COUNT (1) AS DAY_2_DNMTR,
+                           SUM (A.DAY_1_DNMTR) / COUNT (1) AS DAY_1_DNMTR,
+                           SUM (A.DAY_0_DNMTR) / COUNT (1) AS DAY_0_DNMTR
+                      FROM DAS_DEFECTSUM_MWD A
+                     WHERE     A.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND A.FACTORYNAME = #{shopName}
+                           AND A.PRODUCTIONTYPE IN ('Production', 'TPCN')
+                  GROUP BY A.PRODUCTIONTYPE, A.PRODUCTCATEGORY) B) DNM,
+         (  SELECT SUM (MONTH_2_NMRTR) AS MONTH_2_NMRTR_ALL,
+                   SUM (MONTH_1_NMRTR) AS MONTH_1_NMRTR_ALL,
+                   SUM (MONTH_0_NMRTR) AS MONTH_0_NMRTR_ALL,
+                   SUM (WEEK_3_NMRTR) AS WEEK_3_NMRTR_ALL,
+                   SUM (WEEK_2_NMRTR) AS WEEK_2_NMRTR_ALL,
+                   SUM (WEEK_1_NMRTR) AS WEEK_1_NMRTR_ALL,
+                   SUM (WEEK_0_NMRTR) AS WEEK_0_NMRTR_ALL,
+                   SUM (DAY_6_NMRTR) AS DAY_6_NMRTR_ALL,
+                   SUM (DAY_5_NMRTR) AS DAY_5_NMRTR_ALL,
+                   SUM (DAY_4_NMRTR) AS DAY_4_NMRTR_ALL,
+                   SUM (DAY_3_NMRTR) AS DAY_3_NMRTR_ALL,
+                   SUM (DAY_2_NMRTR) AS DAY_2_NMRTR_ALL,
+                   SUM (DAY_1_NMRTR) AS DAY_1_NMRTR_ALL,
+                   SUM (DAY_0_NMRTR) AS DAY_0_NMRTR_ALL
+              FROM (SELECT CASE WHEN C.PRODUCTCATEGORY LIKE '%HD' THEN '_HD' END
+                              AS PRODUCTCATEGORY,
+                           C.FACTORYNAME,
+                           CASE
+                              WHEN C.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                              THEN
+                                 '正式量产'
+                           END
+                              AS PRODUCTIONTYPE,
+                           C.DEFECTCODE,
+                           C.MONTH_2_NMRTR,
+                           C.MONTH_1_NMRTR,
+                           C.MONTH_0_NMRTR,
+                           C.WEEK_3_NMRTR,
+                           C.WEEK_2_NMRTR,
+                           C.WEEK_1_NMRTR,
+                           C.WEEK_0_NMRTR,
+                           C.DAY_6_NMRTR,
+                           C.DAY_5_NMRTR,
+                           C.DAY_4_NMRTR,
+                           C.DAY_3_NMRTR,
+                           C.DAY_2_NMRTR,
+                           C.DAY_1_NMRTR,
+                           C.DAY_0_NMRTR
+                      FROM DAS_DEFECTSUM_MWD C
+                     WHERE     C.PROCESSOPERATIONNAME = 'EVEN_DEPT_SCRAP'
+                           AND C.FACTORYNAME = #{shopName}
+                           AND C.PRODUCTIONTYPE IN ('Production', 'TPCN')) D
+          GROUP BY D.FACTORYNAME) DNM1
+   WHERE (NMR.DEFECTCODE LIKE #{departmentName} 
+            <if test='departmentName == "PI%"'>  
+                OR NMR.DEFECTCODE LIKE 'INS%'
+            </if>
+             	   AND 1=1)
+ORDER BY NMR.DEFECTCODE DESC
+    </select>
+    
+    
+</mapper>

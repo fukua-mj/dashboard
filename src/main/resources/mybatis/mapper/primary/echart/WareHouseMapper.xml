@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.WareHouseMapper">
+   
+    <select id="getwarehouse" resultType="java.util.HashMap">
+		SELECT * FROM DAS_PACKING_SUM WHERE RECEIVEDFROM=#{shopName}
+    </select>      
+    
+    
+    <select id="getwarehouseGrade" resultType="java.util.HashMap">
+		SELECT * FROM DAS_PACKING_SUM WHERE RECEIVEDFROM = #{shopName,jdbcType=VARCHAR} AND PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+    </select> 
+</mapper>

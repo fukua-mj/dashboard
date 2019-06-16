@@ -1,0 +1,56 @@
+<p-tabView [activeIndex]="index">
+  <!--   <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+    <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+      <app-stockin #Child_BpShop [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="item.header"
+        [processType]="item.processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="item.dataType"
+        [lineName]="lineName" [productionTypeDisplay]="item.productionTypeDisplay"></app-stockin>
+    </p-tabPanel>
+  </ng-template> -->
+  <p-tabPanel [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[0].header"
+      [processType]="items[0].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[0].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[0].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[1].header" [selected]="items[1].selected" *ngIf="items[1].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[1].header"
+      [processType]="items[1].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[1].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[1].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[2].header" [selected]="items[2].selected" *ngIf="items[2].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[2].header"
+      [processType]="items[2].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[2].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[2].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[3].header" [selected]="items[3].selected" *ngIf="items[3].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[3].header"
+      [processType]="items[3].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[3].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[3].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[4].header" [selected]="items[4].selected" *ngIf="items[4].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[4].header"
+      [processType]="items[4].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[4].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[4].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[5].header" [selected]="items[5].selected" *ngIf="items[5].display">
+    <app-stockin [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="items[5].header"
+      [processType]="items[5].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="items[5].dataType"
+      [lineName]="lineName" [productionTypeDisplay]="items[5].productionTypeDisplay"></app-stockin>
+  </p-tabPanel>
+</p-tabView>
+<button type="button" pButton icon="fa fa-search" (click)="showTabSetting()" class="xl-tabSetting lg-tabSetting"></button>
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}}</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

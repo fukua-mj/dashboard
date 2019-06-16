@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.OperatorInfoMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.OperatorInfo">
+    <result column="FACTORYNAME" jdbcType="VARCHAR" property="factoryname" />
+    <result column="PROCESSOPERATIONNAME" jdbcType="VARCHAR" property="processoperationname" />
+    <result column="SHIFTNAME" jdbcType="VARCHAR" property="shiftname" />
+    <result column="GROUPNAME" jdbcType="VARCHAR" property="groupname" />
+    <result column="OPERATORID" jdbcType="VARCHAR" property="operatorid" />
+    <result column="OPERATORNAME" jdbcType="VARCHAR" property="operatorname" />
+    <result column="RESERVED1" jdbcType="VARCHAR" property="reserved1" />
+    <result column="RESERVED2" jdbcType="VARCHAR" property="reserved2" />
+    <result column="RESERVED3" jdbcType="VARCHAR" property="reserved3" />
+    <result column="LASTUPDATETIME" jdbcType="DATE" property="lastupdatetime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.OperatorInfo">
+    insert into DAS_MDL_OPERATOR_INFO (FACTORYNAME, PROCESSOPERATIONNAME, 
+      SHIFTNAME, GROUPNAME, OPERATORID, 
+      OPERATORNAME, RESERVED1, RESERVED2, 
+      RESERVED3, LASTUPDATETIME)
+    values (#{factoryname,jdbcType=VARCHAR}, #{processoperationname,jdbcType=VARCHAR}, 
+      #{shiftname,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, #{operatorid,jdbcType=VARCHAR}, 
+      #{operatorname,jdbcType=VARCHAR}, #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=VARCHAR}, 
+      #{reserved3,jdbcType=VARCHAR}, #{lastupdatetime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.OperatorInfo">
+    insert into DAS_MDL_OPERATOR_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        FACTORYNAME,
+      </if>
+      <if test="processoperationname != null">
+        PROCESSOPERATIONNAME,
+      </if>
+      <if test="shiftname != null">
+        SHIFTNAME,
+      </if>
+      <if test="groupname != null">
+        GROUPNAME,
+      </if>
+      <if test="operatorid != null">
+        OPERATORID,
+      </if>
+      <if test="operatorname != null">
+        OPERATORNAME,
+      </if>
+      <if test="reserved1 != null">
+        RESERVED1,
+      </if>
+      <if test="reserved2 != null">
+        RESERVED2,
+      </if>
+      <if test="reserved3 != null">
+        RESERVED3,
+      </if>
+      <if test="lastupdatetime != null">
+        LASTUPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="factoryname != null">
+        #{factoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="processoperationname != null">
+        #{processoperationname,jdbcType=VARCHAR},
+      </if>
+      <if test="shiftname != null">
+        #{shiftname,jdbcType=VARCHAR},
+      </if>
+      <if test="groupname != null">
+        #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorid != null">
+        #{operatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorname != null">
+        #{operatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null">
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null">
+        #{reserved2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved3 != null">
+        #{reserved3,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdatetime != null">
+        #{lastupdatetime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getOperatorInfoListAll" resultType="java.util.HashMap">
+  	SELECT * FROM WEBMGR.DAS_MDL_OPERATOR_INFO A 
+  	    WHERE 1=1 
+    <if test='operatorInfofactoryName != "" and operatorInfofactoryName != null'>
+    AND A.FACTORYNAME = #{operatorInfofactoryName}
+    </if>
+    <if test='operatorInfooperationName != "" and operatorInfooperationName != null'>
+    AND A.PROCESSOPERATIONNAME = #{operatorInfooperationName}
+    </if>
+    <if test='operatorInfoshiftName != "" and operatorInfoshiftName != null'>
+    AND A.SHIFTNAME = #{operatorInfoshiftName}
+    </if>
+    <if test='operatorInfogroupName != "" and operatorInfogroupName != null'>
+    AND A.GROUPNAME = #{operatorInfogroupName}
+    </if>
+    <if test='operatorInfooperatorId != "" and operatorInfooperatorId != null'>
+    AND A.OPERATORID = #{operatorInfooperatorId}
+    </if>
+    <if test='operatorInfooperatorName != "" and operatorInfooperatorName != null'>
+    AND A.OPERATORNAME = #{operatorInfooperatorName}
+    </if>    
+  </select>
+  
+  <insert id="setOperatorInfo" parameterType="String">
+  	INSERT INTO WEBMGR.DAS_MDL_OPERATOR_INFO (FACTORYNAME,
+                                          PROCESSOPERATIONNAME,
+                                          SHIFTNAME,
+                                          GROUPNAME,
+                                          OPERATORID,
+                                          OPERATORNAME)
+     VALUES (#{factoryName},
+             #{processOperationName},
+             #{shiftName},
+             #{groupName},
+             #{operatorId},
+             #{operatorName})
+  </insert>
+  
+  <delete id="deleteAllOperatorInfo" parameterType="String">
+  	DELETE FROM WEBMGR.DAS_MDL_OPERATOR_INFO
+      WHERE FACTORYNAME = #{shopName}
+  </delete>
+</mapper>

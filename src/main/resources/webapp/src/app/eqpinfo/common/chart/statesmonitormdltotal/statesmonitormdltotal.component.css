@@ -1,0 +1,204 @@
+.chartArea-12{
+    height: 700px;
+    border-right: 0;
+    border-bottom: 0;
+}
+.chartArea{
+    height: 700px;
+}
+.productionTypeArea {
+    height: 300px;
+}
+.productionCategoryArea {
+    height: 400px;
+}
+ul {
+    list-style-type: none;
+}
+
+.ui-table .ui-table-thead > tr > th, body .ui-table .ui-table-tfoot > tr > td {
+    font-weight: 400;
+    height: 10px;
+    background-color: #9e3939;
+    border: 1px solid #cacaca;
+}
+.table {
+    font-size: 18px;
+}
+
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+    .sm-chartArea-12{
+        height: 401px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .sm-chartArea{
+        height: 300px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .sm-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .sm-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .sm-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+    .md-chartArea-12{
+        height: 829px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .md-chartArea{
+        height: 600px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .md-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .md-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .md-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-chartArea-12{
+        height: 577px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .lg-chartArea{
+        height: 300px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .lg-title{
+        font-size: 1.0em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .lg-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 440px;
+    }
+    .lg-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -20px;
+    }
+    .lg-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 124px;
+    } 
+    .lg-productionTypeArea .optionul {
+        height: 560px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    .lg-productionTypeArea .optionul::-webkit-scrollbar {
+        display: none;
+        width: 10px;
+    }
+    .lg-productionTypeArea .optionul:hover::-webkit-scrollbar {
+        display: inline-block;
+    }
+    .lg-productionTypeArea .optionul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #535353;
+    }
+    .lg-productionTypeArea .optionul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+    .lg-table {
+        font-size: 13px;
+    }
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-chartArea-12{
+        height: 797px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .xl-chartArea{
+        height: 680px;
+        min-height: 680px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .xl-title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .xl-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 580px;
+    }
+    .xl-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .xl-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 150px;
+    }    
+
+
+    .xl-productionTypeArea .optionul {
+        height: 560px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    .xl-productionTypeArea .optionul::-webkit-scrollbar {
+        display: none;
+        width: 10px;
+    }
+    .xl-productionTypeArea .optionul:hover::-webkit-scrollbar {
+        display: inline-block;
+    }
+    .xl-productionTypeArea .optionul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #535353;
+    }
+    .xl-productionTypeArea .optionul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+
+    .xl-table {
+        font-size: 12px;
+    }
+}

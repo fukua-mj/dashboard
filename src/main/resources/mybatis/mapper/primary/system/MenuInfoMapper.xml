@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.MenuInfoMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.MenuInfo">
+    <result column="MENUNAME" jdbcType="VARCHAR" property="menuname" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="ROUTERLINK" jdbcType="VARCHAR" property="routerlink" />
+    <result column="ISPARENT" jdbcType="VARCHAR" property="isparent" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="SORT" jdbcType="VARCHAR" property="sort" />
+    <result column="HIDEFLAG" jdbcType="VARCHAR" property="hideflag" />
+    <result column="RESERVED1" jdbcType="VARCHAR" property="reserved1" />
+    <result column="RESERVED2" jdbcType="VARCHAR" property="reserved2" />
+    <result column="RESERVED3" jdbcType="VARCHAR" property="reserved3" />
+    <result column="CHINESE" jdbcType="VARCHAR" javaType="String" property="chinese"/>
+    <result column="ENGLISH" jdbcType="VARCHAR" javaType="String" property="english"/>
+    <result column="KOREAN" jdbcType="VARCHAR" javaType="String" property="korean"/>
+    <association column="PARENTNAME" javaType="com.boe.idm.project.model.system.MenuInfo" property="parent" fetchType="lazy" select="selectMenuByName"/>   
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="com.boe.idm.project.model.system.MenuInfo">
+    <result column="MENUNAME" jdbcType="VARCHAR" property="menuname" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="ROUTERLINK" jdbcType="VARCHAR" property="routerlink" />
+    <result column="ISPARENT" jdbcType="VARCHAR" property="isparent" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="SORT" jdbcType="VARCHAR" property="sort" />
+    <result column="HIDEFLAG" jdbcType="VARCHAR" property="hideflag" />
+    <result column="RESERVED1" jdbcType="VARCHAR" property="reserved1" />
+    <result column="RESERVED2" jdbcType="VARCHAR" property="reserved2" />
+    <result column="RESERVED3" jdbcType="VARCHAR" property="reserved3" />
+    <result column="CHINESE" jdbcType="VARCHAR" javaType="String" property="chinese"/>
+    <result column="ENGLISH" jdbcType="VARCHAR" javaType="String" property="english"/>
+    <result column="KOREAN" jdbcType="VARCHAR" javaType="String" property="korean"/>
+    <result column="PARENTNAME" jdbcType="VARCHAR" javaType="String" property="parentname" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.MenuInfo">
+    insert into NG_DAS_MENUINFO (MENUNAME, ICON, PARENTNAME, 
+      URL, ROUTERLINK, ISPARENT, 
+      DESCRIPTION, SORT, HIDEFLAG, 
+      RESERVED1, RESERVED2, RESERVED3
+      )
+    values (#{menuname,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{parentname,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{routerlink,jdbcType=VARCHAR}, #{isparent,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR}, #{hideflag,jdbcType=VARCHAR}, 
+      #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=VARCHAR}, #{reserved3,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.MenuInfo">
+    insert into NG_DAS_MENUINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuname != null">
+        MENUNAME,
+      </if>
+      <if test="icon != null">
+        ICON,
+      </if>
+      <if test="parentname != null">
+        PARENTNAME,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="routerlink != null">
+        ROUTERLINK,
+      </if>
+      <if test="isparent != null">
+        ISPARENT,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+      <if test="sort != null">
+        SORT,
+      </if>
+      <if test="hideflag != null">
+        HIDEFLAG,
+      </if>
+      <if test="reserved1 != null">
+        RESERVED1,
+      </if>
+      <if test="reserved2 != null">
+        RESERVED2,
+      </if>
+      <if test="reserved3 != null">
+        RESERVED3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuname != null">
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentname != null">
+        #{parentname,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="routerlink != null">
+        #{routerlink,jdbcType=VARCHAR},
+      </if>
+      <if test="isparent != null">
+        #{isparent,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="hideflag != null">
+        #{hideflag,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null">
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null">
+        #{reserved2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved3 != null">
+        #{reserved3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectMenuByName" parameterType="String" resultMap="BaseResultMap">
+  	  SELECT A.*,
+         B.CHINESE,
+         B.ENGLISH,
+         B.KOREAN
+    FROM NG_DAS_MENUINFO A, NG_DAS_MENULABELINFO B
+   WHERE A.MENUNAME = B.MENUNAME(+)
+   AND A.MENUNAME = #{PARENTMENUNAME}
+  </select>
+  
+  <select id="getMenuList" resultMap="BaseResultMap2">
+  SELECT ME.MENUNAME,
+         ME.ICON,
+         ME.PARENTNAME,
+         ME.URL,
+         ME.ROUTERLINK,
+         ME.ISPARENT,
+         ME.DESCRIPTION,
+         RO.SORT,
+         ME.HIDEFLAG,
+         ME.RESERVED1,
+         ME.RESERVED2,
+         ME.RESERVED3,
+         ME.CHINESE,
+         ME.ENGLISH,
+         ME.KOREAN
+    FROM (  SELECT A.*,
+                   B.CHINESE,
+                   B.ENGLISH,
+                   B.KOREAN
+              FROM NG_DAS_MENUINFO A, NG_DAS_MENULABELINFO B
+             WHERE A.MENUNAME = B.MENUNAME(+)
+          ORDER BY SORT) ME,
+         (SELECT *
+            FROM NG_DAS_ROLEMENULINK RM
+           WHERE RM.ROLENAME = (SELECT UR.ROLENAME
+                                  FROM NG_DAS_USERROLELINK UR
+                                 WHERE UR.USERACCOUNT = #{userId})) RO
+   WHERE ME.MENUNAME = RO.MENUNAME
+ORDER BY RO.SORT
+
+  </select>
+  
+  <select id="getPrimaryMenuList" resultType="java.util.HashMap">
+  	  SELECT *
+    FROM NG_DAS_MENUINFO A
+   WHERE A.PARENTNAME IS NULL
+ORDER BY A.SORT
+  </select>
+     
+  <select id="getAllMenuInfoList"  resultMap="BaseResultMap2">
+	  SELECT ME.MENUNAME,
+	         ME.CHINESE,
+	         ME.ENGLISH,
+	         ME.KOREAN,
+	         ME.ICON,
+	         ME.PARENTNAME,
+	         ME.URL,
+	         ME.ROUTERLINK,
+	         ME.ISPARENT,
+	         ME.DESCRIPTION,
+	         ME.SORT,
+	         ME.HIDEFLAG,
+	         ME.RESERVED1,
+	         ME.RESERVED2,
+	         ME.RESERVED3
+	    FROM (  SELECT A.*,
+	                   B.CHINESE,
+	                   B.ENGLISH,
+	                   B.KOREAN
+	              FROM NG_DAS_MENUINFO A, NG_DAS_MENULABELINFO B
+	             WHERE A.MENUNAME = B.MENUNAME(+)
+	          ORDER BY SORT) ME
+	ORDER BY ME.SORT
+ 	</select> 
+  
+    <select id="getMenuInfoListWithOutExist" resultMap="BaseResultMap2">
+	  SELECT ME.*,
+         LA.CHINESE,
+         LA.ENGLISH,
+         LA.KOREAN
+    FROM NG_DAS_MENUINFO ME, NG_DAS_MENULABELINFO LA
+   WHERE     ME.MENUNAME NOT IN (SELECT RM.MENUNAME
+                               FROM NG_DAS_ROLEMENULINK RM
+                              WHERE RM.ROLENAME = #{roleName})
+         AND ME.MENUNAME = LA.MENUNAME(+)
+ORDER BY ME.SORT
+ 	</select> 
+
+
+    <select id="getMenuInfoListByRole" resultMap="BaseResultMap2">
+	  SELECT ME.*,
+         LA.CHINESE,
+         LA.ENGLISH,
+         LA.KOREAN
+    FROM NG_DAS_MENUINFO ME, NG_DAS_MENULABELINFO LA
+   WHERE     ME.MENUNAME IN (SELECT RM.MENUNAME
+                               FROM NG_DAS_ROLEMENULINK RM
+                             WHERE RM.ROLENAME = #{roleName})
+         AND ME.MENUNAME = LA.MENUNAME(+)
+ORDER BY ME.SORT
+ 	</select> 
+ 	
+ 	<update id="updateMenuInfo" parameterType="com.boe.idm.project.model.system.MenuInfo">
+    UPDATE NG_DAS_MENUINFO SET 
+    ICON = #{icon,jdbcType=VARCHAR}, 
+    PARENTNAME = #{parentname,jdbcType=VARCHAR}, 
+    URL = #{url,jdbcType=VARCHAR}, 
+    ROUTERLINK = #{routerlink,jdbcType=VARCHAR}, 
+    ISPARENT = #{isparent,jdbcType=VARCHAR}, 
+    DESCRIPTION = #{description,jdbcType=VARCHAR}, 
+    SORT = #{sort,jdbcType=VARCHAR}, 
+    HIDEFLAG = #{hideflag,jdbcType=VARCHAR}, 
+    RESERVED1 = #{reserved1,jdbcType=VARCHAR}, 
+    RESERVED2 = #{reserved2,jdbcType=VARCHAR}, 
+    RESERVED3 = #{reserved3,jdbcType=VARCHAR} WHERE
+		MENUNAME=#{menuname}
+  </update>
+  
+  <delete id="deleteMenuInfo" parameterType="com.boe.idm.project.model.system.MenuInfo">
+       		DELETE NG_DAS_MENUINFO WHERE
+		MENUNAME=#{menuname}
+  </delete>
+  
+  <select id="getRoleByUser" resultType="java.util.HashMap">
+	  	SELECT A.ROLENAME
+	  FROM WEBMGR.NG_DAS_USERROLELINK A
+	 WHERE A.USERACCOUNT = #{userName}
+  </select> 
+  
+  <select id="getUrlsByRole" resultType="String">
+  	  SELECT M.ROUTERLINK
+    FROM WEBMGR.NG_DAS_MENUINFO M
+   WHERE     M.MENUNAME IN (SELECT RM.MENUNAME
+                              FROM WEBMGR.NG_DAS_ROLEMENULINK RM
+                             WHERE RM.ROLENAME = #{roleName})
+         AND M.ROUTERLINK IS NOT NULL
+ORDER BY M.ROUTERLINK
+  </select> 
+
+ 	
+</mapper>

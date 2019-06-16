@@ -1,0 +1,61 @@
+<div class="ui-g">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea">
+    <div echarts [options]="echartOption" (chartClick)="chartClick($event)" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+    <div echarts [options]="echartOption1" class="ui-g-12 subchartArea xl-subchartArea md-subchartArea lg-subchartArea sm-subchartArea"></div>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="xl-title lg-title"><strong>产品阶段</strong></div>
+      <ul class="optionul">
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductionType+{{shopName}}+{{processType}}" value="Production" label="正式量产"
+            [(ngModel)]="selectedProductionType" inputId="QAOPProductionType1" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductionType+{{shopName}}+{{processType}}" value="TPCN" label="TPCN" [(ngModel)]="selectedProductionType"
+            inputId="QAOPProductionType2" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductionType+{{shopName}}+{{processType}}" value="Develop" label="客户送样"
+            [(ngModel)]="selectedProductionType" inputId="QAOPProductionType3" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductionType+{{shopName}}+{{processType}}" value="Engineer" label="工程验证"
+            [(ngModel)]="selectedProductionType" inputId="QAOPProductionType4" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+        <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductionType+{{shopName}}+{{processType}}" value="PV" label="PV" [(ngModel)]="selectedProductionType"
+            inputId="QAOPProductionType5" (click)="productionTypeClicked()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title"><strong>产品类型</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="QAOPProductCategory+{{shopName}}+{{processType}}" value="{{item}}" label="{{item}}"
+            [(ngModel)]="selectedProductionCategory" inputId="QAOPProductCategory+{{shopName}}+{{processType}}+{{item}}"
+            (click)="searchButtonClick()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 lineNameArea xl-lineNameArea md-lineNameArea lg-lineNameArea sm-lineNameArea">
+      <div class="xl-title lg-title"><strong>日期时间</strong></div>
+      <div class="ui-g">
+        <div class="ui-g-10 ui-xl-10 ui-lg-10 xl-datetimelabel lg-datetimelabel">
+          <span>开始时间 :</span>
+          <p-calendar styleClass="calender" dateFormat="yy-mm-dd" [(ngModel)]="startDate" [showTime]="true" [showIcon]="true"
+            [readonlyInput]="true"></p-calendar>
+          <br />
+          <span>结束时间 :</span>
+          <p-calendar styleClass="calender" dateFormat="yy-mm-dd" [(ngModel)]="endDate" [showTime]="true" [showIcon]="true"
+            [readonlyInput]="true"></p-calendar>
+        </div>
+        <div class="ui-g-2 ui-xl-2 ui-lg-2 searchbutton">
+          <br />
+          <button class="button" pButton type="button" (click)="searchButtonClick()" icon='fa fa-search'></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

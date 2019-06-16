@@ -1,0 +1,60 @@
+<div class="ui-g">
+    <div echarts [options]="echartOption" class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"></div>
+    <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+            <div class="title lg-title xl-title"><strong>产品阶段</strong></div>
+            <ul class="optionul">
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveByOperationProductionType" value="Production" label="正式量产" [(ngModel)]="selectedWIPMoveProductionType"
+                        inputId="WIPMoveByOperationProductionType0" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveByOperationProductionType" value="TPCN" label="TPCN" [(ngModel)]="selectedWIPMoveProductionType"
+                        inputId="WIPMoveByOperationProductionType1" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveByOperationProductionType" value="Develop" label="客户送样" [(ngModel)]="selectedWIPMoveProductionType"
+                        inputId="WIPMoveByOperationProductionType2" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveByOperationProductionType" value="Engineer" label="工程验证" [(ngModel)]="selectedWIPMoveProductionType"
+                        inputId="WIPMoveByOperationProductionType3" (click)="WIPMoveProductionTypeClicked()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveByOperationProductionType" value="PV" label="PV" [(ngModel)]="selectedWIPMoveProductionType"
+                        inputId="WIPMoveByOperationProductionType4" (click)="WIPMoveProductionTypeClicked()" (selected)="true"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+            <div class="title lg-title xl-title"><strong>产品类型</strong></div>
+            <ul class="optionul"> 
+                <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="wipMoveByOperationProductCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedProductionCategory"
+                        inputId="wipMoveByOperationProductCategory+{{item}}" (click)="drawChart()"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+        <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+            <div class="title lg-title xl-title"><strong>工序类型</strong></div>
+            <ul class="optionul">
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveOPerationType" value="MAIN" label="主线" [(ngModel)]="selectedOperationType"
+                        inputId="WIPMoveOPerationType" (click)="drawChart()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveOPerationType" value="IQC" label="IQC" [(ngModel)]="selectedOperationType"
+                        inputId="WIPMoveOPerationType2" (click)="drawChart()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveOPerationType" value="ReWork" label="ReWork" [(ngModel)]="selectedOperationType"
+                        inputId="WIPMoveOPerationType3" (click)="drawChart()"></p-radioButton>
+                </li>
+                <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+                    <p-radioButton name="WIPMoveOPerationType" value="RT" label="RT" [(ngModel)]="selectedOperationType"
+                        inputId="WIPMoveOPerationType4" (click)="drawChart()" (selected)="true"></p-radioButton>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

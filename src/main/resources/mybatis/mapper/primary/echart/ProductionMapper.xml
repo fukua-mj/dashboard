@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.ProductionMapper">
+
+	<select id="getActplan" resultType="java.util.HashMap">
+			SELECT * FROM DAS_PRODUCTION_D A where A.FACTORYNAME=#{shopName} AND A.PRODUCTCATEGORY=#{productCategory} AND A.IN_OUT=#{datatype} 
+		AND A.PRODUCTIONTYPE LIKE'ALL%' ORDER BY A.CATEGORY
+	</select>
+	
+	<select id="getRt" resultType="java.util.HashMap">
+		SELECT *
+	  FROM DAS_PRODUCTION_D A
+	 WHERE     A.CATEGORY IN ('STOCK IN CUM ACT',
+	                          'RT CUM ACT',
+	                          'STOCK IN DAILY ACT',
+	                          'RT DAILY ACT')
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.PRODUCTCATEGORY = #{productCategory}
+	</select>
+	
+	<select id="getProduction" resultType="java.util.HashMap">
+	      SELECT B.PRODUCTCATEGORY,
+       B.FACTORYNAME,
+       ROUND (
+            B.MONTH_2_IN
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_2, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_2_IN,
+       ROUND (
+            B.MONTH_2_OUT
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_2, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_2_OUT,
+       ROUND (
+            B.MONTH_1_IN
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_1, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_1_IN,
+       ROUND (
+            B.MONTH_1_OUT
+          / TO_CHAR (LAST_DAY (TO_DATE (A.MONTH_1, 'YYYYMM')), 'DD'),
+          0)
+          AS MONTH_1_OUT,
+       ROUND (B.MONTH_0_IN, 0) AS MONTH_0_IN,
+       ROUND (B.MONTH_0_OUT, 0) AS MONTH_0_OUT,
+       ROUND (B.WEEK_3_IN / 7, 0) AS WEEK_3_IN,
+       ROUND (B.WEEK_3_OUT / 7, 0) AS WEEK_3_OUT,
+       ROUND (B.WEEK_2_IN / 7, 0) AS WEEK_2_IN,
+       ROUND (B.WEEK_2_OUT / 7, 0) AS WEEK_2_OUT,
+       ROUND (B.WEEK_1_IN / 7, 0) AS WEEK_1_IN,
+       ROUND (B.WEEK_1_OUT / 7, 0) AS WEEK_1_OUT,
+       ROUND (B.WEEK_0_IN / 7, 0) AS WEEK_0_IN,
+       ROUND (B.WEEK_0_OUT / 7, 0) AS WEEK_0_OUT,
+       B.DAY_6_IN,
+       B.DAY_6_OUT,
+       B.DAY_5_IN,
+       B.DAY_5_OUT,
+       B.DAY_4_IN,
+       B.DAY_4_OUT,
+       B.DAY_3_IN,
+       B.DAY_3_OUT,
+       B.DAY_2_IN,
+       B.DAY_2_OUT,
+       B.DAY_1_IN,
+       B.DAY_1_OUT,
+       B.DAY_0_IN,
+       B.DAY_0_OUT
+  FROM (SELECT *
+          FROM DAS_CALENDAR_MWD A
+         WHERE A.DATATYPE = 'FACTORY_MWD') A,
+       DAS_PRODUCTION_MWD B
+ WHERE FACTORYNAME = #{shopName}
+	</select>
+	
+	<select id="getactplanCategory" resultType="java.util.HashMap">
+				SELECT DISTINCT PRODUCTCATEGORY
+  FROM DAS_PRODUCTION_D
+ WHERE FACTORYNAME = #{shopName} AND PRODUCTCATEGORY != 'ALL_CATEGORY' ORDER BY PRODUCTCATEGORY
+	</select>
+	
+	<select id="getRtCategory" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM DAS_PRODUCTION_D A
+   WHERE     A.CATEGORY IN ('STOCK IN CUM ACT',
+                            'RT CUM ACT',
+                            'STOCK IN DAILY ACT',
+                            'RT DAILY ACT')
+         AND A.FACTORYNAME = #{shopName}
+ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getwipMoveCategory" resultType="java.util.HashMap">
+<!-- 		SELECT DISTINCT PRODUCTCATEGORY
+		 <if test="productionType == 'Production'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD
+		 </if>
+		 <if test="productionType == 'PV'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_PV
+		 </if>
+		 <if test="productionType == 'Engineer'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_EN
+		 </if>
+		 <if test="productionType == 'Develop'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_DEV
+		 </if>
+		 WHERE FACTORYNAME = #{shopName}
+		 ORDER BY PRODUCTCATEGORY -->
+		 
+		   SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM MDWMGR.DSB_WIP_D A
+   WHERE     1 = 1
+         AND A.DATATYPE = #{dataType}
+         AND A.FACTORYNAME = #{shopName}
+         AND A.PRODUCTIONTYPE = #{productionType}
+ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getWIP" resultType="java.util.HashMap">
+	  SELECT A.PRODUCTCATEGORY,
+         A.FACTORYNAME,
+         A.PRODUCTIONTYPE,
+         A.PROCESSOPERATIONNAME,
+         A.DAY_0_EOH
+		 <if test="productionType == 'Production'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD A
+		 </if>
+		 <if test="productionType == 'PV'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_PV A
+		 </if>
+		 <if test="productionType == 'Engineer'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_EN A
+		 </if>
+		 <if test="productionType == 'Develop'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_DEV A
+		 </if>
+    WHERE A.FACTORYNAME=#{shopName}
+    AND A.PRODUCTCATEGORY=#{productCategory}
+    AND A.PROCESSOPERATIONNAME != 'MAIN'
+ORDER BY A.ORDER_BY_COL1,
+         A.ORDER_BY_COL2,
+         A.ORDER_BY_COL3,
+         A.ORDER_BY_COL4
+	</select>
+	
+	<select id="getWIPTotal" resultType="java.util.HashMap">
+	        SELECT SUM (A.DAY_0_EOH) AS WIP
+		 <if test="productionType == 'Production'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD A
+		 </if>
+		 <if test="productionType == 'PV'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_PV A
+		 </if>
+		 <if test="productionType == 'Engineer'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_EN A
+		 </if>
+		 <if test="productionType == 'Develop'">
+		  FROM MDWMGR.DAS_EOHBOH_MWD_DEV A
+		 </if>
+   WHERE     A.FACTORYNAME = #{shopName}
+         AND A.PRODUCTCATEGORY = #{productCategory}
+         AND A.PROCESSOPERATIONNAME != 'MAIN'
+         AND A.PROCESSOPERATIONNAME NOT IN ('FA',
+                                            'RW_BANK',
+                                            'RW_EI',
+                                            'RW_APP',
+                                            'RW_OQA',
+                                            'RW_packing',
+                                            'Scrap_Bank',
+                                            'CELL_BANK')
+GROUP BY A.FACTORYNAME, A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getMove" resultType="java.util.HashMap">
+	  SELECT A.PRODUCTCATEGORY,
+         A.FACTORYNAME,
+         A.PRODUCTIONTYPE,
+         A.PROCESSOPERATIONNAME,
+         A.DAY_0_MOVEMENT
+         <if test="productionType == 'Production'">
+		  FROM MDWMGR.DAS_MOVEMENT_MWD A
+		 </if>
+		 <if test="productionType == 'PV'">
+		  FROM MDWMGR.DAS_MOVEMENT_MWD_PV A
+		 </if>
+		 <if test="productionType == 'Engineer'">
+		  FROM MDWMGR.DAS_MOVEMENT_MWD_EN A
+		 </if>
+		 <if test="productionType == 'Develop'">
+		  FROM MDWMGR.DAS_MOVEMENT_MWD_DEV A
+		 </if>
+   WHERE A.FACTORYNAME = #{shopName} AND A.PRODUCTCATEGORY =#{productCategory}
+ORDER BY A.ORDER_BY_COL1,
+         A.ORDER_BY_COL2,
+         A.ORDER_BY_COL3,
+         A.ORDER_BY_COL4
+	</select>
+	
+	<select id="getOKMovement" resultType="java.util.HashMap">
+	SELECT *
+  FROM MDWMGR.DAS_OKMOVEMENT_MWD A
+ WHERE     A.DATATYPE = 'MDLOKMOVEMENT'
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.PRODUCTIONTYPE = #{productionType}
+	</select>
+		
+	<select id="eacCutproductioncategory" resultType="java.util.HashMap">
+  SELECT DISTINCT PRODUCTCATEGORY
+    FROM DAS_LINEFPY_MWD
+   WHERE DAS_LINEFPY_MWD.FACTORYNAME = #{shopName}
+ORDER BY PRODUCTCATEGORY
+	</select>		
+	
+	<select id="geteacCutproduction" resultType="java.util.HashMap">
+SELECT DAS_LINEFPY_MWD.PRODUCTCATEGORY,
+       DAS_LINEFPY_MWD.LINENAME,
+       DAS_LINEFPY_MWD.PRODUCTIONTYPE,
+       DAS_LINEFPY_MWD.DAY_6_G,
+       DAS_LINEFPY_MWD.DAY_5_G,
+       DAS_LINEFPY_MWD.DAY_4_G,
+       DAS_LINEFPY_MWD.DAY_3_G,
+       DAS_LINEFPY_MWD.DAY_2_G,
+       DAS_LINEFPY_MWD.DAY_1_G,
+       DAS_LINEFPY_MWD.DAY_0_G,
+       DAS_LINEFPY_MWD.DAY_6_OUT,
+       DAS_LINEFPY_MWD.DAY_5_OUT,
+       DAS_LINEFPY_MWD.DAY_4_OUT,
+       DAS_LINEFPY_MWD.DAY_3_OUT,
+       DAS_LINEFPY_MWD.DAY_2_OUT,
+       DAS_LINEFPY_MWD.DAY_1_OUT,
+       DAS_LINEFPY_MWD.DAY_0_OUT,
+       DECODE(DAS_LINEFPY_MWD.DAY_6_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_6_G / DAS_LINEFPY_MWD.DAY_6_OUT) * 100,
+                     2) )) AS DAY_6_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_5_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_5_G / DAS_LINEFPY_MWD.DAY_5_OUT) * 100,
+                     2) )) AS DAY_5_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_4_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_4_G / DAS_LINEFPY_MWD.DAY_4_OUT) * 100,
+                     2) )) AS DAY_4_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_3_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_3_G / DAS_LINEFPY_MWD.DAY_3_OUT) * 100,
+                     2))) AS DAY_3_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_2_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_2_G / DAS_LINEFPY_MWD.DAY_2_OUT) * 100,
+                     2))) AS DAY_2_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_1_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_1_G / DAS_LINEFPY_MWD.DAY_1_OUT) * 100,
+                     2) )) AS DAY_1_YLD,
+       DECODE(DAS_LINEFPY_MWD.DAY_0_OUT,
+              0,
+              '0',
+              (TRUNC((DAS_LINEFPY_MWD.DAY_0_G / DAS_LINEFPY_MWD.DAY_0_OUT) * 100,
+                     2))) AS DAY_0_YLD
+  FROM DAS_LINEFPY_MWD
+ WHERE DAS_LINEFPY_MWD.LINENAME LIKE #{machineType}
+ AND PRODUCTCATEGORY=#{productCategory}
+ ORDER BY DAS_LINEFPY_MWD.ORDER_BY_COL1,
+          DAS_LINEFPY_MWD.ORDER_BY_COL2,
+          DAS_LINEFPY_MWD.ORDER_BY_COL3,
+          DAS_LINEFPY_MWD.ORDER_BY_COL4
+	</select>	
+	
+	<select id="getWIPMDLByLine" resultType="java.util.HashMap">
+	  SELECT TT.FACTORYNAME,
+         TT.PRODUCTCATEGORY,
+         --TT.PRODUCTIONTYPE,
+         TT.PROCESSOPERATIONNAME,
+         SUM (TT.DAY_0_EOH) AS DAY_0_EOH,
+         TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+    FROM (  SELECT A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   A.PRODUCTIONTYPE,
+                   A.PROCESSOPERATIONNAME,
+                   A.LINENAME,
+                   A.WORKORDER,
+                   A.DAY_0_EOH,
+                   A.ORDER_BY_COL1,
+                   A.ORDER_BY_COL2,
+                   A.ORDER_BY_COL3,
+                   A.ORDER_BY_COL4
+              FROM MDWMGR.DAS_MDLLINEEOHBOH_MWD A
+             WHERE A.FACTORYNAME = #{shopName} AND A.LINENAME LIKE #{lineName}
+             AND A.PROCESSOPERATIONNAME != 'MAIN'
+          ORDER BY A.ORDER_BY_COL1,
+                   A.ORDER_BY_COL2,
+                   A.ORDER_BY_COL3,
+                   A.ORDER_BY_COL4) TT
+GROUP BY TT.FACTORYNAME,
+         TT.PRODUCTCATEGORY,
+         --TT.PRODUCTIONTYPE,
+         TT.PROCESSOPERATIONNAME,
+         TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+ORDER BY TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+	</select>
+	
+	<select id="getWIPTotalMDLByLine" resultType="java.util.HashMap">
+	        SELECT SUM (A.DAY_0_EOH) AS WIP
+    FROM MDWMGR.DAS_MDLLINEEOHBOH_MWD A
+   WHERE     A.FACTORYNAME = #{shopName}
+         AND A.LINENAME LIKE #{lineName}
+         AND A.PROCESSOPERATIONNAME != 'MAIN'
+         AND A.PROCESSOPERATIONNAME NOT IN ('FA',
+                                            'RW_BANK',
+                                            'RW_EI',
+                                            'RW_APP',
+                                            'RW_OQA',
+                                            'RW_packing',
+                                            'Scrap_Bank',
+                                            'CELL_BANK')
+GROUP BY A.FACTORYNAME
+	</select>
+	
+	<select id="getMoveMDLByLine" resultType="java.util.HashMap">
+  SELECT TT.FACTORYNAME,
+         TT.PRODUCTCATEGORY,
+         --TT.PRODUCTIONTYPE,
+         TT.PROCESSOPERATIONNAME,
+         SUM (TT.DAY_0_MOVEMENT) AS DAY_0_MOVEMENT,
+         TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+    FROM (  SELECT A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   A.PRODUCTIONTYPE,
+                   A.PROCESSOPERATIONNAME,
+                   A.LINENAME,
+                   A.WORKORDER,
+                   A.DAY_0_MOVEMENT,
+                   A.ORDER_BY_COL1,
+                   A.ORDER_BY_COL2,
+                   A.ORDER_BY_COL3,
+                   A.ORDER_BY_COL4
+              FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+   WHERE A.FACTORYNAME = #{shopName} AND A.LINENAME LIKE #{lineName}
+          ORDER BY A.ORDER_BY_COL1,
+                   A.ORDER_BY_COL2,
+                   A.ORDER_BY_COL3,
+                   A.ORDER_BY_COL4) TT
+GROUP BY TT.FACTORYNAME,
+         TT.PRODUCTCATEGORY,
+         --TT.PRODUCTIONTYPE,
+         TT.PROCESSOPERATIONNAME,
+         TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+ORDER BY TT.ORDER_BY_COL1,
+         TT.ORDER_BY_COL2,
+         TT.ORDER_BY_COL3,
+         TT.ORDER_BY_COL4
+	</select>
+	
+	<select id="WIPMDLByLineProductCategory" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.PRODUCTCATEGORY
+    FROM MDWMGR.DAS_MDLLINEEOHBOH_MWD A
+   WHERE A.FACTORYNAME = #{shopName} AND A.LINENAME LIKE #{lineName}
+ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getOQAAPPList" resultType="java.util.HashMap">
+		SELECT *
+  FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+ WHERE     A.PROCESSOPERATIONNAME = 'OQA_APP'
+       AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getMDLAllOperationName" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.PRODUCTCATEGORY,
+       A.PROCESSOPERATIONNAME,
+       A.ORDER_BY_COL4
+    FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+   WHERE A.FACTORYNAME = 'MODULE' AND A.PRODUCTCATEGORY = #{productCategory}
+     	<if test='lineType == "Main"'>
+     		AND A.ORDER_BY_COL4 &lt;= (SELECT DISTINCT A.ORDER_BY_COL4
+                   FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+                  WHERE     1 = 1
+                        AND A.FACTORYNAME = 'MODULE'
+                        AND A.PRODUCTCATEGORY = #{productCategory}
+                        AND A.PROCESSOPERATIONNAME = 'OQA_APP') AND A.ORDER_BY_COL4 &gt;= 000
+  		</if>
+     	<if test='lineType == "IQC"'>
+			AND A.PROCESSOPERATIONNAME LIKE 'IQC%'
+  		</if>
+  		<if test='lineType == "ReWork"'>
+			AND (A.PROCESSOPERATIONNAME LIKE 'RW%' OR A.PROCESSOPERATIONNAME IN ('FA','Scrap_Bank'))
+  		</if>
+  		<if test='lineType == "RT"'>
+			AND A.PROCESSOPERATIONNAME LIKE 'RT%'
+  		</if>
+ORDER BY A.ORDER_BY_COL4
+	</select>	
+	
+	<select id="getMDLAllOperationName1" resultType="java.util.HashMap">
+			  SELECT DISTINCT A.PRODUCTCATEGORY,
+	       A.PROCESSOPERATIONNAME,
+	       A.ORDER_BY_COL4
+	    FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+	   WHERE A.FACTORYNAME = 'MODULE' AND A.PRODUCTCATEGORY = #{productCategory}
+	     	<if test='lineType == "Main"'>
+	     		AND A.ORDER_BY_COL4 &lt;= (SELECT DISTINCT A.ORDER_BY_COL4
+	                   FROM MDWMGR.DAS_MDLLINEMOVEMENT_MWD A
+	                  WHERE     1 = 1
+	                        AND A.FACTORYNAME = 'MODULE'
+	                        AND A.PRODUCTCATEGORY = #{productCategory}
+	                        AND A.PROCESSOPERATIONNAME = 'OQA_TEST') AND A.ORDER_BY_COL4 &gt;= 000
+	  		</if>
+	     	<if test='lineType == "IQC"'>
+				AND A.PROCESSOPERATIONNAME LIKE 'IQC%'
+	  		</if>
+	  		<if test='lineType == "ReWork"'>
+				AND (A.PROCESSOPERATIONNAME LIKE 'RW%' OR A.PROCESSOPERATIONNAME IN ('FA','Scrap_Bank'))
+	  		</if>
+	  		<if test='lineType == "RT"'>
+				AND A.PROCESSOPERATIONNAME LIKE 'RT%'
+	  		</if>
+	ORDER BY A.ORDER_BY_COL4
+		</select>
+		
+	<select id="getWIPMovementOKQTY" resultType="java.util.HashMap">
+	SELECT *
+	  FROM MDWMGR.DAS_OKMOVEMENT_MWD A
+	 WHERE     A.LINENAME = #{lineName}
+	       AND A.FACTORYNAME = #{shopName}
+	</select>	
+	
+	<select id="getDailyReportCategory" resultType = "java.util.HashMap">
+		SELECT DISTINCT PRODUCTCATEGORY
+		    FROM MDWMGR.DSB_PRDREPORT_DAY
+		ORDER BY PRODUCTCATEGORY
+	</select>	
+	
+	<select id="getDailyReportList" resultType="java.util.HashMap">
+		  SELECT TT.PRODUCTCATEGORY,
+         TT.FACTORYNAME,
+         CASE
+            WHEN TT.FACTORYNAME = 'BP' THEN 1
+            WHEN TT.FACTORYNAME = 'EVEN (Half)' THEN 2
+            WHEN TT.FACTORYNAME = 'EAC (Pcs)' THEN 3
+            WHEN TT.FACTORYNAME = 'MDL (Pcs)' THEN 4
+         END
+            AS ORDER_BY,
+         TT.IN_OUT,
+         TT.MONTH_PLAN_QTY,
+         TT.CUM_PLAN_QTY,
+         TT.DAILY_PLAN_QTY,
+         TT.CUM_ACT_QTY,
+         TT.DAILY_ACT_QTY,
+         TT.CUM_BALANCE,
+         TT.DAILY_BALANCE,
+         TT.ACCESSRATIO,
+         TT.CUM_SCRAP_QTY,
+         TT.DAILY_SCRAP_QTY,
+         CASE WHEN TT.CUM_YIELD IS NULL THEN 0 ELSE TT.CUM_YIELD END CUM_YIELD
+    FROM (SELECT A.PRODUCTCATEGORY,
+                 CASE
+                    WHEN A.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                    WHEN A.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                    WHEN A.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                    ELSE A.FACTORYNAME
+                 END
+                    AS FACTORYNAME,
+                 A.IN_OUT,
+                 A.MONTH_PLAN_QTY,
+                 A.CUM_PLAN_QTY,
+                 A.DAILY_PLAN_QTY,
+                 A.CUM_ACT_QTY,
+                 A.DAILY_ACT_QTY,
+                 A.CUM_BALANCE,
+                 A.DAILY_BALANCE,
+                 A.ACCESSRATIO * 100 AS ACCESSRATIO,
+                 A.CUM_SCRAP_QTY,
+                 A.DAILY_SCRAP_QTY,
+                 A.CUM_YIELD *100 AS CUM_YIELD
+            FROM MDWMGR.DSB_PRDREPORT_DAY A
+           WHERE 1 = 1
+                 <if test="productCategoryList != null">
+             		AND A.PRODUCTCATEGORY IN
+  					<foreach item="productCategoryList" index="index" collection="productCategoryList" open="(" separator="," close=")">
+                    	#{productCategoryList}
+                	</foreach> 
+                </if> 
+          UNION ALL
+            SELECT 'Sum' AS PRODUCTCATEGORY,
+                   CASE
+                      WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                      WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                      WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                      ELSE B.FACTORYNAME
+                   END
+                      AS FACTORYNAME,
+                   B.IN_OUT,
+                   SUM (B.MONTH_PLAN_QTY) AS MONTH_PLAN_QTY,
+                   SUM (B.CUM_PLAN_QTY) AS CUM_PLAN_QTY,
+                   SUM (B.DAILY_PLAN_QTY) AS DAILY_PLAN_QTY,
+                   SUM (B.CUM_ACT_QTY) AS CUM_ACT_QTY,
+                   SUM (B.DAILY_ACT_QTY) AS DAILY_ACT_QTY,
+                   (SUM (B.CUM_ACT_QTY) - SUM (B.CUM_PLAN_QTY)) AS CUM_BALANCE,
+                   (SUM (B.DAILY_ACT_QTY) - SUM (B.DAILY_PLAN_QTY))
+                      AS DAILY_BALANCE,
+                   CASE
+                      WHEN SUM (B.MONTH_PLAN_QTY) = 0
+                      THEN
+                         0
+                      ELSE
+                         ROUND (
+                            (SUM (B.CUM_ACT_QTY) / SUM (B.MONTH_PLAN_QTY)) * 100,
+                            4)
+                   END
+                      AS ACCESSRATIO,
+                   SUM (B.CUM_SCRAP_QTY) AS CUM_SCRAP_QTY,
+                   SUM (B.DAILY_SCRAP_QTY) AS DAILY_SCRAP_QTY,
+                   NULL AS CUM_YIELD
+              FROM MDWMGR.DSB_PRDREPORT_DAY B
+             WHERE 1 = 1 
+                <if test="productCategoryList2 != null">
+             		AND B.PRODUCTCATEGORY IN             
+  					<foreach item="productCategoryList2" index="index" collection="productCategoryList2" open="(" separator="," close=")">
+                    	#{productCategoryList2}
+                	</foreach>  
+                </if>
+          GROUP BY CASE
+                      WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                      WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                      WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                      ELSE B.FACTORYNAME
+                   END,
+                   B.IN_OUT) TT
+ORDER BY ORDER_BY, TT.PRODUCTCATEGORY DESC, TT.IN_OUT
+	</select>	
+	
+	<select id="getDailyReportShopCount" resultType="java.util.HashMap">
+	SELECT COUNT(*) AS COUNT
+  FROM (  SELECT TT.PRODUCTCATEGORY,
+                 TT.FACTORYNAME,
+                 CASE
+                    WHEN TT.FACTORYNAME = 'BP' THEN 1
+                    WHEN TT.FACTORYNAME = 'EVEN (Half)' THEN 2
+                    WHEN TT.FACTORYNAME = 'EAC (Pcs)' THEN 3
+                    WHEN TT.FACTORYNAME = 'MDL (Pcs)' THEN 4
+                 END
+                    AS ORDER_BY,
+                 TT.IN_OUT,
+                 TT.MONTH_PLAN_QTY,
+                 TT.CUM_PLAN_QTY,
+                 TT.DAILY_PLAN_QTY,
+                 TT.CUM_ACT_QTY,
+                 TT.DAILY_ACT_QTY,
+                 TT.CUM_BALANCE,
+                 TT.DAILY_BALANCE,
+                 TT.ACCESSRATIO,
+                 TT.CUM_SCRAP_QTY,
+                 TT.DAILY_SCRAP_QTY,
+                 CASE WHEN TT.CUM_YIELD IS NULL THEN 0 ELSE TT.CUM_YIELD END
+                    CUM_YIELD
+            FROM (SELECT A.PRODUCTCATEGORY,
+                         CASE
+                            WHEN A.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                            WHEN A.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                            WHEN A.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                            ELSE A.FACTORYNAME
+                         END
+                            AS FACTORYNAME,
+                         A.IN_OUT,
+                         A.MONTH_PLAN_QTY,
+                         A.CUM_PLAN_QTY,
+                         A.DAILY_PLAN_QTY,
+                         A.CUM_ACT_QTY,
+                         A.DAILY_ACT_QTY,
+                         A.CUM_BALANCE,
+                         A.DAILY_BALANCE,
+                         A.ACCESSRATIO * 100 AS ACCESSRATIO,
+                         A.CUM_SCRAP_QTY,
+                         A.DAILY_SCRAP_QTY,
+                         A.CUM_YIELD * 100 AS CUM_YIELD
+                    FROM MDWMGR.DSB_PRDREPORT_DAY A
+		           WHERE 1 = 1
+		                 <if test="productCategoryList != null">
+		             		AND A.PRODUCTCATEGORY IN
+		  					<foreach item="productCategoryList" index="index" collection="productCategoryList" open="(" separator="," close=")">
+		                    	#{productCategoryList}
+		                	</foreach> 
+		                </if> 
+                  UNION ALL
+                    SELECT 'Sum' AS PRODUCTCATEGORY,
+                           CASE
+                              WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                              WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                              WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                              ELSE B.FACTORYNAME
+                           END
+                              AS FACTORYNAME,
+                           B.IN_OUT,
+                           SUM (B.MONTH_PLAN_QTY) AS MONTH_PLAN_QTY,
+                           SUM (B.CUM_PLAN_QTY) AS CUM_PLAN_QTY,
+                           SUM (B.DAILY_PLAN_QTY) AS DAILY_PLAN_QTY,
+                           SUM (B.CUM_ACT_QTY) AS CUM_ACT_QTY,
+                           SUM (B.DAILY_ACT_QTY) AS DAILY_ACT_QTY,
+                           (SUM (B.CUM_ACT_QTY) - SUM (B.CUM_PLAN_QTY))
+                              AS CUM_BALANCE,
+                           (SUM (B.DAILY_ACT_QTY) - SUM (B.DAILY_PLAN_QTY))
+                              AS DAILY_BALANCE,
+                           CASE
+                              WHEN SUM (B.MONTH_PLAN_QTY) = 0
+                              THEN
+                                 0
+                              ELSE
+                                 ROUND (
+                                      (  SUM (B.CUM_ACT_QTY)
+                                       / SUM (B.MONTH_PLAN_QTY))
+                                    * 100,
+                                    4)
+                           END
+                              AS ACCESSRATIO,
+                           SUM (B.CUM_SCRAP_QTY) AS CUM_SCRAP_QTY,
+                           SUM (B.DAILY_SCRAP_QTY) AS DAILY_SCRAP_QTY,
+                           NULL AS CUM_YIELD
+                      FROM MDWMGR.DSB_PRDREPORT_DAY B
+		             WHERE 1 = 1 
+		                <if test="productCategoryList2 != null">
+		             		AND B.PRODUCTCATEGORY IN             
+		  					<foreach item="productCategoryList2" index="index" collection="productCategoryList2" open="(" separator="," close=")">
+		                    	#{productCategoryList2}
+		                	</foreach>  
+		                </if>
+                  GROUP BY CASE
+                              WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                              WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                              WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                              ELSE B.FACTORYNAME
+                           END,
+                           B.IN_OUT) TT
+        ORDER BY ORDER_BY, TT.PRODUCTCATEGORY DESC, TT.IN_OUT) TT1 WHERE TT1.FACTORYNAME = #{shopNameCompare}
+	</select>
+	
+	<select id="getDailyReportCategoryCount" resultType="java.util.HashMap">
+		SELECT COUNT(*) AS COUNT
+  FROM (  SELECT TT.PRODUCTCATEGORY,
+                 TT.FACTORYNAME,
+                 CASE
+                    WHEN TT.FACTORYNAME = 'BP' THEN 1
+                    WHEN TT.FACTORYNAME = 'EVEN (Half)' THEN 2
+                    WHEN TT.FACTORYNAME = 'EAC (Pcs)' THEN 3
+                    WHEN TT.FACTORYNAME = 'MDL (Pcs)' THEN 4
+                 END
+                    AS ORDER_BY,
+                 TT.IN_OUT,
+                 TT.MONTH_PLAN_QTY,
+                 TT.CUM_PLAN_QTY,
+                 TT.DAILY_PLAN_QTY,
+                 TT.CUM_ACT_QTY,
+                 TT.DAILY_ACT_QTY,
+                 TT.CUM_BALANCE,
+                 TT.DAILY_BALANCE,
+                 TT.ACCESSRATIO,
+                 TT.CUM_SCRAP_QTY,
+                 TT.DAILY_SCRAP_QTY,
+                 CASE WHEN TT.CUM_YIELD IS NULL THEN 0 ELSE TT.CUM_YIELD END
+                    CUM_YIELD
+            FROM (SELECT A.PRODUCTCATEGORY,
+                         CASE
+                            WHEN A.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                            WHEN A.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                            WHEN A.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                            ELSE A.FACTORYNAME
+                         END
+                            AS FACTORYNAME,
+                         A.IN_OUT,
+                         A.MONTH_PLAN_QTY,
+                         A.CUM_PLAN_QTY,
+                         A.DAILY_PLAN_QTY,
+                         A.CUM_ACT_QTY,
+                         A.DAILY_ACT_QTY,
+                         A.CUM_BALANCE,
+                         A.DAILY_BALANCE,
+                         A.ACCESSRATIO * 100 AS ACCESSRATIO,
+                         A.CUM_SCRAP_QTY,
+                         A.DAILY_SCRAP_QTY,
+                         A.CUM_YIELD * 100 AS CUM_YIELD
+                    FROM MDWMGR.DSB_PRDREPORT_DAY A
+		           WHERE 1 = 1
+		                 <if test="productCategoryList != null">
+		             		AND A.PRODUCTCATEGORY IN
+		  					<foreach item="productCategoryList" index="index" collection="productCategoryList" open="(" separator="," close=")">
+		                    	#{productCategoryList}
+		                	</foreach> 
+		                </if> 
+                  UNION ALL
+                    SELECT 'Sum' AS PRODUCTCATEGORY,
+                           CASE
+                              WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                              WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                              WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                              ELSE B.FACTORYNAME
+                           END
+                              AS FACTORYNAME,
+                           B.IN_OUT,
+                           SUM (B.MONTH_PLAN_QTY) AS MONTH_PLAN_QTY,
+                           SUM (B.CUM_PLAN_QTY) AS CUM_PLAN_QTY,
+                           SUM (B.DAILY_PLAN_QTY) AS DAILY_PLAN_QTY,
+                           SUM (B.CUM_ACT_QTY) AS CUM_ACT_QTY,
+                           SUM (B.DAILY_ACT_QTY) AS DAILY_ACT_QTY,
+                           (SUM (B.CUM_ACT_QTY) - SUM (B.CUM_PLAN_QTY))
+                              AS CUM_BALANCE,
+                           (SUM (B.DAILY_ACT_QTY) - SUM (B.DAILY_PLAN_QTY))
+                              AS DAILY_BALANCE,
+                           CASE
+                              WHEN SUM (B.MONTH_PLAN_QTY) = 0
+                              THEN
+                                 0
+                              ELSE
+                                 ROUND (
+                                      (  SUM (B.CUM_ACT_QTY)
+                                       / SUM (B.MONTH_PLAN_QTY))
+                                    * 100,
+                                    4)
+                           END
+                              AS ACCESSRATIO,
+                           SUM (B.CUM_SCRAP_QTY) AS CUM_SCRAP_QTY,
+                           SUM (B.DAILY_SCRAP_QTY) AS DAILY_SCRAP_QTY,
+                           NULL AS CUM_YIELD
+                      FROM MDWMGR.DSB_PRDREPORT_DAY B
+		             WHERE 1 = 1 
+		                <if test="productCategoryList2 != null">
+		             		AND B.PRODUCTCATEGORY IN             
+		  					<foreach item="productCategoryList2" index="index" collection="productCategoryList2" open="(" separator="," close=")">
+		                    	#{productCategoryList2}
+		                	</foreach>  
+		                </if>
+                  GROUP BY CASE
+                              WHEN B.FACTORYNAME = 'EVEN' THEN 'EVEN (Half)'
+                              WHEN B.FACTORYNAME = 'EAC' THEN 'EAC (Pcs)'
+                              WHEN B.FACTORYNAME = 'MODULE' THEN 'MDL (Pcs)'
+                              ELSE B.FACTORYNAME
+                           END,
+                           B.IN_OUT) TT
+        ORDER BY ORDER_BY, TT.PRODUCTCATEGORY DESC, TT.IN_OUT) TT1 WHERE TT1.FACTORYNAME = #{shopNameCompare} AND TT1.PRODUCTCATEGORY = #{productCategoryCompare}
+	</select>			
+
+	<select id="getScrapProductionCategory" resultType="java.util.HashMap">
+	SELECT DISTINCT PRODUCTCATEGORY
+  FROM (SELECT A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               A.PRODUCTIONTYPE,
+               A.CAUSEDEPARTMENT,
+               A.SCRAPQTY,
+               A.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (A.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+               (CASE
+                   WHEN (A.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                   THEN
+                      0
+                   WHEN     A.FACTORYNAME = 'EVEN'
+                        AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                   THEN
+                      SCRAPQTY * 0.5 / (A.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                   ELSE
+                      SCRAPQTY / (A.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                END)
+                  AS CAUSERATIO
+          FROM (  SELECT A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         A.PRODUCTIONTYPE,
+                         SUM (SCRAPQTY) AS TOTALSCRAP
+                    FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                GROUP BY A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         A.PRODUCTIONTYPE) TOTALSCRAP,
+               MDWMGR.DAS_PRDBPSCRAP_MWD A
+         WHERE     1 = 1
+               AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+               AND A.DATETYPE = TOTALSCRAP.DATETYPE
+               AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+               AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+               AND A.PRODUCTIONTYPE = TOTALSCRAP.PRODUCTIONTYPE
+               AND A.FACTORYNAME = 'BP'
+        UNION
+        SELECT A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               A.PRODUCTIONTYPE,
+               A.CAUSEDEPARTMENT,
+               A.SCRAPQTY,
+               A.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (A.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+               (CASE
+                   WHEN (A.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                   THEN
+                      0
+                   WHEN     A.FACTORYNAME = 'EVEN'
+                        AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                   THEN
+                      SCRAPQTY * 0.5 / (A.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                   ELSE
+                      SCRAPQTY / (A.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                END)
+                  AS CAUSERATIO
+          FROM (  SELECT A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         A.PRODUCTIONTYPE,
+                         SUM (SCRAPQTY) AS TOTALSCRAP
+                    FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                GROUP BY A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         A.PRODUCTIONTYPE) TOTALSCRAP,
+               MDWMGR.DAS_PRDBPSCRAP_MWD A
+         WHERE     1 = 1
+               AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+               AND A.DATETYPE = TOTALSCRAP.DATETYPE
+               AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+               AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+               AND A.PRODUCTIONTYPE = TOTALSCRAP.PRODUCTIONTYPE
+               AND A.FACTORYNAME = 'EVEN'
+               AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP')
+ WHERE FACTORYNAME = #{shopName}
+	</select>
+	
+	<select id="getScrapGridValue" resultType="java.util.HashMap">
+  SELECT TT.FACTORYDATE,
+         TT.DATETYPE,
+         TT.PRODUCTCATEGORY,
+         TT.FACTORYNAME,
+         TT.PRODUCTIONTYPE,
+         SUM (TT.SCRAPQTY) AS SCRAPQTY,
+         MAX (TT.OUTQTY) AS OUTQTY,
+         MAX (TT.TOTALSCRAP) AS TOTALSCRAP,
+         MAX (TT.INQTY) AS INQTY,
+         CASE
+            WHEN MAX (TT.INQTY) = 0 THEN 0
+            ELSE MAX (TT.TOTALSCRAP) / MAX (TT.INQTY)
+         END
+            AS CAUSERATIO
+    FROM (  SELECT A.FACTORYDATE,
+                   A.DATETYPE,
+                   A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   (CASE
+                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                       THEN
+                          '量产阶段'
+                       WHEN A.PRODUCTIONTYPE = 'Develop'
+                       THEN
+                          '客户送样'
+                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+                       THEN
+                          '工程验证'
+                    END)
+                      AS PRODUCTIONTYPE,
+                   A.CAUSEDEPARTMENT,
+                   SUM (A.SCRAPQTY) AS SCRAPQTY,
+                   TOTALSCRAP.OUTQTY,
+                   TOTALSCRAP.TOTALSCRAP,
+                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+                   (CASE
+                       WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                       THEN
+                          0
+                       WHEN     A.FACTORYNAME = 'EVEN'
+                            AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                       THEN
+                            SUM (A.SCRAPQTY)
+                          * 0.5
+                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                       ELSE
+                            SUM (A.SCRAPQTY)
+                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                    END)
+                      AS CAUSERATIO
+              FROM (  SELECT A.FACTORYDATE,
+                             A.DATETYPE,
+                             A.PRODUCTCATEGORY,
+                             A.FACTORYNAME,
+                             (CASE
+                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                                 THEN
+                                    '量产阶段'
+                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+                                 THEN
+                                    '客户送样'
+                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+                                 THEN
+                                    '工程验证'
+                              END)
+                                AS PRODUCTIONTYPE,
+                             SUM (SCRAPQTY) AS TOTALSCRAP,
+                             SUM (OUTQTY) AS OUTQTY
+                        FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                    GROUP BY A.FACTORYDATE,
+                             A.DATETYPE,
+                             A.PRODUCTCATEGORY,
+                             A.FACTORYNAME,
+                             (CASE
+                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                                 THEN
+                                    '量产阶段'
+                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+                                 THEN
+                                    '客户送样'
+                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+                                 THEN
+                                    '工程验证'
+                              END)) TOTALSCRAP,
+                   MDWMGR.DAS_PRDBPSCRAP_MWD A
+             WHERE     1 = 1
+                   AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+                   AND A.DATETYPE = TOTALSCRAP.DATETYPE
+                   AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+                   AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+                   AND (CASE
+                           WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                           THEN
+                              '量产阶段'
+                           WHEN A.PRODUCTIONTYPE = 'Develop'
+                           THEN
+                              '客户送样'
+                           WHEN A.PRODUCTIONTYPE = 'Engineer'
+                           THEN
+                              '工程验证'
+                        END) = TOTALSCRAP.PRODUCTIONTYPE
+                   AND A.FACTORYNAME = 'BP'
+          GROUP BY A.FACTORYDATE,
+                   A.DATETYPE,
+                   A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   (CASE
+                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                       THEN
+                          '量产阶段'
+                       WHEN A.PRODUCTIONTYPE = 'Develop'
+                       THEN
+                          '客户送样'
+                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+                       THEN
+                          '工程验证'
+                    END),
+                   A.CAUSEDEPARTMENT,
+                   TOTALSCRAP.OUTQTY,
+                   TOTALSCRAP.TOTALSCRAP,
+                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+          UNION ALL
+            SELECT A.FACTORYDATE,
+                   A.DATETYPE,
+                   A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   (CASE
+                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                       THEN
+                          '量产阶段'
+                       WHEN A.PRODUCTIONTYPE = 'Develop'
+                       THEN
+                          '客户送样'
+                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+                       THEN
+                          '工程验证'
+                    END)
+                      AS PRODUCTIONTYPE,
+                   A.CAUSEDEPARTMENT,
+                   SUM (A.SCRAPQTY) AS SCRAPQTY,
+                   TOTALSCRAP.OUTQTY,
+                   TOTALSCRAP.TOTALSCRAP,
+                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+                   (CASE
+                       WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                       THEN
+                          0
+                       WHEN     A.FACTORYNAME = 'EVEN'
+                            AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                       THEN
+                            SUM (A.SCRAPQTY)
+                          * 0.5
+                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                       ELSE
+                            SUM (A.SCRAPQTY)
+                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                    END)
+                      AS CAUSERATIO
+              FROM (  SELECT A.FACTORYDATE,
+                             A.DATETYPE,
+                             A.PRODUCTCATEGORY,
+                             A.FACTORYNAME,
+                             (CASE
+                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                                 THEN
+                                    '量产阶段'
+                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+                                 THEN
+                                    '客户送样'
+                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+                                 THEN
+                                    '工程验证'
+                              END)
+                                AS PRODUCTIONTYPE,
+                             SUM (SCRAPQTY) AS TOTALSCRAP,
+                             SUM (OUTQTY) AS OUTQTY
+                        FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                    GROUP BY A.FACTORYDATE,
+                             A.DATETYPE,
+                             A.PRODUCTCATEGORY,
+                             A.FACTORYNAME,
+                             (CASE
+                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                                 THEN
+                                    '量产阶段'
+                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+                                 THEN
+                                    '客户送样'
+                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+                                 THEN
+                                    '工程验证'
+                              END)) TOTALSCRAP,
+                   MDWMGR.DAS_PRDBPSCRAP_MWD A
+             WHERE     1 = 1
+                   AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+                   AND A.DATETYPE = TOTALSCRAP.DATETYPE
+                   AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+                   AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+                   AND (CASE
+                           WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                           THEN
+                              '量产阶段'
+                           WHEN A.PRODUCTIONTYPE = 'Develop'
+                           THEN
+                              '客户送样'
+                           WHEN A.PRODUCTIONTYPE = 'Engineer'
+                           THEN
+                              '工程验证'
+                        END) = TOTALSCRAP.PRODUCTIONTYPE
+                   AND A.FACTORYNAME = 'EVEN'
+                   AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+          GROUP BY A.FACTORYDATE,
+                   A.DATETYPE,
+                   A.PRODUCTCATEGORY,
+                   A.FACTORYNAME,
+                   (CASE
+                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+                       THEN
+                          '量产阶段'
+                       WHEN A.PRODUCTIONTYPE = 'Develop'
+                       THEN
+                          '客户送样'
+                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+                       THEN
+                          '工程验证'
+                    END),
+                   A.CAUSEDEPARTMENT,
+                   TOTALSCRAP.OUTQTY,
+                   TOTALSCRAP.TOTALSCRAP,
+                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)) TT
+	 WHERE FACTORYNAME = #{shopName}
+        AND PRODUCTCATEGORY = #{productCategory}
+         AND DATETYPE != 'DAY'
+GROUP BY TT.FACTORYDATE,
+         TT.DATETYPE,
+         TT.PRODUCTCATEGORY,
+         TT.FACTORYNAME,
+         TT.PRODUCTIONTYPE
+ORDER BY TT.DATETYPE, TT.FACTORYDATE
+	</select>
+	
+	<select id="getyieldScrap" resultType="java.util.HashMap">
+	SELECT *
+  FROM (SELECT A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ) AS PRODUCTIONTYPE,
+               A.CAUSEDEPARTMENT,
+               SUM(A.SCRAPQTY) AS SCRAPQTY,
+               TOTALSCRAP.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+               (CASE
+                   WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                   THEN
+                      0
+                   WHEN     A.FACTORYNAME = 'EVEN'
+                        AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                   THEN
+                      SUM(A.SCRAPQTY) * 0.5 / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                   ELSE
+                      SUM(A.SCRAPQTY) / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                END)
+                  AS CAUSERATIO
+          FROM (  SELECT A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                               WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                               WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ) AS PRODUCTIONTYPE,
+                         SUM (SCRAPQTY) AS TOTALSCRAP,
+                         SUM (OUTQTY) AS OUTQTY
+                    FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                GROUP BY A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                               WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                               WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ) ) TOTALSCRAP,
+               MDWMGR.DAS_PRDBPSCRAP_MWD A
+         WHERE     1 = 1
+               AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+               AND A.DATETYPE = TOTALSCRAP.DATETYPE
+               AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+               AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+               AND (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END) = TOTALSCRAP.PRODUCTIONTYPE
+               AND A.FACTORYNAME = 'BP'
+        GROUP BY
+               A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ),
+               A.CAUSEDEPARTMENT,
+               TOTALSCRAP.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) 
+          UNION ALL
+        SELECT A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END) AS PRODUCTIONTYPE,
+               A.CAUSEDEPARTMENT,
+               SUM(A.SCRAPQTY) AS SCRAPQTY,
+               TOTALSCRAP.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+               (CASE
+                   WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+                   THEN
+                      0
+                   WHEN     A.FACTORYNAME = 'EVEN'
+                        AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+                   THEN
+                      SUM(A.SCRAPQTY) * 0.5 / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                   ELSE
+                      SUM(A.SCRAPQTY) / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+                END)
+                  AS CAUSERATIO
+          FROM (  SELECT A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                               WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                               WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ) AS PRODUCTIONTYPE,
+                         SUM (SCRAPQTY) AS TOTALSCRAP,
+                         SUM (OUTQTY) AS OUTQTY
+                    FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+                GROUP BY A.FACTORYDATE,
+                         A.DATETYPE,
+                         A.PRODUCTCATEGORY,
+                         A.FACTORYNAME,
+                         (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                               WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                               WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END )) TOTALSCRAP,
+               MDWMGR.DAS_PRDBPSCRAP_MWD A
+         WHERE     1 = 1
+               AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+               AND A.DATETYPE = TOTALSCRAP.DATETYPE
+               AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+               AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+               AND (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END) = TOTALSCRAP.PRODUCTIONTYPE
+               AND A.FACTORYNAME = 'EVEN'
+               AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+        GROUP BY 
+               A.FACTORYDATE,
+               A.DATETYPE,
+               A.PRODUCTCATEGORY,
+               A.FACTORYNAME,
+               (CASE WHEN A.PRODUCTIONTYPE IN ('TPCN','Production') THEN '量产阶段'
+                     WHEN A.PRODUCTIONTYPE = 'Develop' THEN '客户送样'
+                     WHEN A.PRODUCTIONTYPE = 'Engineer' THEN '工程验证' END ),
+               A.CAUSEDEPARTMENT,
+               TOTALSCRAP.OUTQTY,
+               TOTALSCRAP.TOTALSCRAP,
+               (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)  )
+ WHERE FACTORYNAME = #{shopName}
+        AND PRODUCTCATEGORY = #{productCategory}
+        AND DATETYPE = 'DAY'
+       ORDER BY FACTORYDATE
+	</select> 
+	
+	<select id="getScrapRatio" resultType="java.util.HashMap">
+	  SELECT TT.FACTORYDATE,
+	         TT.DATETYPE,
+	         TT.PRODUCTCATEGORY,
+	         TT.FACTORYNAME,
+	         TT.PROCESSOPERATIONNAME,
+	         TT.SCRAPQTY,
+	         TT.OUTQTY,
+	         ROUND ( (TT.SCRAPQTY / TT.OUTQTY) * 100, 2) AS RATIO
+	    FROM (SELECT T1.FACTORYDATE,
+	                 T1.DATETYPE,
+	                 T1.PRODUCTCATEGORY,
+	                 T1.FACTORYNAME,
+	                 T1.PROCESSOPERATIONNAME,
+	                 T1.SCRAPQTY,
+	                 (T1.SCRAPQTY + T2.OUTQTY) AS OUTQTY
+	            FROM (  SELECT A.FACTORYDATE,
+	                           A.DATETYPE,
+	                           A.PRODUCTCATEGORY,
+	                           A.FACTORYNAME,
+	                           A.PROCESSOPERATIONNAME,
+	                           SUM (A.SCRAPQTY) AS SCRAPQTY
+	                      FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+	                     WHERE 1 = 1
+	                  GROUP BY A.FACTORYDATE,
+	                           A.DATETYPE,
+	                           A.PRODUCTCATEGORY,
+	                           A.FACTORYNAME,
+	                           A.PROCESSOPERATIONNAME) T1,
+	                 (  SELECT B.FACTORYDATE,
+	                           B.DATETYPE,
+	                           B.PRODUCTCATEGORY,
+	                           B.FACTORYNAME,
+	                           B.PROCESSOPERATIONNAME,
+	                           SUM (B.OUTQTY) AS OUTQTY
+	                      FROM (  SELECT A.FACTORYDATE,
+	                                     A.DATETYPE,
+	                                     A.PRODUCTCATEGORY,
+	                                     A.FACTORYNAME,
+	                                     A.PROCESSOPERATIONNAME,
+	                                     A.PRODUCTIONTYPE,
+	                                     MAX (A.OUTQTY) AS OUTQTY
+	                                FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+	                               WHERE 1 = 1
+	                            GROUP BY A.FACTORYDATE,
+	                                     A.DATETYPE,
+	                                     A.PRODUCTCATEGORY,
+	                                     A.FACTORYNAME,
+	                                     A.PROCESSOPERATIONNAME,
+	                                     A.PRODUCTIONTYPE) B
+	                     WHERE 1 = 1
+	                  GROUP BY B.FACTORYDATE,
+	                           B.DATETYPE,
+	                           B.PRODUCTCATEGORY,
+	                           B.FACTORYNAME,
+	                           B.PROCESSOPERATIONNAME) T2
+	           WHERE     T1.FACTORYDATE = T2.FACTORYDATE
+	                 AND T1.DATETYPE = T2.DATETYPE
+	                 AND T1.PRODUCTCATEGORY = T2.PRODUCTCATEGORY
+	                 AND T1.FACTORYNAME = T2.FACTORYNAME
+	                 AND T1.PROCESSOPERATIONNAME = T2.PROCESSOPERATIONNAME
+	                 AND T1.SCRAPQTY != 0) TT
+	   WHERE     TT.DATETYPE = 'MONTH'
+	         AND TT.PRODUCTCATEGORY = #{productCategory}
+	         AND TT.FACTORYNAME = #{shopName}
+	ORDER BY TT.FACTORYDATE	
+	</select> 
+	
+	<select id="getdetailScrapValue" resultType="java.util.HashMap">
+		/* Formatted on 2018/12/24 14:55:03 (QP5 v5.252.13127.32847) */
+		  SELECT *
+		    FROM (  SELECT A.FACTORYDATE,
+		                   A.DATETYPE,
+		                   A.PRODUCTCATEGORY,
+		                   A.FACTORYNAME,
+		                   (CASE
+		                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                       THEN
+		                          '量产阶段'
+		                       WHEN A.PRODUCTIONTYPE = 'Develop'
+		                       THEN
+		                          '客户送样'
+		                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                       THEN
+		                          '工程验证'
+		                    END)
+		                      AS PRODUCTIONTYPE,
+		                   A.CAUSEDEPARTMENT,
+		                   SUM (A.SCRAPQTY) AS SCRAPQTY,
+		                   TOTALSCRAP.OUTQTY,
+		                   TOTALSCRAP.TOTALSCRAP,
+		                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+		                   (CASE
+		                       WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+		                       THEN
+		                          0
+		                       WHEN     A.FACTORYNAME = 'EVEN'
+		                            AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+		                       THEN
+		                            SUM (A.SCRAPQTY)
+		                          * 0.5
+		                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+		                       ELSE
+		                            SUM (A.SCRAPQTY)
+		                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+		                    END)
+		                      AS CAUSERATIO
+		              FROM (  SELECT A.FACTORYDATE,
+		                             A.DATETYPE,
+		                             A.PRODUCTCATEGORY,
+		                             A.FACTORYNAME,
+		                             (CASE
+		                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                                 THEN
+		                                    '量产阶段'
+		                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+		                                 THEN
+		                                    '客户送样'
+		                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                                 THEN
+		                                    '工程验证'
+		                              END)
+		                                AS PRODUCTIONTYPE,
+		                             SUM (SCRAPQTY) AS TOTALSCRAP,
+		                             SUM (OUTQTY) AS OUTQTY
+		                        FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+		                    GROUP BY A.FACTORYDATE,
+		                             A.DATETYPE,
+		                             A.PRODUCTCATEGORY,
+		                             A.FACTORYNAME,
+		                             (CASE
+		                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                                 THEN
+		                                    '量产阶段'
+		                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+		                                 THEN
+		                                    '客户送样'
+		                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                                 THEN
+		                                    '工程验证'
+		                              END)) TOTALSCRAP,
+		                   MDWMGR.DAS_PRDBPSCRAP_MWD A
+		             WHERE     1 = 1
+		                   AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+		                   AND A.DATETYPE = TOTALSCRAP.DATETYPE
+		                   AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+		                   AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+		                   AND (CASE
+		                           WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                           THEN
+		                              '量产阶段'
+		                           WHEN A.PRODUCTIONTYPE = 'Develop'
+		                           THEN
+		                              '客户送样'
+		                           WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                           THEN
+		                              '工程验证'
+		                        END) = TOTALSCRAP.PRODUCTIONTYPE
+		                   AND A.FACTORYNAME = 'BP'
+		          GROUP BY A.FACTORYDATE,
+		                   A.DATETYPE,
+		                   A.PRODUCTCATEGORY,
+		                   A.FACTORYNAME,
+		                   (CASE
+		                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                       THEN
+		                          '量产阶段'
+		                       WHEN A.PRODUCTIONTYPE = 'Develop'
+		                       THEN
+		                          '客户送样'
+		                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                       THEN
+		                          '工程验证'
+		                    END),
+		                   A.CAUSEDEPARTMENT,
+		                   TOTALSCRAP.OUTQTY,
+		                   TOTALSCRAP.TOTALSCRAP,
+		                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+		          UNION ALL
+		            SELECT A.FACTORYDATE,
+		                   A.DATETYPE,
+		                   A.PRODUCTCATEGORY,
+		                   A.FACTORYNAME,
+		                   (CASE
+		                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                       THEN
+		                          '量产阶段'
+		                       WHEN A.PRODUCTIONTYPE = 'Develop'
+		                       THEN
+		                          '客户送样'
+		                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                       THEN
+		                          '工程验证'
+		                    END)
+		                      AS PRODUCTIONTYPE,
+		                   A.CAUSEDEPARTMENT,
+		                   SUM (A.SCRAPQTY) AS SCRAPQTY,
+		                   TOTALSCRAP.OUTQTY,
+		                   TOTALSCRAP.TOTALSCRAP,
+		                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) AS INQTY,
+		                   (CASE
+		                       WHEN (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP) = 0
+		                       THEN
+		                          0
+		                       WHEN     A.FACTORYNAME = 'EVEN'
+		                            AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+		                       THEN
+		                            SUM (A.SCRAPQTY)
+		                          * 0.5
+		                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+		                       ELSE
+		                            SUM (A.SCRAPQTY)
+		                          / (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP)
+		                    END)
+		                      AS CAUSERATIO
+		              FROM (  SELECT A.FACTORYDATE,
+		                             A.DATETYPE,
+		                             A.PRODUCTCATEGORY,
+		                             A.FACTORYNAME,
+		                             (CASE
+		                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                                 THEN
+		                                    '量产阶段'
+		                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+		                                 THEN
+		                                    '客户送样'
+		                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                                 THEN
+		                                    '工程验证'
+		                              END)
+		                                AS PRODUCTIONTYPE,
+		                             SUM (SCRAPQTY) AS TOTALSCRAP,
+		                             SUM (OUTQTY) AS OUTQTY
+		                        FROM MDWMGR.DAS_PRDBPSCRAP_MWD A
+		                    GROUP BY A.FACTORYDATE,
+		                             A.DATETYPE,
+		                             A.PRODUCTCATEGORY,
+		                             A.FACTORYNAME,
+		                             (CASE
+		                                 WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                                 THEN
+		                                    '量产阶段'
+		                                 WHEN A.PRODUCTIONTYPE = 'Develop'
+		                                 THEN
+		                                    '客户送样'
+		                                 WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                                 THEN
+		                                    '工程验证'
+		                              END)) TOTALSCRAP,
+		                   MDWMGR.DAS_PRDBPSCRAP_MWD A
+		             WHERE     1 = 1
+		                   AND A.FACTORYDATE = TOTALSCRAP.FACTORYDATE
+		                   AND A.DATETYPE = TOTALSCRAP.DATETYPE
+		                   AND A.PRODUCTCATEGORY = TOTALSCRAP.PRODUCTCATEGORY
+		                   AND A.FACTORYNAME = TOTALSCRAP.FACTORYNAME
+		                   AND (CASE
+		                           WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                           THEN
+		                              '量产阶段'
+		                           WHEN A.PRODUCTIONTYPE = 'Develop'
+		                           THEN
+		                              '客户送样'
+		                           WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                           THEN
+		                              '工程验证'
+		                        END) = TOTALSCRAP.PRODUCTIONTYPE
+		                   AND A.FACTORYNAME = 'EVEN'
+		                   AND SUBSTR (A.CAUSEDEPARTMENT, 1, 2) = 'BP'
+		          GROUP BY A.FACTORYDATE,
+		                   A.DATETYPE,
+		                   A.PRODUCTCATEGORY,
+		                   A.FACTORYNAME,
+		                   (CASE
+		                       WHEN A.PRODUCTIONTYPE IN ('TPCN', 'Production')
+		                       THEN
+		                          '量产阶段'
+		                       WHEN A.PRODUCTIONTYPE = 'Develop'
+		                       THEN
+		                          '客户送样'
+		                       WHEN A.PRODUCTIONTYPE = 'Engineer'
+		                       THEN
+		                          '工程验证'
+		                    END),
+		                   A.CAUSEDEPARTMENT,
+		                   TOTALSCRAP.OUTQTY,
+		                   TOTALSCRAP.TOTALSCRAP,
+		                   (TOTALSCRAP.OUTQTY + TOTALSCRAP.TOTALSCRAP))
+		   WHERE     FACTORYNAME = #{shopName}
+		         AND PRODUCTCATEGORY = #{productCategory}
+		         AND DATETYPE = #{dateType}
+		         AND FACTORYDATE = #{date}
+		ORDER BY FACTORYDATE
+	</select> 
+	
+	<select id="getWIPMoveProductCategoryByOPerationType" resultType="java.util.HashMap">
+		  SELECT DISTINCT A.PRODUCTCATEGORY
+	    FROM MDWMGR.DSB_WIP_D A
+	   WHERE     1 = 1
+	         AND A.DATATYPE = #{dataType}
+	         AND A.FACTORYNAME = #{shopName}
+	         AND A.PRODUCTIONTYPE = #{productionType}
+	ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getWipNew" resultType="java.util.HashMap">
+	  SELECT *
+	    FROM MDWMGR.DSB_WIP_D A
+	 WHERE     A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	       AND A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	       AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	       AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	ORDER BY A.ORDER_BY_COL1
+	</select>
+	
+	<select id="getMoveNew" resultType="java.util.HashMap">
+	  SELECT *
+	    FROM MDWMGR.DSB_MOVEMENT_D A
+	 WHERE     A.DATATYPE = #{dataType,jdbcType=VARCHAR}
+	       AND A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	       AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	       AND A.PRODUCTIONTYPE = #{productionType,jdbcType=VARCHAR}
+	ORDER BY A.ORDER_BY_COL1
+	</select>
+	
+	<select id="getMDLAllOperationNameNew" resultType="java.util.HashMap">
+	  SELECT DISTINCT A.PROCESSOPERATIONNAME, A.SEQ
+	    FROM MDWMGR.DSB_WIPMOVE_ORDER A
+	   WHERE     1 = 1
+	         AND A.FACTORYNAME = 'MODULE'
+	         AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	         AND A.PROCESSOPERATIONNAMEGROUP = #{lineType,jdbcType=VARCHAR}
+	ORDER BY A.SEQ
+	</select>
+	
+	<select id="getWIPTotalNew" resultType="java.util.HashMap">
+  SELECT A.FACTORYDATE,
+         A.DATATYPE,
+         A.FACTORYNAME,
+         A.LINENAME,
+         A.WORKORDER,
+         A.PRODUCTCATEGORY,
+         A.PRODUCTIONTYPE,
+         SUM (A.WIPQTY) AS TOTALQTY
+    FROM MDWMGR.DSB_WIP_D A
+ WHERE     A.DATATYPE = #{dataType}
+       AND A.FACTORYNAME = #{shopName}
+       AND A.PRODUCTCATEGORY = #{productCategory}
+       AND A.PRODUCTIONTYPE = #{productionType}
+GROUP BY A.FACTORYDATE,
+         A.DATATYPE,
+         A.FACTORYNAME,
+         A.LINENAME,
+         A.WORKORDER,
+         A.PRODUCTCATEGORY,
+         A.PRODUCTIONTYPE
+	</select>
+	
+	<select id="getOperationNameNew" resultType="java.util.HashMap">
+	  SELECT *
+    FROM MDWMGR.DSB_WIPMOVE_ORDER A
+   WHERE     1 = 1
+         AND A.FACTORYNAME = #{shopName}
+         AND A.PRODUCTCATEGORY = #{productCategory}
+         AND A.PRODUCTIONTYPE = #{productionType}
+ORDER BY A.SEQ
+	</select>
+	
+	<select id="getWIPMDLByLineNew" resultType="java.util.HashMap">
+	  SELECT A.FACTORYDATE,
+	         A.DATATYPE,
+	         A.FACTORYNAME,
+	         A.LINENAME,
+	         A.PRODUCTCATEGORY,
+	         A.PROCESSOPERATIONNAME,
+	         SUM (A.WIPQTY) AS WIPQTY,
+	         A.ORDER_BY_COL1
+	    FROM MDWMGR.DSB_WIP_D A
+	   WHERE     1 = 1
+	         AND A.DATATYPE = 'MDLBYLINE'
+	         AND A.FACTORYNAME = 'MODULE'
+	         AND A.LINENAME = #{lineName}
+	GROUP BY A.FACTORYDATE,
+	         A.DATATYPE,
+	         A.FACTORYNAME,
+	         A.LINENAME,
+	         A.PRODUCTCATEGORY,
+	         A.PROCESSOPERATIONNAME,
+	         A.ORDER_BY_COL1
+	ORDER BY A.ORDER_BY_COL1
+	</select>
+	
+	<select id="getWIPTotalMDLByLineNew" resultType="java.util.HashMap">
+		  SELECT SUM (A.WIPQTY) AS WIPQTY
+		    FROM MDWMGR.DSB_WIP_D A
+		   WHERE     1 = 1
+		         AND A.DATATYPE = 'MDLBYLINE'
+		         AND A.FACTORYNAME = 'MODULE'
+		         AND A.LINENAME = #{lineName}
+		         AND A.PROCESSOPERATIONNAME != 'MAIN'
+		         AND A.PROCESSOPERATIONNAME NOT IN ('FA',
+		                                            'RW_BANK',
+		                                            'RW_EI',
+		                                            'RW_APP',
+		                                            'RW_OQA',
+		                                            'RW_packing',
+		                                            'Scrap_Bank',
+		                                            'CELL_BANK')
+		GROUP BY A.FACTORYNAME
+	</select>
+	
+	<select id="getMoveMDLByLineNew" resultType="java.util.HashMap">
+		  SELECT A.FACTORYDATE,
+		         A.DATATYPE,
+		         A.FACTORYNAME,
+		         A.LINENAME,
+		         A.PRODUCTCATEGORY,
+		         A.PROCESSOPERATIONNAME,
+		         SUM (A.MOVEMENTQTY) AS MOVEMENTQTY,
+		         A.ORDER_BY_COL1
+		    FROM MDWMGR.DSB_MOVEMENT_D A
+		   WHERE     1 = 1
+		         AND A.DATATYPE = 'MDLBYLINE'
+		         AND A.FACTORYNAME = 'MODULE'
+		         AND A.LINENAME = #{lineName}
+		GROUP BY A.FACTORYDATE,
+		         A.DATATYPE,
+		         A.FACTORYNAME,
+		         A.LINENAME,
+		         A.PRODUCTCATEGORY,
+		         A.PROCESSOPERATIONNAME,
+		         A.ORDER_BY_COL1
+		ORDER BY A.ORDER_BY_COL1
+	</select>
+	
+	<select id="WIPMDLByLineProductCategoryNew" resultType="java.util.HashMap">
+	SELECT DISTINCT A.PRODUCTCATEGORY
+	  FROM MDWMGR.DSB_WIP_D A
+	 WHERE     1 = 1
+	       AND A.DATATYPE = 'MDLBYLINE'
+	       AND A.FACTORYNAME = 'MODULE'
+	       AND A.LINENAME = #{lineName}
+	</select>
+	
+	<select id="getOQAAPPListNew" resultType="java.util.HashMap">
+		SELECT *
+		  FROM MDWMGR.DSB_MOVEMENT_D A
+		 WHERE A.PROCESSOPERATIONNAME = 'OQA_APP' AND A.PRODUCTCATEGORY = #{productCategory}
+	</select>
+
+	<select id="getDummyDetail" resultType="java.util.HashMap">
+		  SELECT *
+	    FROM MDWMGR.DSB_PRDDMY_MWD A
+	   WHERE A.FACTORYNAME = #{shopName} AND A.DATATYPE = 'DMYBYDEPT'
+	ORDER BY A.DATATYPE
+	</select>
+	
+	<select id="getDummyDepartment" resultType="java.lang.String">
+		  SELECT DISTINCT A.DEPARTMENT
+    FROM MDWMGR.DSB_PRDDMY_MWD A
+   WHERE A.FACTORYNAME = #{shopName} AND A.DATATYPE = 'DMYBYDEPT'
+ORDER BY A.DEPARTMENT
+	</select>
+		
+</mapper>

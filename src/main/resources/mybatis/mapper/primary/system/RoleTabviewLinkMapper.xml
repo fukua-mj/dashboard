@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.RoleTabviewLinkMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.RoleTabviewLink">
+    <result column="ROLENAME" jdbcType="VARCHAR" property="rolename" />
+    <result column="MENUNAME" jdbcType="VARCHAR" property="menuname" />
+    <result column="TABVLEWINDEX" jdbcType="DECIMAL" property="tabvlewindex" />
+    <result column="USEFLAG" jdbcType="VARCHAR" property="useflag" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.RoleTabviewLink">
+    insert into NG_DAS_ROLETABVIEWLINK (ROLENAME, MENUNAME, TABVLEWINDEX, 
+      USEFLAG, DESCRIPTION)
+    values (#{rolename,jdbcType=VARCHAR}, #{menuname,jdbcType=VARCHAR}, #{tabvlewindex,jdbcType=DECIMAL}, 
+      #{useflag,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.RoleTabviewLink">
+    insert into NG_DAS_ROLETABVIEWLINK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        ROLENAME,
+      </if>
+      <if test="menuname != null">
+        MENUNAME,
+      </if>
+      <if test="tabvlewindex != null">
+        TABVLEWINDEX,
+      </if>
+      <if test="useflag != null">
+        USEFLAG,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="menuname != null">
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="tabvlewindex != null">
+        #{tabvlewindex,jdbcType=DECIMAL},
+      </if>
+      <if test="useflag != null">
+        #{useflag,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getUsableTabView" resultType="com.boe.idm.project.model.system.RoleTabviewLink">
+  	  SELECT *
+    FROM WEBMGR.NG_DAS_ROLETABVIEWLINK RT
+   WHERE     RT.ROLENAME = (SELECT UR.ROLENAME
+                              FROM WEBMGR.NG_DAS_USERROLELINK UR
+                             WHERE UR.USERACCOUNT = #{userAccount})
+         AND RT.MENUNAME = #{menuName}
+ORDER BY RT.TABVLEWINDEX
+  </select>
+  
+  <select id="getRoleTabViewLink" resultType="com.boe.idm.project.model.system.RoleTabviewLink">
+	  	  SELECT *
+	    FROM WEBMGR.NG_DAS_ROLETABVIEWLINK RT
+	ORDER BY RT.MENUNAME, RT.ROLENAME, RT.TABVLEWINDEX
+  </select>
+</mapper>

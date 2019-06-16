@@ -1,0 +1,35 @@
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+    .chartarea{
+        width: 100%;
+        height: 300px;
+        background-color: gold;
+    }
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+    .chartarea{
+        width: 100%;
+        height: 1000px;
+        background-color: yellowgreen;
+    }
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .chartarea{
+        width: 100%;
+        height: 570px;
+        background-color: rebeccapurple;
+    }
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .chartarea{
+        width: 100%;
+        height: 785px;
+        background-color: aqua;
+    }
+}

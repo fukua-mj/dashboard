@@ -1,0 +1,186 @@
+.chartArea-12{
+    height: 700px;
+    border-right: 0;
+    border-bottom: 0;
+}
+.chartArea{
+    height: 700px;
+}
+.productionTypeArea {
+    height: 300px;
+}
+.productionCategoryArea {
+    height: 400px;
+}
+ul {
+    list-style-type: none;
+}
+
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+    .sm-chartArea-12{
+        height: 401px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .sm-chartArea{
+        height: 300px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .sm-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .sm-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .sm-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+    .md-chartArea-12{
+        height: 829px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .md-chartArea{
+        height: 600px;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .md-productionTypeArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    }
+    .md-productionTypeLi {
+        line-height:2.5;
+        margin: 0 0 0 -30px;
+    }
+    .md-productionCategoryArea {
+        margin: 0 0 0 0;
+        height: 214px;
+    } 
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-chartArea-12{
+        height: 570px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .lg-chartArea{
+        height: 570px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .lg-title{
+        font-size: 1.0em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .lg-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 180px;
+    }
+    .lg-productionTypeLi {
+        line-height:1.8;
+        font-size: 14px;
+        margin: 0 0 0 -30px;
+    }
+    .lg-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 184px;
+    } 
+    .lg-productionCategoryArea .optionul {
+        height: 155px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    .lg-productionCategoryArea .optionul::-webkit-scrollbar {
+        display: none;
+        width: 6px;
+    }
+    .lg-productionCategoryArea .optionul:hover::-webkit-scrollbar {
+        display: inline-block;
+    }
+    .lg-productionCategoryArea .optionul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #535353;
+    }
+    .lg-productionCategoryArea .optionul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-chartArea-12{
+        height: 790px;
+        border-right: 0;
+        border-bottom: 0;
+    }
+    .xl-chartArea{
+        height: 790px;
+        border-right: 1px solid rgba(167, 165, 165, 0.795);
+        border-bottom: 0;
+    }
+    .xl-title{
+        font-size: 1.3em;
+        text-align: center;
+        border-bottom: 1px solid rgba(167, 165, 165, 0.795);
+    }
+    .xl-productionTypeArea {
+        margin: -7px 0 0 0;
+        height: 270px;
+    }
+    .xl-productionTypeLi {
+        line-height:2.5;
+        font-size: 17px;
+        margin: 0 0 0 -30px;
+    }
+    .xl-productionCategoryArea {
+        margin: 7px 0 0 0;
+        height: 247px;
+    }    
+    .xl-productionCategoryArea .optionul {
+        height: 225px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    .xl-productionCategoryArea .optionul::-webkit-scrollbar {
+        display: none;
+        width: 10px;
+    }
+    .xl-productionCategoryArea .optionul:hover::-webkit-scrollbar {
+        display: inline-block;
+    }
+    .xl-productionCategoryArea .optionul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #535353;
+    }
+    .xl-productionCategoryArea .optionul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+}

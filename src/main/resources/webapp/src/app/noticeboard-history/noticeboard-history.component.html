@@ -1,0 +1,27 @@
+<!-- <p-listbox [options]="noticelist" [(ngModel)]="selectNotice" optionLabel="subject" [listStyle]="{'height':'300px'}"></p-listbox>
+ -->
+<!-- <p-listbox [options]="noticelist" [(ngModel)]="selectNotice" (onChange)="onChange($event)" optionLabel="subject"
+    [listStyle]="{'height':'300px','width':'500px'}" [style]="{'width':'500px'}">
+        <ng-template let-noticelist pTemplate="item">
+        <div>
+            <span style="float:left;margin:20px 10px 0 0">{{noticelist.subject}}</span>
+            <span style="float:right;margin:20px 10px 0 0">{{noticelist.timekey}}</span>
+        </div>
+    </ng-template>
+</p-listbox> -->
+<div style="margin: 0 0 0 -1%">
+    <p-orderList [value]="noticelist" [listStyle]="{'height':'260px','width':'100%','line-height':'10px'}" [style]="{'width':'100%'}">
+        <ng-template let-notice pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <div style="float:left;margin:15px 5px 0 0"  class="xl-subject lg-subject">
+                    <a [routerLink]="['/boe/communication/noticeboard']" [queryParams]="{subject:notice.subject,timekey:notice.timekey}"
+                        (click)="onClick()">{{notice.subject}}</a>
+                </div>
+                <div style="float:right;margin:15px 5px 0 0" class="xl-noticetimekey lg-noticetimekey">{{notice.timekey}}</div>
+            </div>
+        </ng-template>
+    </p-orderList>
+</div>
+
+
+<!-- <a [routerLink]="['/boe/communication/noticeboard']" [queryParams]="{id:1}" (click)="onClick()">跳呀跳</a> -->

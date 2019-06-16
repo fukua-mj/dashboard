@@ -1,0 +1,27 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index">
+  <p-tabPanel [header]="items[0].header" leftIcon="pi pi-calendar" *ngIf="display[0]">
+    <app-engineerdata #DICD [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[0].processType"></app-engineerdata>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[1].header" leftIcon="pi pi-calendar" *ngIf="display[1]">
+    <app-engineerdata #FICD [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[1].processType"></app-engineerdata>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[2].header" leftIcon="pi pi-calendar" *ngIf="display[2]">
+    <app-engineerdata #THICKNESS [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[2].processType"></app-engineerdata>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[3].header" leftIcon="pi pi-calendar" *ngIf="display[3]">
+    <app-engineerdata #RS [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[3].processType"></app-engineerdata>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[4].header" leftIcon="pi pi-calendar" *ngIf="display[4]">
+    <app-engineerdata #OL [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[4].processType"></app-engineerdata>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[5].header" leftIcon="pi pi-calendar" *ngIf="display[5]">
+    <app-engineerdata #TP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[5].processType"></app-engineerdata>
+  </p-tabPanel>
+</p-tabView>

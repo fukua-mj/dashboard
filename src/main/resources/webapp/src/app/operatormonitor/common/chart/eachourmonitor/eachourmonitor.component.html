@@ -1,0 +1,109 @@
+<div class="ui-g xl-tablearea lg-tablearea">
+  <div class="ui-g-10 ui-lg-10 ui-xl-10 ui-md-12 ui-sm-12">
+    <p-table [value]="values" #dailyReportTable [loading]="loading" selectionMode="single" [(selection)]="selectedItem"
+      (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [paginator]="false" [rows]="15"
+      [globalFilterFields]="['']" [resizableColumns]="true">
+      <ng-template pTemplate="body" let-data>
+        <tr *ngFor="let header of data.header.items">
+          <td *ngFor="let item of header" [attr.rowspan]="item.rowspan" [attr.colspan]="item.colspan" [ngStyle]="{'background-color': data.header.backgroundColor,'width':item.width,'fontSize':data.header.fontSize,'color':data.header.fontColor,'line-height':data.header.lineheight}">
+            <strong>{{item.header}}</strong>
+          </td>
+        </tr>
+        <tr *ngFor="let value of data.values.items" [pSelectableRow]="values">
+          <td *ngFor="let item of value" class="ui-resizable-column" [attr.rowspan]="item.rowspan" [attr.colspan]="item.colspan"
+            [ngStyle]="{'color': item.color,'font-size':item.fontsize,'text-align':'center'}" pEditableColumn>
+            <label *ngIf="!item.editable">{{item.value}}</label>
+            <p-cellEditor *ngIf="item.editable">
+              <ng-template pTemplate="input">
+                <textarea pInputTextArea [rows]="item.editrows" [cols]="item.editcols" autoResize="autoResize"
+                  [(ngModel)]="item.value" (focus)="focus(this)" (blur)="blur()"></textarea>
+              </ng-template>
+              <ng-template pTemplate="output">
+                <label>{{item.value}}</label>
+              </ng-template>
+            </p-cellEditor>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div>
+      <div class="ui-g-12 timeArea xl-timeArea md-timeArea lg-timeArea sm-timeArea">
+        <div class="lg-title xl-title"><strong>日期时间</strong></div>
+        <div class="ui-g-12">
+          <div class="ui-g-1"></div>
+          <div class="ui-g-4">
+            <span>开始时间：</span>
+            <p-calendar [styleClass]="['ui-g-12']" dateFormat="yy-mm-dd" [(ngModel)]="startDate" [showTime]="true"
+              [showIcon]="true" [readonlyInput]="true"></p-calendar>
+          </div>
+          <div class="ui-g-4">
+            <span>结束时间：</span>
+            <p-calendar [styleClass]="['ui-g-12']" dateFormat="yy-mm-dd" [(ngModel)]="endDate" [showTime]="true"
+              [showIcon]="true" [readonlyInput]="true"></p-calendar>
+          </div>
+          <div class="ui-g-3">
+            <button pButton label="Search" (click)="getGridValue()"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="selectCondition">
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+        <div class="xl-title lg-title ui-g-12"><strong>产品阶段</strong></div>
+        <ul class="optionul">
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="ALL" label="ALL" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType0" (click)="getProductCategory()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="Production" label="正式量产" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType1" (click)="getProductCategory()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="TPCN" label="TPCN" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType2" (click)="getProductCategory()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="Develop" label="客户送样" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType3" (click)="getProductCategory()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="Engineer" label="工程验证" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType4" (click)="getProductCategory()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductionType" value="PV" label="PV" [(ngModel)]="selectedProductionType"
+              inputId="EACMonitorProductionType5" (click)="getProductCategory()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title ui-g-12"><strong>产品类型</strong></div>
+        <ul class="optionul">
+          <li *ngFor="let item of productCategory" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorProductCategory" value="{{item}}" label="{{item}}" [(ngModel)]="selectedProductCategory"
+              inputId="EACMonitorProductCategory+{{item}}" (click)="getGridValue()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+        <div class="xl-title lg-title ui-g-12"><strong>Type</strong></div>
+        <ul class="optionul">
+          <br />
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorDataTypeType" value="OPERATOR" label="By Operator" [(ngModel)]="selectedDataType"
+              inputId="EACMonitorDataTypeType1" (click)="getGridValue()"></p-radioButton>
+          </li>
+          <li class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+            <p-radioButton name="EACMonitorDataTypeType" value="MACHINE" label="By Machine" [(ngModel)]="selectedDataType"
+              inputId="EACMonitorDataTypeType2" (click)="getGridValue()"></p-radioButton>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

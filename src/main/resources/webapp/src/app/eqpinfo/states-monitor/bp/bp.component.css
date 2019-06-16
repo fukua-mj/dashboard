@@ -1,0 +1,47 @@
+.tabSetting {
+    position: fixed;
+    right: 2%;
+    top: 9%;
+}
+
+
+/* 640px 手机 sm */
+@media screen and (max-width:40em){
+
+}
+
+/* 641px 平板 md*/
+@media screen and (min-width:40.063em){
+
+
+}
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-tabSetting{
+        position: fixed;
+        right: 2%;
+        top: 11%;
+    }
+    .lg-tabMove{
+        position: fixed;
+        right: 5%;
+        top: 12%
+    }
+
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-tabSetting{
+        position: fixed;
+        right: 2%;
+        top: 8.5%;
+    }
+    .xl-tabMove{
+        position: fixed;
+        right: 5%;
+        top: 9.5%
+    }
+
+}

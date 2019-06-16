@@ -1,0 +1,12 @@
+<p-growl [(value)]="msgs"></p-growl>
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index">
+  <p-tabPanel header="Total" leftIcon="pi pi-calendar" *ngIf="display[0]">
+    <app-shoptotal [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="processType[0]"></app-shoptotal>
+  </p-tabPanel>
+  <p-tabPanel header="Defect" leftIcon="pi pi-inbox" *ngIf="display[1]">
+    <app-departmentdefectscrap [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="processType[0]" [dataType]="dataType[0]"></app-departmentdefectscrap>
+  </p-tabPanel>
+  <p-tabPanel header="Scrap" *ngIf="display[2]">
+    <app-departmentdefectscrap [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName" [processType]="processType[0]" [dataType]="dataType[1]"></app-departmentdefectscrap>
+  </p-tabPanel>
+</p-tabView>

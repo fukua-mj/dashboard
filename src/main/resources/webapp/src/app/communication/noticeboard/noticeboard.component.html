@@ -1,0 +1,41 @@
+<div class="ui-g">
+    <div [class]="bodyClass">
+        <div class="noticeboard">
+            <br />
+            <div class="title">{{selectNotice.subject}}</div>
+            <div class="ui-g-12">
+                <div class="ui-g-4 author">
+                    【作者】{{selectNotice.author}}
+                </div>
+                <div class="ui-g-4 timekey">
+                    【发布时间】{{selectNotice.timekey}}
+                </div>
+                <div class="ui-g-4 visitcount">
+                    【访问量】{{selectNotice.visitcount}}
+                </div>
+            </div>
+            <div class="noticecontent" id="noticecontent">
+
+            </div>
+            <br />
+            <div class="lastnext">
+                <button pButton type="button" icon="fa fa-arrow-left" label="Last" (click)="getLastNotice()" [disabled]="disable_Last"></button>
+                <button pButton type="button" icon="fa fa-arrow-right" label="Next" (click)="getNextNotice()" [disabled]="disable_Next"></button>
+            </div>
+        </div>
+    </div>
+    <!--     <div class="ui-lg-2">
+        1111
+    </div> -->
+</div>
+
+<!-- <div [class]="div1Class" [style.display]="div1Visible" style="background-color:aqua;height: 300px;">
+    <p-panel>
+        <p-header>
+            <div class="ui-helper-clearfix">
+                <span class="ui-panel-title">区域一</span>
+                <button pButton class="btn-expand" [icon]="div1Icon" (click)="div1Click()"></button>
+            </div>
+        </p-header>
+    </p-panel>
+</div> -->

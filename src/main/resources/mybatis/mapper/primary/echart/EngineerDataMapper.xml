@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.EngineerDataMapper">
+   
+	<select id="getProductCategory" resultType="java.util.HashMap">
+	SELECT DISTINCT PRODUCTCATEGORY
+	  FROM MDWMGR.DAS_DCRESULT_SUM_MWD A
+	 WHERE     1 = 1
+	       AND A.FACTORYNAME = #{shopName}
+	       AND A.LAYERITEM = #{layerItem}
+	       AND A.LAYERNAME = #{layerName}
+	       AND A.ITEMNAME = #{itemName}
+	       ORDER BY A.PRODUCTCATEGORY
+	</select>
+	
+	<select id="getengineeringData" resultType="java.util.HashMap">
+		  SELECT A.DATETIME,
+	         A.DATETYPE,
+	         A.FACTORYNAME,
+	         A.PRODUCTCATEGORY,
+	         A.LAYERITEM,
+	         A.LAYERNAME,
+	         A.ITEMNAME,
+	         ROUND(A.AVG_RESULT,2) AS AVG_RESULT,
+	         A.UNIFORMITY * 100 AS UNIFORMITY,
+	         ROUND(A.UCL_RESULT,2) AS UCL_RESULT,
+	         ROUND(A.LCL_RESULT,2) AS LCL_RESULT,
+	         ROUND(A.USL_RESULT,2) AS USL_RESULT,
+	         ROUND(A.LSL_RESULT,2) AS LSL_RESULT,
+	         ROUND(A.CPK_RESULT,2) AS CPK_RESULT,
+	         ROUND(A.LSL_RESULT,2) AS LSL_RELATIVE,
+	         ROUND((A.LCL_RESULT-A.LSL_RESULT),2) AS LCL_RELATIVE,
+	         ROUND((A.UCL_RESULT-A.LCL_RESULT),2) AS UCL_RELATIVE,
+	         ROUND((A.USL_RESULT-A.UCL_RESULT),2) AS USL_RELATIVE,
+	         ROUND((A.UCL_RESULT-A.LCL_RESULT)/6,3) AS SIGMA,
+	         A.ETLTIME
+	  FROM MDWMGR.DAS_DCRESULT_SUM_MWD A
+	 WHERE 1 = 1
+	 AND A.FACTORYNAME = #{shopName,jdbcType=VARCHAR}
+	 AND A.LAYERITEM = #{layerItem,jdbcType=VARCHAR}
+	 AND A.LAYERNAME = #{layerName,jdbcType=VARCHAR}
+	 AND A.PRODUCTCATEGORY = #{productCategory,jdbcType=VARCHAR}
+	 AND A.ITEMNAME = #{itemName,jdbcType=VARCHAR}
+	 ORDER BY A.DATETYPE DESC , A.DATETIME
+
+	</select>
+
+</mapper>

@@ -1,0 +1,81 @@
+<p-tabView (onChange)="onTabChange($event)" [activeIndex]="index">
+  <!--     <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+    <p-tabPanel [header]="item.header" [selected]="item.selected" *ngIf="item.display">
+      <app-bpshop #Child_+{{item.header}} [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+        [processType]="item.processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+        [lineName]="lineName"></app-bpshop>
+    </p-tabPanel>
+  </ng-template> -->
+  <p-tabPanel [header]="items[0].header" [selected]="items[0].selected" *ngIf="items[0].display">
+    <app-bpshop #Child_EA [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[0].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[1].header" [selected]="items[1].selected" *ngIf="items[1].display">
+    <app-bpshop #Child_CUT [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[1].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[2].header" [selected]="items[2].selected" *ngIf="items[2].display">
+    <app-bpshop #Child_Aging [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[2].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[3].header" [selected]="items[3].selected" *ngIf="items[3].display">
+    <app-bpshop #Child_AET [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[3].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+<!--   <p-tabPanel [header]="items[4].header" [selected]="items[4].selected" *ngIf="items[4].display">
+    <app-bpshop #Child_AET1 [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[4].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[5].header" [selected]="items[5].selected" *ngIf="items[5].display">
+    <app-bpshop #Child_AET2 [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[5].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel> -->
+  <p-tabPanel [header]="items[4].header" [selected]="items[4].selected" *ngIf="items[4].display">
+    <app-bpshop #Child_MET [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[4].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[5].header" [selected]="items[5].selected" *ngIf="items[5].display">
+    <app-bpshop #Child_EAPP [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[5].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+  <p-tabPanel [header]="items[6].header" [selected]="items[6].selected" *ngIf="items[6].display">
+    <app-bpshop #Child_REAET [deviceType]="deviceType" [currentUserName]="currentUserName" [shopName]="shopName"
+      [processType]="items[6].processType" [categoryURL]="categoryURL" [chartURL]="chartURL" [dataType]="dataType"
+      [lineName]="lineName"></app-bpshop>
+  </p-tabPanel>
+</p-tabView>
+<!-- <button type="button" pButton icon="fa fa-search" class="xl-tabSetting lg-tabSetting" label="To Spotfire">
+</button> -->
+<div class="xl-tabSetting lg-tabSetting">
+  <a href="http://10.141.70.229:81/spotfire/wp/analysis?file=/%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B/PNL/YIELD_MNT%26ANALYST&waid=sQil9y_g50qTJQMGcmMlW-25201874c2vu5o&wavid=0"
+    target="_blank ">
+    <!--       <img border="0" alt="w3cschool" src="./../../../assets/images/spotfire.PNG" width="155.33" height="24"> -->
+    <!--       To Spotfire -->
+    <button type="button" pButton icon="fa fa-share" class="xl-tabSetting lg-tabSetting" label="To Spotfire">
+    </button>
+  </a>
+</div>
+
+<p-dialog header="Tab设置" [(visible)]="display_Setting" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12" *ngFor='let item of items'>
+      <div class="ui-g-6">
+        <label for="{{item.header}}"><strong>{{item.header}}</strong></label>
+      </div>
+      <div class="ui-g-3">
+        <p-inputSwitch [(ngModel)]=item.display></p-inputSwitch>
+      </div>
+      <div class="ui-g-3">
+        <span> {{item.display}}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

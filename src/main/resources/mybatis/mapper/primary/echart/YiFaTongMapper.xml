@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.boe.idm.project.mapper.primary.chart.YiFaTongMapper">
+
+<select id="getYiFaTongGirdData" resultType="java.util.HashMap">       
+ SELECT A.*, A.DEFECTQTY / A.TOTALQTY AS DYIELD
+  FROM DSB_DEFECTSUM_MWD A
+ WHERE     A.DEFECTDATATYPE = #{DefectDataType}
+       AND A.PRODUCTIONTYPE = #{Productiontype}
+       AND A.DATETIME = #{DateTime}
+       AND A.OPER_DESC = #{Oper_Desc}
+       AND A.PRODUCTCATEGORY = #{ProductCategory}
+       ORDER BY A.DEFECTQTY DESC
+</select>
+
+<select id="getYiFaTongCategoryData" resultType="java.util.HashMap">
+ SELECT DISTINCT A.PRODUCTCATEGORY
+  FROM DSB_DEFECTSUM_MWD A
+ WHERE     A.DEFECTDATATYPE = #{DefectDataType}
+       AND A.PRODUCTIONTYPE = #{Productiontype}
+       AND A.DATETIME = #{DateTime}
+       AND A.OPER_DESC = #{Oper_Desc}
+</select>
+ 
+<select id="getyifatongmaildata" resultType="java.util.HashMap">
+SELECT *
+  FROM YIFATONGMAIL A
+ WHERE A.OPER_DESC = #{Oper_Desc}
+</select>
+
+<select id="getmonthweekdaytimedata" resultType="java.util.HashMap">
+	SELECT TO_CHAR (SYSDATE, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (SYSDATE, 'YYYYWW') AS DATEWEEK,
+       TO_CHAR (SYSDATE, 'YYYYMM') AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 1, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 1) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 1) AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 2, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 2) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 2) AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 3, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 3) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 3) AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 4, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 4) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 4) AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 5, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 5) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 5) AS DATEMONTH
+  FROM DUAL
+UNION ALL
+SELECT TO_CHAR (SYSDATE - 6, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 6) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 6) AS DATEMONTH
+       FROM DUAL
+ UNION ALL
+SELECT TO_CHAR (SYSDATE - 7, 'YYYYMMDD') AS DATETIME,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYWW') - 7) AS DATEWEEK,
+       TO_CHAR (TO_CHAR (SYSDATE, 'YYYYMM') - 7) AS DATEMONTH    
+  FROM DUAL
+</select>
+
+<select id="selectfromYIFATONG" resultType="java.util.HashMap">
+SELECT * FROM YIFATONG A 
+   WHERE A.OPERA_DESC = #{OPERA_DESC}
+     AND A.PRODUCTIONCATEGORY = #{PRODUCTIONCATEGORY} 
+     AND A.DEFECTCODE IS NOT NULL
+</select>
+
+<insert id="insertYiFaTongData" >
+ INSERT INTO YIFATONG (FACTORYNAME,
+                      OPERA_DESC,
+                      DEFECTCODE,
+                      NOTYIELD_NOW,
+                      NOTYIELD_QTY,
+                      NOTYIELD_NOW_Q,
+                      NOTYIELD_QTY_Q,
+                      PRODUCTIONCATEGORY)
+     VALUES (
+           #{FACTORYNAME},
+           #{OPERA_DESC},
+           #{DEFECTCODE},
+           #{NOTYIELD_NOW},
+           #{NOTYIELD_QTY},
+           #{NOTYIELD_NOW_Q},
+           #{NOTYIELD_QTY_Q},
+           #{PRODUCTIONCATEGORY} 
+     )
+ </insert>
+ 
+ <delete id="deleteYiFaYTongData" >
+DELETE FROM YIFATONG
+      WHERE 1 = 1
+</delete>
+
+<select id="GetYiFaTongMailCheckDoNotSendData" resultType="java.util.HashMap">
+SELECT *
+  FROM YIFATONGMAILCHECK A
+ WHERE     A.OPER_DESC = #{Oper_Desc}
+       AND A.FACTORYNAME = #{FactoryName}
+       AND A.DEFECTCODE = #{DefectCode}
+       AND A.PRODUCTIONTYPE = #{ProductionType}
+       AND A.PRODUCTIONCATEGORY = #{ProductionCategory}
+       AND A.TIMEKEY = #{TimeKey}
+</select>
+
+<insert id="insertintoYiFaTongMailHappendData">
+INSERT INTO YIFATONGMAILCHECK (OPER_DESC,
+                               FACTORYNAME,
+                               DEFECTCODE,
+                               PRODUCTIONTYPE,
+                               PRODUCTIONCATEGORY,
+                               TIMEKEY)
+     VALUES (#{Oper_Desc},
+             #{FactoryName},
+             #{DefectCode},
+             #{ProductionType},
+             #{ProductionCategory},
+             #{TimeKey})
+</insert>
+
+<delete id="DeleteCheckYiFaTongHapendData">
+DELETE FROM YIFATONGMAILCHECK
+      WHERE TIMEKEY &lt; #{TimeKey}
+</delete>
+
+<select id="GetYiFaTongForWebSocket" resultType="java.util.HashMap">
+SELECT *
+  FROM YIFATONGMAILCHECK A
+ WHERE A.SHOWFLAG = 'NO' AND A.TIMEKEY = #{TimeKey}
+</select>
+
+<update id="ShowedYiFaTongFlag">
+UPDATE YIFATONGMAILCHECK A
+   SET A.SHOWFLAG = 'YES'
+ WHERE A.SHOWFLAG = #{ShowFlag}
+      AND A.OPER_DESC = #{Oper_Desc}
+      AND A.FACTORYNAME = #{FactoryName}
+      AND A.DEFECTCODE = #{DefectCode}
+      AND A.PRODCUTIONTYPE = #{ProductionType}
+      AND A.PRODUCTIONCATEGORY = #{ProductionCategory}
+      AND A.TIMEKEY = #{TimeKey}
+</update>
+
+
+</mapper>

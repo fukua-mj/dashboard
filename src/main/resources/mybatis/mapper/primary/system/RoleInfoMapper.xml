@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.RoleInfoMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.RoleInfo">
+    <result column="ROLENAME" jdbcType="VARCHAR" property="rolename" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.RoleInfo">
+    insert into NG_DAS_ROLEINFO (ROLENAME, DESCRIPTION)
+    values (#{rolename,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.RoleInfo">
+    insert into NG_DAS_ROLEINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        ROLENAME,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getAllRoleInfoList" resultMap="BaseResultMap">
+  	  SELECT *
+    FROM NG_DAS_ROLEINFO A
+ORDER BY A.ROLENAME
+  </select>
+  
+  <select id="getRoleInfoListByUser" resultMap="BaseResultMap">
+SELECT *
+  FROM NG_DAS_ROLEINFO R
+ WHERE R.ROLENAME = (SELECT A.ROLENAME
+                       FROM NG_DAS_USERROLELINK A
+                      WHERE A.USERACCOUNT = #{userAccount})
+  </select> 
+  
+  <select id="getAllRoleInfoListWithOutExist" parameterType="String" resultMap="BaseResultMap">
+  	  SELECT *
+    FROM NG_DAS_ROLEINFO A WHERE 1=1 
+    <if test = "existRoleName != null">
+        AND A.ROLENAME != #{existRoleName}
+    </if>
+ORDER BY A.ROLENAME
+  </select>
+  
+  	<update id="updateRoleInfo" parameterType="com.boe.idm.project.model.system.RoleInfo">
+		UPDATE NG_DAS_ROLEINFO SET
+		ROLENAME = #{rolename},
+		DESCRIPTION = #{description}
+		WHERE ROLENAME = #{rolename}
+	</update>
+	
+	<delete id="deleteRoleInfo" parameterType="com.boe.idm.project.model.system.RoleInfo">
+		DELETE NG_DAS_ROLEINFO WHERE
+		ROLENAME = #{rolename}
+	</delete>
+	
+	<select id="getAllRoleInfoWithOutExistByMenuName" resultMap="BaseResultMap">
+	  SELECT *
+    FROM NG_DAS_ROLEINFO
+   WHERE ROLENAME NOT IN (SELECT ROLENAME
+                            FROM NG_DAS_ROLEMENULINK
+                           WHERE MENUNAME = #{menuName})
+ORDER BY ROLENAME
+	</select>
+	
+	<select id="getRoleInfoByMenuName" resultMap="BaseResultMap">
+	  SELECT *
+    FROM NG_DAS_ROLEINFO
+   WHERE ROLENAME IN (SELECT ROLENAME
+                            FROM NG_DAS_ROLEMENULINK
+                           WHERE MENUNAME = #{menuName})
+ORDER BY ROLENAME
+	</select>
+</mapper>

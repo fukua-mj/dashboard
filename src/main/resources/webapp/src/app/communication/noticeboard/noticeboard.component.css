@@ -1,0 +1,44 @@
+.body {
+    background-image: url(assets/images/BOECD.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+/*     filter:alpha(opacity=10);  
+    -moz-opacity:0.2;  
+    -khtml-opacity: 0.6;  
+    opacity: 0.6; */
+    width:100%;
+    background-attachment:fixed;
+    min-height : 882px;
+    padding-top: 3%;
+}
+
+.noticeboard {
+    margin-left: 10%;
+    width: 80%;
+    min-height : 790px;
+    background-color: rgba(214, 243, 247, 0.76);
+    color: black;
+}
+
+.title {
+    font-size: 40px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+}
+.author {
+    text-align: right;
+}
+.visitcount{
+    text-align: left;
+}
+.timekey {
+    text-align: center;
+}
+.noticecontent {
+    padding: 0 2% 0 2%;
+    text-indent:2em;
+}
+.lastnext {
+    text-align: right;
+    padding: 0 2% 0 0;
+}

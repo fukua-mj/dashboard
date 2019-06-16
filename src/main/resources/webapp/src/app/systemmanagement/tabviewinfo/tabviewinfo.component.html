@@ -1,0 +1,84 @@
+<p-panel>
+  <p-table #RoleTabviewInfo [columns]='cols' [value]="roleTabViewInfoList" selectionMode="single" [(selection)]="selectedRole"
+    (onRowSelect)="onRowSelect($event)" [resizableColumns]="true" [paginator]="true" [rows]="15" [globalFilterFields]="['rolename','menuname']">
+    <ng-template pTemplate="caption">
+      标签页信息
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of cols">{{col.header}}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-roleTabViewInfoList let-columns="columns">
+      <tr [pSelectableRow]="roleTabViewInfoList">
+        <td *ngFor="let col of columns">{{roleTabViewInfoList[col.field]}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div style="text-align: left">
+        <input type="text" pInputText placeholder="角色名称" (input)="RoleTabviewInfo.filterGlobal($event.target.value, 'contains')"
+          style="background-color: rgb(221, 236, 243)">
+<!--         <p-button (click)="showAddRoleDialog()" icon="fa fa-plus" label="新增"></p-button>
+        <p-button (click)="showUpdateRoleDialog()" icon="fa fa-plus" label="修改"></p-button>
+        <p-button (click)="showDeleteRoleDialog()" icon="fa fa-minus" label="删除"></p-button>
+        <p-button (click)="showUserRoleLinkDialog()" icon="fa fa-connectdevelop" label="角色关联用户"></p-button>
+        <p-button (click)="showRoleMenuLinkDialog()" icon="fa fa-connectdevelop" label="角色关联菜单"></p-button>
+        <p-button (click)="Test()" icon="fa fa-connectdevelop" label="Test"></p-button> -->
+      </div>
+    </ng-template>
+  </p-table>
+</p-panel>
+
+<!-- <p-dialog header="ModifyTabViewLink" [(visible)]="display_modify" [responsive]="true" showEffect="fade" [modal]="true"
+  [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="rolename_modify">角色名称</label>
+      </div>
+      <div class="ui-g-7">
+        <input pInputText id="rolename_modify" [(ngModel)]="selectedRoleTabViewLink.rolename">
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="menuname_modify">菜单名称</label>
+      </div>
+      <div class="ui-g-7">
+        <input pInputText id="menuname_modify" [(ngModel)]="selectedRoleTabViewLink.menuname">
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="tabvlewindex_modify">TabViewIndex</label>
+      </div>
+      <div class="ui-g-7">
+        <input pInputText id="tabvlewindex_modify" [(ngModel)]="selectedRoleTabViewLink.tabvlewindex">
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="useflag_modify">隐藏标志位</label>
+      </div>
+      <div class="ui-g-7">
+        <input pInputText id="useflag_modify" [(ngModel)]="selectedRoleTabViewLink.useflag">
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="description_modify">TabView描述</label>
+      </div>
+      <div class="ui-g-7">
+        <input pInputText id="description_modify" [(ngModel)]="selectedRoleTabViewLink.description">
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div>
+      <p-button label="Update" (click)="updateRole()" *ngIf="display_update"></p-button>
+      <p-button label="Delete" (click)="deleteRole()" *ngIf="display_delete"></p-button>
+      <p-button label="Cancel" (click)="cancel()"></p-button>
+    </div>
+  </p-footer>
+</p-dialog> -->
+

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.NoticeBoardMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.NoticeBoard">
+    <id column="TIMEKEY" jdbcType="DATE" property="timekey" />
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author" />
+    <result column="SUBJECT" jdbcType="VARCHAR" property="subject" />
+    <result column="MESSAGEDETAIL" jdbcType="VARCHAR" property="messagedetail" />
+    <result column="RECEIVERNAME" jdbcType="VARCHAR" property="receivername" />
+    <result column="CONFIRMFLAG" jdbcType="VARCHAR" property="confirmflag" />
+    <result column="IMAGEURL" jdbcType="VARCHAR" property="imageurl" />
+    <result column="VISITCOUNT" jdbcType="DECIMAL" property="visitcount" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" type="com.boe.idm.project.model.system.NoticeBoard2">
+    <result column="TIMEKEY" jdbcType="VARCHAR" property="timekey" />
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author" />
+    <result column="SUBJECT" jdbcType="VARCHAR" property="subject" />
+    <result column="MESSAGEDETAIL" jdbcType="VARCHAR" property="messagedetail" />
+    <result column="RECEIVERNAME" jdbcType="VARCHAR" property="receivername" />
+    <result column="CONFIRMFLAG" jdbcType="VARCHAR" property="confirmflag" />
+    <result column="IMAGEURL" jdbcType="VARCHAR" property="imageurl" />
+    <result column="VISITCOUNT" jdbcType="DECIMAL" property="visitcount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TIMEKEY, AUTHOR, SUBJECT, MESSAGEDETAIL, RECEIVERNAME, CONFIRMFLAG, IMAGEURL, VISITCOUNT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.util.Date" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from NG_DAS_NOTICEBOARD
+    where TIMEKEY = #{timekey,jdbcType=DATE}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.Date">
+    delete from NG_DAS_NOTICEBOARD
+    where TIMEKEY = #{timekey,jdbcType=DATE}
+  </delete>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.NoticeBoard">
+    insert into NG_DAS_NOTICEBOARD (TIMEKEY, AUTHOR, SUBJECT, 
+      MESSAGEDETAIL, RECEIVERNAME, CONFIRMFLAG, 
+      IMAGEURL, VISITCOUNT)
+    values (#{timekey,jdbcType=DATE}, #{author,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, 
+      #{messagedetail,jdbcType=VARCHAR}, #{receivername,jdbcType=VARCHAR}, #{confirmflag,jdbcType=VARCHAR}, 
+      #{imageurl,jdbcType=VARCHAR}, #{visitcount,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.NoticeBoard">
+    insert into NG_DAS_NOTICEBOARD
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="timekey != null">
+        TIMEKEY,
+      </if>
+      <if test="author != null">
+        AUTHOR,
+      </if>
+      <if test="subject != null">
+        SUBJECT,
+      </if>
+      <if test="messagedetail != null">
+        MESSAGEDETAIL,
+      </if>
+      <if test="receivername != null">
+        RECEIVERNAME,
+      </if>
+      <if test="confirmflag != null">
+        CONFIRMFLAG,
+      </if>
+      <if test="imageurl != null">
+        IMAGEURL,
+      </if>
+      <if test="visitcount != null">
+        VISITCOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="timekey != null">
+        #{timekey,jdbcType=DATE},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="messagedetail != null">
+        #{messagedetail,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmflag != null">
+        #{confirmflag,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null">
+        #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="visitcount != null">
+        #{visitcount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.boe.idm.project.model.system.NoticeBoard">
+    update NG_DAS_NOTICEBOARD
+    <set>
+      <if test="author != null">
+        AUTHOR = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        SUBJECT = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="messagedetail != null">
+        MESSAGEDETAIL = #{messagedetail,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        RECEIVERNAME = #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmflag != null">
+        CONFIRMFLAG = #{confirmflag,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null">
+        IMAGEURL = #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="visitcount != null">
+        VISITCOUNT = #{visitcount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TIMEKEY = #{timekey,jdbcType=DATE}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.boe.idm.project.model.system.NoticeBoard">
+    update NG_DAS_NOTICEBOARD
+    set AUTHOR = #{author,jdbcType=VARCHAR},
+      SUBJECT = #{subject,jdbcType=VARCHAR},
+      MESSAGEDETAIL = #{messagedetail,jdbcType=VARCHAR},
+      RECEIVERNAME = #{receivername,jdbcType=VARCHAR},
+      CONFIRMFLAG = #{confirmflag,jdbcType=VARCHAR},
+      IMAGEURL = #{imageurl,jdbcType=VARCHAR},
+      VISITCOUNT = #{visitcount,jdbcType=DECIMAL}
+    where TIMEKEY = #{timekey,jdbcType=DATE}
+  </update>
+  
+  <select id="getNoticeList" resultMap="BaseResultMap2">
+	  SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+	         A.AUTHOR,
+	         A.SUBJECT,
+	         A.MESSAGEDETAIL,
+	         A.RECEIVERNAME,
+	         A.CONFIRMFLAG,
+	         A.IMAGEURL,
+	         A.VISITCOUNT
+	    FROM WEBMGR.NG_DAS_NOTICEBOARD A
+	ORDER BY TIMEKEY DESC
+  </select>   
+    
+  <insert id="insertByItem">
+    insert into NG_DAS_NOTICEBOARD
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="timeKey != null">
+        TIMEKEY,
+      </if>
+      <if test="author != null">
+        AUTHOR,
+      </if>
+      <if test="subject != null">
+        SUBJECT,
+      </if>
+      <if test="messageDetail != null">
+        MESSAGEDETAIL,
+      </if>
+      <if test="receiveName != null">
+        RECEIVERNAME,
+      </if>
+      <if test="confirmflag != null">
+        CONFIRMFLAG,
+      </if>
+      <if test="imageurl != null">
+        IMAGEURL,
+      </if>
+      <if test="visitcount != null">
+        VISITCOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="timeKey != null">
+        to_date(#{timeKey,jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:mi:ss' ),
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="messageDetail != null">
+        #{messageDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveName != null">
+        #{receiveName,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmflag != null">
+        #{confirmflag,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null">
+        #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="visitcount != null">
+        #{visitcount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getNotice" resultMap="BaseResultMap2">
+  SELECT *
+    FROM (SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+                 A.AUTHOR,
+                 A.SUBJECT,
+                 A.MESSAGEDETAIL,
+                 A.RECEIVERNAME,
+                 A.CONFIRMFLAG,
+                 A.IMAGEURL,
+                 A.VISITCOUNT
+            FROM WEBMGR.NG_DAS_NOTICEBOARD A) TT
+   WHERE     TIMEKEY = #{timekey}
+         AND TT.SUBJECT = #{subject}
+ORDER BY TIMEKEY DESC
+  </select>
+  
+  <update id="updateNoticeVisitCount">
+  	UPDATE WEBMGR.NG_DAS_NOTICEBOARD A
+   SET A.VISITCOUNT = #{visitcount}
+ WHERE A.TIMEKEY = TO_DATE (#{timekey}, 'YYYY-MM-DD HH24:mi:ss')
+ 	AND A.SUBJECT = #{subject}
+  </update>
+  
+  <select id="getLastNotice" resultMap="BaseResultMap2">
+  SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+         A.AUTHOR,
+         A.SUBJECT,
+         A.MESSAGEDETAIL,
+         A.RECEIVERNAME,
+         A.CONFIRMFLAG,
+         A.IMAGEURL,
+         A.VISITCOUNT
+    FROM WEBMGR.NG_DAS_NOTICEBOARD A
+   WHERE     A.TIMEKEY >
+                TO_DATE (#{timekey}, 'YYYY-MM-DD HH24:mi:ss')
+         AND ROWNUM = 1
+ORDER BY A.TIMEKEY DESC
+  </select>
+  
+  <select id="getNextNotice" resultMap="BaseResultMap2"> <!-- '&lt;':'<' -->
+  SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+         A.AUTHOR,
+         A.SUBJECT,
+         A.MESSAGEDETAIL,
+         A.RECEIVERNAME,
+         A.CONFIRMFLAG,
+         A.IMAGEURL,
+         A.VISITCOUNT
+    FROM WEBMGR.NG_DAS_NOTICEBOARD A
+   WHERE     A.TIMEKEY &lt; 
+                TO_DATE (#{timekey}, 'YYYY-MM-DD HH24:mi:ss')
+         AND ROWNUM = 1
+ORDER BY A.TIMEKEY DESC
+  </select>
+  
+  <select id="getSendHistory" resultMap="BaseResultMap2">
+	  	  SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+	         A.AUTHOR,
+	         A.SUBJECT,
+	         A.MESSAGEDETAIL,
+	         A.RECEIVERNAME,
+	         A.CONFIRMFLAG,
+	         A.IMAGEURL,
+	         A.VISITCOUNT
+	    FROM WEBMGR.NG_DAS_NOTICEBOARD A
+	   WHERE A.AUTHOR = #{author}
+	ORDER BY TIMEKEY DESC
+  </select>
+  
+  <select id="getLatestNotice" resultMap="BaseResultMap2">
+		SELECT *
+		  FROM (  SELECT TO_CHAR (A.TIMEKEY, 'YYYY-MM-DD HH24:mi:ss') AS TIMEKEY,
+		                 A.AUTHOR,
+		                 A.SUBJECT,
+		                 A.MESSAGEDETAIL,
+		                 A.RECEIVERNAME,
+		                 A.CONFIRMFLAG,
+		                 A.IMAGEURL,
+		                 A.VISITCOUNT
+		            FROM WEBMGR.NG_DAS_NOTICEBOARD A
+		        ORDER BY TIMEKEY DESC)
+		 WHERE ROWNUM &lt; 2
+  </select>
+</mapper>

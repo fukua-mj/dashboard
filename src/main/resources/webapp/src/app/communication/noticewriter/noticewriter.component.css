@@ -1,0 +1,30 @@
+.title {
+    font-size: 35px;
+}
+.sendHistory {
+    font-size: 10px;
+}
+.hmtitle {
+/*     color: #535353;
+    padding: 6px 0 0 10px;
+    margin: 0 0 -10px 0;
+    background-image: url(./../../../assets/images/homepage/usercard.png); */
+}
+
+
+
+/* 1025px lg 显示器*/
+@media screen and (min-width:64.063em){
+    .lg-noticewriter {
+        min-height:600px;
+    }
+
+}
+
+/* 1441px xl 大电视*/
+@media screen and (min-width:90.063em){
+    .xl-noticewriter {
+        min-height:882px;
+    }
+
+}

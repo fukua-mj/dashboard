@@ -1,0 +1,41 @@
+<div class="ui-g">
+  <div class="ui-g-10">
+    <div class="ui-g-12 xl-table lg-table table" *ngIf="display_table">
+      <p-table #OutQty [columns]='cols' [value]="outQtyList" [resizableColumns]="true">
+        <ng-template pTemplate="header" let-columns>
+          <tr style="height:10px">
+            <th *ngFor="let col of cols">{{col.header}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-outQtyList let-columns="columns">
+          <tr [pSelectableRow]="outQtyList">
+            <td *ngFor="let col of columns">{{outQtyList[col.field]}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div [id]="divid" echarts [options]="echartOption" class="ui-g-12 chartArea xl-chartArea md-chartArea lg-chartArea sm-chartArea"
+      [ngStyle]="{'height': getChartHeight()}"></div>
+
+  </div>
+  <div class="ui-g-2 ui-lg-2 ui-xl-2 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionTypeArea xl-productionTypeArea md-productionTypeArea lg-productionTypeArea sm-productionTypeArea">
+      <div class="xl-title lg-title"><strong>设备Line别</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of lineName" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="StatesLineName+{{shopName}}+{{processType}}" value="{{item}}" label="{{item}}"
+            [(ngModel)]="selectedLineName" inputId="StatesLineName+{{shopName}}+{{processType}}+ {{item}}" (click)="drawChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+    <div class="ui-g-12 ui-lg-12 ui-xl-12 ui-md-6 ui-sm-6 productionCategoryArea xl-productionCategoryArea md-productionCategoryArea lg-productionCategoryArea sm-productionCategoryArea">
+      <div class="xl-title lg-title"><strong>Date</strong></div>
+      <ul class="optionul">
+        <li *ngFor="let item of date" class="productionTypeLi xl-productionTypeLi md-productionTypeLi lg-productionTypeLi sm-productionTypeLi">
+          <p-radioButton name="StatesDate+{{shopName}}+{{processType}}" value="{{item}}" label="{{item}}" [(ngModel)]="selectedDate"
+            inputId="StatesDate+{{shopName}}+{{processType}}+ {{item}}" (click)="drawChart()"></p-radioButton>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,235 @@
+{
+    "items": [
+        {
+            "label": "MES UI",
+            "icon": "view_list",
+            "items" : [
+                {
+                    "label": "type1",
+                    "routerLink": [
+                        "mes-ui/type1"
+                    ]
+                },
+                {
+                    "label": "type2",
+                    "routerLink": [
+                        "mes-ui/type2"
+                    ]
+                },
+                {
+                    "label": "type3",
+                    "routerLink": [
+                        "mes-ui/type3"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "REPORT UI",
+            "icon": "desktop_mac",
+            "items" : [
+                {
+                    "label": "type1",
+                    "routerLink": [
+                        "report-ui/type1"
+                    ]
+                },
+                {
+                    "label": "type2",
+                    "routerLink": [
+                        "report-ui/type2"
+                    ]
+                },
+                {
+                    "label": "type3",
+                    "routerLink": [
+                        "report-ui/type3"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "DASHBOARD UI",
+            "icon": "dashboard",
+            "items": [
+                {
+                    "label":"type1",
+                    "routerLink": [
+                        "dash-board-ui/type1"
+                    ]
+                },
+                {
+                    "label":"type2",
+                    "routerLink": [
+                        "dash-board-ui/type2"
+                    ]
+                },
+                {
+                    "label":"type3",
+                    "routerLink": [
+                        "dash-board-ui/type3"
+                    ]
+                }
+
+            ]
+        },
+        {
+            "label": "BOE UI",
+            "icon": "refresh",
+            "items": [
+                {
+                    "label": "list",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "boe-ui/boe-list"
+                    ]
+                },
+                {
+                    "label": "grid",
+                    "icon": "grid_on",
+                    "routerLink": [
+                        "boe-ui/boe-grid"
+                    ]
+                },
+                {
+                    "label": "chart",
+                    "icon": "insert_chart",
+                    "routerLink": [
+                        "boe-ui/boe-chart"
+                    ]
+                },
+                {
+                    "label": "dashboard",
+                    "icon": "dashboard",
+                    "routerLink": [
+                        "boe-ui/boe-dashboard"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "BOE Pages",
+            "icon": "cloud",
+            "items": [
+                {
+                    "label": "TEST",
+                    "routerLink": [
+                        "pages/test"
+                    ]
+                },
+                {
+                    "label": "TEST1",
+                    "routerLink": [
+                        "pages/test1"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "ICONS",
+            "icon": "search",
+            "items": [
+                {
+                    "label": "Font Awesome",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "icons/fontawesome"
+                    ]
+                },
+                {
+                    "label": "Material",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "icons/material"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "产量指标",
+            "icon": "search",
+            "items": [
+                {
+                    "label": "BP",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "production/pro-bp"
+                    ]
+                },
+                {
+                    "label": "EVEN",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "production/pro-even"
+                    ]
+                }
+            ]
+        },
+        {
+            "label":"设备指标",
+            "icon": "cloud",
+            "items":[
+                {
+                    "label":"设备状态监控",
+                    "icon":"sentiment_neutral",
+                    "items":[
+                        {
+                            "label":"BP",
+                            "icon":"sentiment_neutral",
+                            "routerLink":[
+                                "eqpinfo/statesmonitor/bp"
+                            ]
+                        },
+                        {
+                            "label":"EVEN",
+                            "icon":"sentiment_neutral",
+                            "routerLink":[
+                                "eqpinfo/statesmonitor/even"
+                            ]
+                        },
+                        {
+                            "label":"EAC",
+                            "icon":"sentiment_neutral",
+                            "routerLink":[
+                                "eqpinfo/statesmonitor/eac"
+                            ]
+                        },
+                        {
+                            "label":"MODULE",
+                            "icon":"sentiment_neutral",
+                            "routerLink":[
+                                "eqpinfo/statesmonitor/module"
+                            ]
+                        }
+                    ]
+                },{
+                    "label":"OEE",
+                    "icon":"sentiment_neutral",
+                    "routerLink":[
+                        "eqpinfo/oee"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "TestPage",
+            "icon": "search",
+            "items": [
+                {
+                    "label": "test1",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "testpage/test1"
+                    ]
+                },
+                {
+                    "label": "test2",
+                    "icon": "sentiment_neutral",
+                    "routerLink": [
+                        "testpage/test2"
+                    ]
+                }
+            ]
+        }
+    ]
+}

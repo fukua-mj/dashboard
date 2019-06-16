@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boe.idm.project.mapper.primary.system.RoleMenuLinkMapper">
+  <resultMap id="BaseResultMap" type="com.boe.idm.project.model.system.RoleMenuLink">
+    <result column="ROLENAME" jdbcType="VARCHAR" property="rolename" />
+    <result column="MENUNAME" jdbcType="VARCHAR" property="menuname" />
+    <result column="EVENTTIME" jdbcType="TIMESTAMP" property="eventtime" />
+    <result column="EVENTUSER" jdbcType="VARCHAR" property="eventuser" />
+    <result column="SORT" jdbcType="VARCHAR" property="sort" />
+  </resultMap>
+  <insert id="insert" parameterType="com.boe.idm.project.model.system.RoleMenuLink">
+    insert into NG_DAS_ROLEMENULINK (ROLENAME, MENUNAME, EVENTTIME, 
+      EVENTUSER, SORT)
+    values (#{rolename,jdbcType=VARCHAR}, #{menuname,jdbcType=VARCHAR}, #{eventtime,jdbcType=TIMESTAMP}, 
+      #{eventuser,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.boe.idm.project.model.system.RoleMenuLink">
+    insert into NG_DAS_ROLEMENULINK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        ROLENAME,
+      </if>
+      <if test="menuname != null">
+        MENUNAME,
+      </if>
+      <if test="eventtime != null">
+        EVENTTIME,
+      </if>
+      <if test="eventuser != null">
+        EVENTUSER,
+      </if>
+      <if test="sort != null">
+        SORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rolename != null">
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="menuname != null">
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="eventtime != null">
+        #{eventtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eventuser != null">
+        #{eventuser,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectRoleMenuLinkByRoleAndMenu" parameterType="com.boe.idm.project.model.system.RoleMenuLink" resultType="com.boe.idm.project.model.system.RoleMenuLink">
+  	select * from NG_DAS_ROLEMENULINK where rolename = #{rolename} AND MENUNAME = #{menuname}
+  </select>
+  
+  <select id="getRoleMenuLinkByRoleName" resultType="com.boe.idm.project.model.system.RoleMenuLink">
+  	SELECT * FROM NG_DAS_ROLEMENULINK WHERE ROLENAME = #{rolename}
+  </select>
+  
+  <delete id="deleteRoleMenuLink" parameterType="com.boe.idm.project.model.system.RoleMenuLink2">
+  	DELETE NG_DAS_ROLEMENULINK WHERE ROLENAME = #{rolename} AND MENUNAME = #{menuname}
+  </delete> 
+  
+    <select id="getRoleMenuLinkByMenuName" resultType="com.boe.idm.project.model.system.RoleMenuLink">
+  	SELECT * FROM NG_DAS_ROLEMENULINK WHERE MENUNAME = #{menuname}
+  </select>
+</mapper>
